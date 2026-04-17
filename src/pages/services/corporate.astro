@@ -3,6 +3,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import FinalCTA from '../../components/FinalCTA.astro';
+import ServiceFAQ from '../../components/ServiceFAQ.astro';
+
+const faqs = [
+  { q: '법인 명의 계약·세금계산서 가능?', a: '물론입니다. 법인 계약이 기본이며 전자 세금계산서 자동 발행합니다.' },
+  { q: '내부 관리팀과 어떻게 협업하나요?', a: '담당 매니저 1명이 기업 관리팀과 단일 창구로 연락합니다. 주 1회 미팅, 월간 보고서 제공.' },
+  { q: '기존 계약 업체 해지 도와주나요?', a: '네. 기존 시설·경비·미화 업체 계약 만료 일정 확인 후 인수인계 계획을 함께 수립합니다.' },
+  { q: '보안등급이 높은 사옥도 가능?', a: '포르쉐·보건복지부 이브릿지 등 고보안 시설 경험 다수. NDA 체결 후 출입관리·감독 체계 구축.' },
+  { q: '에너지 절감 성과 보고 가능?', a: '월간 에너지 사용량 비교 리포트 제공. 목표 절감률 합의 후 실적 추적.' },
+];
 
 const features = [
   { title: '정기 방문 & 상시 점검', body: '전등·수전·소방·승강기·냉난방 등 소규모 이슈를 즉시 해결.' },
@@ -84,6 +93,7 @@ const forWho = [
     </div>
   </section>
 
+  <ServiceFAQ faqs={faqs} title="기업 시설 관리 FAQ" />
   <FinalCTA />
   <Footer />
 </BaseLayout>

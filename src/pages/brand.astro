@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const palette = [
+  { name: 'Navy (메인)',     hex: '#1E3A5F', class: 'bg-navy-700' },
+  { name: 'Navy Deep',       hex: '#0E1C2E', class: 'bg-navy-900' },
+  { name: 'Emphasis',        hex: '#DC2626', class: 'bg-emphasis' },
+  { name: 'Ink',             hex: '#111827', class: 'bg-ink' },
+  { name: 'Ink Muted',       hex: '#6B7280', class: 'bg-ink-muted' },
+  { name: 'Ink Label',       hex: '#9CA3AF', class: 'bg-ink-label' },
+  { name: 'Ink Line',        hex: '#E5E7EB', class: 'bg-ink-line' },
+  { name: 'Ink Soft',        hex: '#F3F4F6', class: 'bg-ink-soft' },
+];
+
+const typography = [
+  { label: 'Display 56', sample: '건물관리의 기준', size: 'text-6xl', weight: 'font-extrabold' },
+  { label: 'Heading 40', sample: '지금 이런 고민 있으세요?', size: 'text-4xl', weight: 'font-bold' },
+  { label: 'Title 24',    sample: '단기임대 운영', size: 'text-2xl', weight: 'font-bold' },
+  { label: 'Body 16',     sample: '14년 현장 경험 + 자체 SaaS로 책임집니다.', size: 'text-base', weight: 'font-normal' },
+  { label: 'Label 11',    sample: '핵심 기능', size: 'text-[11px] uppercase tracking-wider', weight: 'font-bold' },
+];
+
+const principles = [
+  { t: '한 화면 1~2색', b: '네이비 + 회색 베이스. 강조는 빨강 단 1곳만.' },
+  { t: '박스 안 박스 X', b: '영역 구분은 얇은 회색 보더 + 여백으로.' },
+  { t: '위계는 타이포', b: '색이 아닌 폰트 크기·굵기로 시각 계층을.' },
+  { t: '이모지 최소화', b: '라벨 단어로 충분하면 이모지 생략.' },
+];
+---
+
+<BaseLayout
+  title="브랜드 가이드 | 하우스맨"
+  description="하우스맨 브랜드 아이덴티티 — 로고·색상·타이포·원칙. 제작 협력사·파트너·언론용 공식 자료."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-20">
+    <div class="container-narrow max-w-3xl text-center">
+      <p class="label-uppercase text-white/70 mb-4">브랜드 가이드</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
+        하우스맨 아이덴티티
+      </h1>
+      <p class="text-lg text-white/85 leading-relaxed">
+        로고·색상·타이포·원칙. 제작 협력사·파트너·언론용.
+      </p>
+    </div>
+  </section>
+
+  <!-- 로고 -->
+  <section class="container-narrow py-section max-w-4xl">
+    <p class="label-uppercase text-center mb-3">로고</p>
+    <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-10">
+      공식 로고 다운로드
+    </h2>
+    <div class="grid md:grid-cols-2 gap-5">
+      <div class="card">
+        <div class="h-32 flex items-center justify-center bg-white rounded-lg border border-ink-line mb-4">
+          <span class="text-4xl font-extrabold text-navy-700">HOUSEMAN</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-semibold text-ink">라이트 버전</div>
+            <div class="text-xs text-ink-label">흰 배경·밝은 곳</div>
+          </div>
+          <a href="/favicon.svg" download class="btn-ghost !py-2 !px-4 text-sm">SVG ⬇</a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="h-32 flex items-center justify-center bg-navy-900 rounded-lg mb-4">
+          <span class="text-4xl font-extrabold text-white">HOUSEMAN</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-semibold text-ink">다크 버전</div>
+            <div class="text-xs text-ink-label">어두운 배경·사진 위</div>
+          </div>
+          <a href="/favicon.svg" download class="btn-ghost !py-2 !px-4 text-sm">SVG ⬇</a>
+        </div>
+      </div>
+    </div>
+    <p class="text-center text-xs text-ink-label mt-6">
+      ※ 로고는 자유롭게 사용 가능. 변형·기울임·색상 변경은 사전 협의 바랍니다.
+    </p>
+  </section>
+
+  <!-- 색상 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-5xl">
+      <p class="label-uppercase text-center mb-3">색상</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-10">
+        팔레트 (8색)
+      </h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {palette.map(({ name, hex, class: cls }) => (
+          <div class="card">
+            <div class={`h-24 rounded-lg ${cls} mb-3`}></div>
+            <div class="font-semibold text-ink text-sm">{name}</div>
+            <div class="text-xs text-ink-muted font-mono">{hex}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 타이포 -->
+  <section class="container-narrow py-section max-w-4xl">
+    <p class="label-uppercase text-center mb-3">타이포그래피</p>
+    <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-10">
+      Pretendard Variable (한국어 기준)
+    </h2>
+    <div class="space-y-6">
+      {typography.map(({ label, sample, size, weight }) => (
+        <div class="card">
+          <div class="text-xs text-ink-label uppercase tracking-wider mb-2">{label}</div>
+          <div class={`${size} ${weight} text-navy-700`}>{sample}</div>
+        </div>
+      ))}
+    </div>
+    <p class="text-center text-xs text-ink-label mt-6">
+      폰트: Pretendard Variable (무료 · <a href="https://github.com/orioncactus/pretendard" target="_blank" rel="noopener" class="underline">GitHub</a>)
+    </p>
+  </section>
+
+  <!-- 원칙 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-4xl">
+      <p class="label-uppercase text-center mb-3">디자인 원칙</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-10">
+        지켜야 할 4가지
+      </h2>
+      <div class="grid md:grid-cols-2 gap-5">
+        {principles.map(({ t, b }) => (
+          <div class="card">
+            <h3 class="font-bold text-navy-700 mb-2">{t}</h3>
+            <p class="text-sm text-ink-muted leading-relaxed">{b}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 음성 톤 -->
+  <section class="container-narrow py-section max-w-3xl">
+    <p class="label-uppercase text-center mb-3">보이스 앤 톤</p>
+    <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-10">
+      어떻게 말하는가
+    </h2>
+    <div class="space-y-4">
+      <div class="card">
+        <div class="font-bold text-navy-700 mb-2">✓ 해야 할 것</div>
+        <ul class="text-sm text-ink-muted space-y-1">
+          <li>· 숫자·사례 구체적으로</li>
+          <li>· "~해드립니다" 다정한 어미</li>
+          <li>· "건물주" 직접 지칭</li>
+          <li>· "시스템·자동화·경험" 키워드 강조</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="font-bold text-emphasis mb-2">✗ 하지 말 것</div>
+        <ul class="text-sm text-ink-muted space-y-1">
+          <li>· "최고의·최상의·완벽한" 공허 수식어</li>
+          <li>· 영어 외래어 남발 (Korean 우선)</li>
+          <li>· 여러 색 이모지 잔뜩 (1~2개면 충분)</li>
+          <li>· "죄송하지만·유감스럽게도" 방어적 어미</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>

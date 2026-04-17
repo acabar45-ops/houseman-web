@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://houseman.co.kr/sitemap-index.xml
+Sitemap: https://houseman.co.kr/rss.xml

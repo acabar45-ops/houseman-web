@@ -3,6 +3,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import FinalCTA from '../../components/FinalCTA.astro';
+import ServiceFAQ from '../../components/ServiceFAQ.astro';
+
+const faqs = [
+  { q: '몇 층짜리부터 위탁 가능한가요?', a: '규모 제한 없습니다. 2~3층 소규모 상가부터 10층 이상 중형 사옥까지 모두 운영합니다. 단, 100층 이상 대형 빌딩은 전문 FM 회사를 권장드립니다.' },
+  { q: '건물 일부 층만 맡길 수 있나요?', a: '가능합니다. 1층만·상가층만·공용부만 등 원하시는 범위로 계약 가능합니다. 대신 최소 월 수수료 기준이 있어 상담 시 조건 확인합니다.' },
+  { q: '빈 상가 임차인 직접 섭외 가능한가요?', a: '하우스맨 부동산 네트워크 800곳과 동시 매칭이 기본입니다. 건물주가 원하는 업종(카페만·사무실만 등)도 지정 가능합니다.' },
+  { q: '기존 관리업체 계약 중인데 전환 가능?', a: '네. 계약 만료 2개월 전부터 인수 준비를 시작합니다. 문서·임차인 정보·시설 이력 인수인계 지원합니다.' },
+  { q: '법정 점검(소방·승강기)도 대행하나요?', a: '전부 대행합니다. 점검 업체 선정·일정 조정·결과 보고서 수령·다음 점검 자동 알림까지 모두 하우스맨이 처리.' },
+];
 
 const features = [
   { title: '공실 관리', body: '800+ 부동산 네트워크 동시 매칭으로 공실 기간 최소화.' },
@@ -96,6 +105,7 @@ const forWho = [
     </div>
   </section>
 
+  <ServiceFAQ faqs={faqs} title="중소형 빌딩 관리 FAQ" />
   <FinalCTA />
   <Footer />
 </BaseLayout>

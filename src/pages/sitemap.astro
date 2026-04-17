@@ -1,0 +1,109 @@
+---
+// 사람이 읽는 사이트맵 — /sitemap (방문자 탐색·SEO·AEO용)
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const groups = [
+  {
+    title: '메인·브랜드',
+    links: [
+      { href: '/', label: '홈' },
+      { href: '/about', label: '회사소개' },
+      { href: '/portfolio', label: '관리 건물 포트폴리오' },
+      { href: '/cases', label: '케이스 스터디' },
+      { href: '/compare', label: '경쟁사 비교' },
+      { href: '/one-pager', label: '원페이저 (A4 요약)' },
+      { href: '/brand', label: '브랜드 가이드' },
+    ],
+  },
+  {
+    title: '서비스',
+    links: [
+      { href: '/services/buildings', label: '중소형 빌딩 관리' },
+      { href: '/services/housing', label: '중소형 주택 관리' },
+      { href: '/services/short-term', label: '단기임대 운영' },
+      { href: '/services/corporate', label: '기업 시설 관리' },
+      { href: '/services/non-resident', label: '비상주 관리사무소' },
+    ],
+  },
+  {
+    title: 'SaaS · 도구',
+    links: [
+      { href: '/saas', label: 'SaaS 소개' },
+      { href: '/pricing', label: '요금제' },
+      { href: '/tools/calculator', label: '수익 계산기' },
+      { href: '/samples/monthly-report', label: '월간 리포트 샘플' },
+      { href: '/app', label: '앱 다운로드' },
+      { href: '/login', label: 'SaaS 로그인' },
+    ],
+  },
+  {
+    title: '공실 정보',
+    links: [
+      { href: '/vacancies', label: '공실 전체' },
+    ],
+  },
+  {
+    title: '콘텐츠',
+    links: [
+      { href: '/blog', label: '블로그' },
+      { href: '/resources', label: '자료실 (PDF 다운로드)' },
+      { href: '/rss.xml', label: 'RSS 피드' },
+    ],
+  },
+  {
+    title: '회사',
+    links: [
+      { href: '/press', label: '보도·언론' },
+      { href: '/careers', label: '채용' },
+      { href: '/investors', label: '투자자 IR' },
+      { href: '/contact', label: '문의' },
+    ],
+  },
+  {
+    title: '법적 고지',
+    links: [
+      { href: '/privacy', label: '개인정보처리방침' },
+      { href: '/terms', label: '이용약관' },
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="사이트맵 | 하우스맨"
+  description="하우스맨 홈페이지의 모든 페이지를 한눈에."
+>
+  <Nav />
+
+  <section class="container-narrow py-section max-w-5xl">
+    <p class="label-uppercase mb-3">사이트맵</p>
+    <h1 class="text-3xl md:text-4xl font-bold text-navy-700 mb-10">
+      하우스맨 홈페이지 전체 지도
+    </h1>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {groups.map(({ title, links }) => (
+        <div>
+          <div class="label-uppercase mb-4">{title}</div>
+          <ul class="space-y-2">
+            {links.map(({ href, label }) => (
+              <li>
+                <a href={href} class="text-ink hover:text-navy-700 hover:underline">
+                  {label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <p class="mt-14 text-xs text-ink-label">
+      XML 사이트맵 (검색엔진용): <a href="/sitemap-index.xml" class="underline">sitemap-index.xml</a>
+    </p>
+  </section>
+
+  <Footer />
+</BaseLayout>

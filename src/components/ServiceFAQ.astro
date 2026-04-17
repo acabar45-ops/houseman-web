@@ -1,0 +1,40 @@
+---
+// 서비스별 FAQ — Astro props로 faqs 배열 받아 렌더링
+// FAQPage JSON-LD 자동 삽입 (AEO)
+export interface Props {
+  faqs: { q: string; a: string }[];
+  title?: string;
+}
+const { faqs, title = '자주 묻는 질문' } = Astro.props;
+---
+
+<section class="container-narrow py-section max-w-3xl">
+  <div class="text-center mb-10">
+    <p class="label-uppercase mb-3">FAQ</p>
+    <h2 class="text-2xl md:text-3xl font-bold text-navy-700">{title}</h2>
+  </div>
+  <div class="space-y-3">
+    {faqs.map(({ q, a }) => (
+      <details class="card group">
+        <summary class="flex items-center justify-between cursor-pointer list-none">
+          <span class="font-semibold text-ink pr-4">{q}</span>
+          <span class="text-navy-700 text-xl transition-transform group-open:rotate-45 flex-shrink-0">+</span>
+        </summary>
+        <p class="mt-4 text-ink-muted leading-relaxed text-[15px]">{a}</p>
+      </details>
+    ))}
+  </div>
+
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map(({ q, a }) => ({
+        '@type': 'Question',
+        name: q,
+        acceptedAnswer: { '@type': 'Answer', text: a },
+      })),
+    })}
+  ></script>
+</section>

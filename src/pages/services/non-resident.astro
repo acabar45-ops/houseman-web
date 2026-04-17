@@ -3,6 +3,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import FinalCTA from '../../components/FinalCTA.astro';
+import ServiceFAQ from '../../components/ServiceFAQ.astro';
+
+const faqs = [
+  { q: '몇 세대부터 가능한가요?', a: '30세대부터 150세대까지 비상주 관리가 가장 효과적입니다. 150세대 이상은 법정 상주 인력 필요 가능성 있습니다.' },
+  { q: '순회 방문 주기는?', a: '주 2~3회 기본. 건물 상태·계절·이슈에 따라 조정. 긴급 상황은 별도 출동.' },
+  { q: '입주자대표 역할과 어떻게 분담?', a: '입주자대표가 결정권 보유, 하우스맨이 실행 담당. 월간 보고서 · 반기 총회 지원.' },
+  { q: '공용 시설(엘리베이터·CCTV) 유지보수는?', a: '법정 점검·유지보수·부품 교체까지 일원 관리. 긴급 고장 시 24시간 출동.' },
+  { q: '관리비 회계는 투명한가요?', a: '월간 수입·지출 내역서 공개. 입주자대표 승인 후 집행. 필요 시 외부 회계 감사 지원.' },
+];
 
 const features = [
   { title: '순회 방문 관리', body: '주 2~3회 순회로 공용시설 점검·민원 수거·입퇴실 확인.' },
@@ -78,6 +87,7 @@ const forWho = [
     </div>
   </section>
 
+  <ServiceFAQ faqs={faqs} title="비상주 관리사무소 FAQ" />
   <FinalCTA />
   <Footer />
 </BaseLayout>

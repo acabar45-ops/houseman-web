@@ -3,6 +3,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import FinalCTA from '../../components/FinalCTA.astro';
+import ServiceFAQ from '../../components/ServiceFAQ.astro';
+
+const faqs = [
+  { q: '호실 1개만 맡겨도 되나요?', a: '가능합니다. 오피스텔·원룸 1호실도 위탁 계약 가능. 단, 최소 월 수수료 기준이 적용됩니다.' },
+  { q: '다가구·다세대 한 동 전체는?', a: '가장 일반적인 계약 형태입니다. 10~30호실 건물 위탁 경험이 가장 많습니다.' },
+  { q: '임차인 직접 뽑고 싶은데 가능?', a: '건물주 심사·최종 승인 옵션이 있습니다. 하우스맨은 후보 3~5명을 추천하고 결정은 건물주가. 또는 모두 위임도 가능.' },
+  { q: '보증금 반환 분쟁 나면?', a: '하우스맨이 중재합니다. 원상복구 사진·정산서·영수증으로 객관 증빙. 분쟁 소송 가는 경우 법무 지원.' },
+  { q: '퇴실 후 청소·페인트는?', a: '하우스맨 협력 청소 업체 표준 가격으로 진행. 투명한 견적서·영수증 제공.' },
+];
 
 const features = [
   { title: '임차인 민원 24시간', body: '카톡 채널·전화·앱으로 접수. 사장님 휴대폰으로 연락 안 옵니다.' },
@@ -92,6 +101,7 @@ const forWho = [
     </div>
   </section>
 
+  <ServiceFAQ faqs={faqs} title="중소형 주택 관리 FAQ" />
   <FinalCTA />
   <Footer />
 </BaseLayout>
