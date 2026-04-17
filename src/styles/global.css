@@ -90,18 +90,18 @@
 @layer components {
   /* Pill CTA — Stripe 시그니처 (radius 20px + 미세 lift shadow) */
   .btn-primary {
-    @apply inline-flex items-center gap-2 px-6 py-3 rounded-pill
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full
            bg-navy-700 text-white font-semibold
            shadow-cta hover:shadow-cta-hover hover:-translate-y-px
            transition-all duration-240 ease-stripe;
   }
   .btn-secondary {
-    @apply inline-flex items-center gap-2 px-6 py-3 rounded-pill
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full
            border border-white/30 text-white font-medium
            hover:bg-white/10 transition duration-240 ease-stripe;
   }
   .btn-ghost {
-    @apply inline-flex items-center gap-2 px-6 py-3 rounded-pill
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-full
            border border-ink-line text-ink font-medium
            hover:bg-ink-soft hover:border-navy-700 transition duration-240 ease-stripe;
   }
