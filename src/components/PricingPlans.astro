@@ -1,48 +1,25 @@
 ---
-// SaaS 3단 플랜 + 대행 산정 기준 (A-1 + B-2 확정)
-const plans = [
+// 하우스맨 OS 가격 — 2축 구조 (셋업비 + 호실당 월구독) + 시뮬레이터
+const setupTiers = [
   {
-    name: 'Starter',
-    price: '30,000원',
-    unit: '/월',
-    target: '1~10 호실',
-    features: [
-      '기본 청구 자동화',
-      '기본 대시보드',
-      '기본 알림톡',
-      '월 정산 리포트',
-    ],
-    cta: '무료 체험 시작',
+    name: 'Light',
+    price: '30만원',
+    target: '표준 룰·10호실 이하',
+    items: ['기본 OS 세팅', '기본 청구·알림 룰', '데이터 이관', '1시간 교육'],
     highlighted: false,
   },
   {
-    name: 'Pro',
-    price: '50,000원',
-    unit: '/월',
-    target: '11~50 호실',
-    features: [
-      'Starter의 모든 기능',
-      '알림톡 3단계 자동 독촉',
-      '검침 자동화',
-      '자동 정산 분배',
-      '미납 회수 지원',
-    ],
-    cta: '무료 체험 시작',
+    name: 'Standard',
+    price: '60만원',
+    target: '10~50호실·중간 복잡도',
+    items: ['Light 전체', '건물별 맞춤 청구 룰', '미납 단계 커스텀', '정산 분배 로직'],
     highlighted: true,
   },
   {
-    name: 'Enterprise',
-    price: '맞춤 견적',
-    unit: '',
-    target: '50+ 호실 또는 대행 패키지',
-    features: [
-      'Pro의 모든 기능',
-      '긴급 출동 포함',
-      '법무 지원',
-      '전담 매니저',
-      '기업 시설 관리',
-    ],
-    cta: '상담 받기',
+    name: 'Complex',
+    price: '100만원',
+    target: '50호실+ 또는 복잡 룰',
+    items: ['Standard 전체', '다중 건물주·법인 구조', '특수 수수료·공과금 분담', '전용 대시보드 위젯'],
     highlighted: false,
   },
 ] as const;
@@ -50,48 +27,165 @@ const plans = [
 
 <section class="bg-ink-soft py-section">
   <div class="container-narrow">
-    <div class="text-center mb-12">
-      <p class="label-uppercase mb-3">요금제</p>
-      <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
-        SaaS는 공개, 대행은 맞춤 견적.
+    <div class="text-center mb-14 max-w-2xl mx-auto">
+      <p class="eyebrow mb-3">HOUSEMAN OS · 가격</p>
+      <h2 class="font-display text-h2 text-ink mb-4 tracking-tight">
+        셋업비 한 번 + 호실당 월 3천원.
       </h2>
-      <p class="mt-3 text-ink-muted">14일 무료 체험, 언제든 해지 가능</p>
+      <p class="text-body text-ink-body">
+        범용 SaaS 구독이 아닙니다. 하우스맨이 당신 건물 룰을 직접 코드에 반영하고, 이후 호실 수만큼 자동 스케일링됩니다.
+      </p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
-      {plans.map(({ name, price, unit, target, features, cta, highlighted }) => (
-        <div class={`card h-full flex flex-col ${highlighted ? 'border-navy-700 border-2 relative' : ''}`}>
-          {highlighted && (
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-navy-700 text-white text-[11px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">
-              추천
-            </div>
-          )}
-          <div class="label-uppercase mb-2">{name}</div>
-          <div class="flex items-baseline gap-1 mb-1">
-            <span class="text-3xl font-extrabold text-navy-700">{price}</span>
-            <span class="text-sm text-ink-muted">{unit}</span>
-          </div>
-          <div class="text-xs text-ink-muted mb-6">{target}</div>
-          <ul class="space-y-2 text-sm text-ink flex-1 mb-6">
-            {features.map((f) => (
-              <li class="flex items-start gap-2">
-                <span class="text-navy-700 mt-1">✓</span>
-                <span>{f}</span>
-              </li>
-            ))}
-          </ul>
-          <a
-            href={cta === '상담 받기' ? 'tel:1544-4150' : '/pricing'}
-            class={highlighted ? 'btn-primary justify-center w-full' : 'btn-ghost justify-center w-full'}
-          >
-            {cta}
-          </a>
+    <!-- 2축 구조 -->
+    <div class="grid lg:grid-cols-2 gap-6 max-w-5xl mx-auto">
+      <!-- 좌: 셋업비 -->
+      <div class="bg-white border border-ink-line rounded-card-lg p-8 shadow-card">
+        <div class="flex items-baseline gap-3 mb-6">
+          <span class="label-uppercase text-navy-700">① 셋업비 (1회)</span>
+          <span class="text-xs text-ink-label">건물별 룰 하드코딩</span>
         </div>
-      ))}
+        <div class="space-y-3">
+          {setupTiers.map(({ name, price, target, items, highlighted }) => (
+            <div class={`p-5 rounded-card border ${highlighted ? 'border-navy-700 bg-navy-50/40' : 'border-ink-line'}`}>
+              <div class="flex items-baseline justify-between mb-2">
+                <div class="flex items-center gap-2">
+                  <span class="font-bold text-ink">{name}</span>
+                  {highlighted && (
+                    <span class="text-[10px] font-bold text-white bg-navy-700 px-2 py-0.5 rounded-full tracking-wider uppercase">가장 많이 선택</span>
+                  )}
+                </div>
+                <span class="font-display text-2xl font-extrabold text-navy-700">{price}</span>
+              </div>
+              <p class="text-xs text-ink-label mb-3">{target}</p>
+              <ul class="text-sm text-ink-body space-y-1">
+                {items.map((it) => (
+                  <li class="flex gap-2"><span class="text-navy-700">·</span><span>{it}</span></li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <p class="mt-5 text-xs text-ink-label">
+          * VAT 별도 · 질문지 기반으로 정확한 등급은 견적 시 확정
+        </p>
+      </div>
+
+      <!-- 우: 월 구독 + 시뮬레이터 -->
+      <div class="bg-white border border-ink-line rounded-card-lg p-8 shadow-card flex flex-col">
+        <div class="flex items-baseline gap-3 mb-6">
+          <span class="label-uppercase text-navy-700">② 월 구독 (호실당)</span>
+        </div>
+
+        <div class="text-center p-8 rounded-card bg-navy-50/40 border border-navy-100 mb-6">
+          <div class="flex items-baseline justify-center gap-1 mb-1">
+            <span class="font-display text-5xl font-extrabold text-navy-700">3,000</span>
+            <span class="text-lg text-ink-body font-medium">원</span>
+          </div>
+          <p class="text-sm text-ink-body">호실당 · 매월</p>
+          <p class="text-xs text-ink-label mt-2">최소 5호실 · 규모 커질수록 할인 가능 (상담)</p>
+        </div>
+
+        <!-- 시뮬레이터 -->
+        <div class="flex-1">
+          <label class="label-uppercase block mb-3">내 건물은 얼마?</label>
+          <div class="flex items-center gap-3 mb-2">
+            <input
+              id="os-rooms"
+              type="range"
+              min="5"
+              max="200"
+              step="1"
+              value="20"
+              class="flex-1 accent-navy-700"
+            />
+            <span id="os-rooms-label" class="font-bold text-navy-700 w-20 text-right">20호실</span>
+          </div>
+          <div class="grid grid-cols-3 gap-3 mt-5 text-center">
+            <div class="p-3 rounded-card bg-ink-soft">
+              <p class="text-[11px] text-ink-label tracking-wider uppercase mb-1">월</p>
+              <p id="os-monthly" class="font-display text-xl font-extrabold text-ink">60,000원</p>
+            </div>
+            <div class="p-3 rounded-card bg-ink-soft">
+              <p class="text-[11px] text-ink-label tracking-wider uppercase mb-1">연</p>
+              <p id="os-yearly" class="font-display text-xl font-extrabold text-ink">720,000원</p>
+            </div>
+            <div class="p-3 rounded-card bg-ink-soft">
+              <p class="text-[11px] text-ink-label tracking-wider uppercase mb-1">3년 총</p>
+              <p id="os-3year" class="font-display text-xl font-extrabold text-ink">2.16M</p>
+            </div>
+          </div>
+          <p class="mt-4 text-xs text-ink-label">셋업비 제외 · 호실당 3,000원 기준</p>
+        </div>
+
+        <a href="/onboarding" class="btn-primary justify-center w-full mt-6">
+          내 건물 맞춤 견적 받기 →
+        </a>
+      </div>
     </div>
 
-    <p class="text-center text-sm text-ink-muted mt-8">
-      VAT 별도 · 건물 규모·용도·긴급출동 포함 여부에 따라 맞춤 견적
-    </p>
+    <!-- TCO 비교 -->
+    <div class="max-w-4xl mx-auto mt-16">
+      <div class="text-center mb-8">
+        <p class="eyebrow mb-3">3년 총비용 비교</p>
+        <h3 class="font-display text-h3 text-ink tracking-tight">
+          직원 한 명 vs 하우스맨 OS
+        </h3>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div class="bg-white border border-ink-line rounded-card-lg p-7">
+          <p class="label-uppercase mb-3">직원 1명 직접 관리</p>
+          <p class="font-display text-3xl font-extrabold text-ink mb-3">1.1억원+</p>
+          <ul class="text-sm text-ink-body space-y-1">
+            <li>· 월 300만원 × 36개월</li>
+            <li>· 4대보험·퇴직금 별도</li>
+            <li>· 휴가·이직 리스크</li>
+          </ul>
+        </div>
+        <div class="bg-navy-50/40 border border-navy-700 rounded-card-lg p-7">
+          <p class="label-uppercase text-navy-700 mb-3">하우스맨 OS (50호실 기준)</p>
+          <p class="font-display text-3xl font-extrabold text-navy-700 mb-3">약 600만원</p>
+          <ul class="text-sm text-ink-body space-y-1">
+            <li>· 셋업비 60만원 (1회)</li>
+            <li>· 월 15만원 × 36개월 = 540만원</li>
+            <li>· 휴가·이직 리스크 0</li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-center text-xs text-ink-label mt-4">
+        * 50호실 기준. 건물 규모·서비스 범위에 따라 실제 비용은 달라질 수 있음.
+      </p>
+    </div>
   </div>
 </section>
+
+<script is:inline>
+  (function () {
+    const slider = document.getElementById('os-rooms');
+    const label = document.getElementById('os-rooms-label');
+    const monthlyEl = document.getElementById('os-monthly');
+    const yearlyEl = document.getElementById('os-yearly');
+    const threeYearEl = document.getElementById('os-3year');
+    if (!slider || !monthlyEl) return;
+
+    const PRICE_PER_ROOM = 3000;
+    const fmt = (n) => n.toLocaleString() + '원';
+    const fmtM = (n) => {
+      if (n >= 1e8) return (n / 1e8).toFixed(2) + '억';
+      if (n >= 1e7) return (n / 1e7).toFixed(1) + '천만';
+      if (n >= 1e6) return (n / 1e6).toFixed(2) + 'M';
+      return n.toLocaleString();
+    };
+
+    const update = () => {
+      const rooms = Number(slider.value);
+      const monthly = rooms * PRICE_PER_ROOM;
+      label.textContent = rooms + '호실';
+      monthlyEl.textContent = fmt(monthly);
+      yearlyEl.textContent = fmt(monthly * 12);
+      threeYearEl.textContent = fmtM(monthly * 36) + '원';
+    };
+    slider.addEventListener('input', update);
+    update();
+  })();
+</script>

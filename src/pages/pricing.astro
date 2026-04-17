@@ -5,97 +5,118 @@ import Footer from '../components/Footer.astro';
 import FinalCTA from '../components/FinalCTA.astro';
 import PricingPlans from '../components/PricingPlans.astro';
 
-const comparison = [
-  { feature: '호실 수용', starter: '1~10 호실', pro: '11~50 호실', ent: '50+ 호실' },
-  { feature: '자동 청구', starter: '✓', pro: '✓', ent: '✓' },
-  { feature: '기본 대시보드', starter: '✓', pro: '✓', ent: '✓' },
-  { feature: '알림톡 기본', starter: '✓', pro: '✓', ent: '✓' },
-  { feature: '알림톡 3단계 독촉', starter: '—', pro: '✓', ent: '✓' },
-  { feature: '검침 자동화', starter: '—', pro: '✓', ent: '✓' },
-  { feature: '자동 정산 분배', starter: '—', pro: '✓', ent: '✓' },
-  { feature: '미납 회수 지원', starter: '—', pro: '✓', ent: '✓' },
-  { feature: '긴급 출동', starter: '—', pro: '—', ent: '✓' },
-  { feature: '법무 지원', starter: '—', pro: '—', ent: '✓' },
-  { feature: '전담 매니저', starter: '—', pro: '—', ent: '✓' },
-  { feature: '기업 시설 관리', starter: '—', pro: '—', ent: '✓' },
+const commonFeatures = [
+  { feature: '청구서 자동 생성·발송', body: '매월 지정일에 호실별 청구서가 자동으로 발송' },
+  { feature: '알림톡 3단계 자동 독촉', body: '납기 전·당일·연체 단계별 자동 발송' },
+  { feature: '입금 매칭·수금 대시보드', body: '계좌 내역과 청구 건 자동 매칭' },
+  { feature: '건물주 정산 PDF', body: '월말 1클릭으로 정산 리포트 생성' },
+  { feature: '검침 데이터 업로드', body: '전기·가스·수도 검침 엑셀/사진 입력' },
+  { feature: '공실 리스트·중개사 연동', body: '800+ 부동산 네트워크 자동 매칭' },
 ];
 
-const agencyFactors = [
-  { icon: '🏢', title: '건물 크기·유형', body: '주거·상업·단기·복합 유형과 호실 수에 따라 결정' },
-  { icon: '📋', title: '서비스 범위', body: '청구만·풀패키지·법무 포함 등 선택에 따라 차등' },
-  { icon: '🚑', title: '긴급 출동', body: '24시간 긴급 대응 포함 여부' },
-  { icon: '👥', title: '전담 인력', body: '건물 담당자·시설팀·민원 창구 별도 배정 여부' },
+const customItems = [
+  { feature: '청구 룰', body: '월세·관리비·공과금 분담 방식, 지연손해금 계산, 부가세 처리' },
+  { feature: '알림 채널·시점', body: '카톡/문자/이메일 조합, 발송 시점·템플릿 커스텀' },
+  { feature: '정산 분배', body: '다중 건물주·법인 구조, 수수료 차감, 이체 계좌 분기' },
+  { feature: '특수 케이스', body: '보증금 월세 전환·단기임대 일할 계산·상가 월매출 연동' },
 ];
 
 const faqs = [
   {
-    q: '14일 체험 이후 자동 결제되나요?',
-    a: '자동 전환되지 않습니다. 체험 기간 종료 전에 직접 플랜을 선택하셔야 결제가 시작됩니다.',
+    q: '왜 셋업비가 있나요? 그냥 구독만 하면 안 되나요?',
+    a: '건물마다 청구·정산 룰이 완전히 달라서 범용 SaaS로는 실제 업무에 쓸 수 없습니다. 하우스맨은 질문지 기반으로 당신 건물의 룰을 코드에 직접 반영합니다. 셋업비는 이 맞춤 개발 + 데이터 이관 + 교육 비용입니다.',
   },
   {
-    q: '중간에 플랜 변경 가능한가요?',
-    a: '네. Starter → Pro → Enterprise 언제든 업그레이드 가능. 다운그레이드는 다음 결제 주기에 반영.',
+    q: '셋업 기간은 얼마나 걸리나요?',
+    a: 'Light 3~5영업일, Standard 5~7영업일, Complex 7~10영업일이 기준입니다. 질문지 접수 후 정확한 일정을 안내드립니다.',
   },
   {
-    q: '대행 수수료는 얼마인가요?',
-    a: '맞춤 견적입니다. 건물 크기·서비스 범위에 따라 월 수십만 원부터 수백만 원대까지 다양합니다. 1544-4150으로 상담 요청 주시면 15분 내 예상 견적을 드립니다.',
+    q: '계약 해지 시 데이터는 어떻게 되나요?',
+    a: '언제든 CSV/엑셀로 전체 내보내기 가능합니다. 해지 후에도 데이터는 30일간 보존되며, 이 기간 내 재계약 시 그대로 복구됩니다.',
+  },
+  {
+    q: '호실 수가 달라지면 요금은 어떻게 되나요?',
+    a: '매월 마감 시점의 실제 운영 호실 수 기준으로 청구됩니다. 공실이어도 활성 호실이면 포함되며, 장기 공실은 상담 시 제외 처리 가능.',
+  },
+  {
+    q: '셋업 후 룰을 수정하고 싶으면?',
+    a: '경미한 변경(알림 문구·발송 시점 등)은 무료 지원. 큰 로직 변경은 별도 견적(시간당 5만원 기준). 분기당 1회 무료 리뷰 포함.',
+  },
+  {
+    q: '대행 서비스와 OS는 뭐가 다른가요?',
+    a: 'OS는 "건물주가 직접 시스템으로 관리"하는 상품, 대행은 "하우스맨이 대신 관리"하는 상품입니다. 두 상품을 조합해서 사용하실 수도 있습니다.',
   },
   {
     q: 'VAT는 별도인가요?',
-    a: 'SaaS·대행 서비스 모두 VAT 별도입니다. 세금계산서 발행 가능.',
+    a: '셋업비·월 구독료 모두 VAT 별도입니다. 세금계산서 발행 가능합니다.',
   },
+];
+
+const agencyFactors = [
+  { icon: 'A', title: '건물 크기·유형', body: '주거·상업·단기·복합 유형과 호실 수에 따라 결정' },
+  { icon: 'B', title: '서비스 범위', body: '청구만·풀패키지·법무 포함 등 선택에 따라 차등' },
+  { icon: 'C', title: '긴급 출동', body: '24시간 긴급 대응 포함 여부' },
+  { icon: 'D', title: '전담 인력', body: '건물 담당자·시설팀·민원 창구 별도 배정 여부' },
 ];
 ---
 
 <BaseLayout
-  title="요금제 | 하우스맨"
-  description="SaaS는 월 3만원부터 공개. 대행은 건물 크기·서비스 범위별 맞춤 견적. 14일 무료 체험."
+  title="요금제 | 하우스맨 OS"
+  description="하우스맨 OS: 셋업비 30~100만원 + 호실당 월 3천원. 건물별 맞춤 세팅. 대행 서비스는 별도 맞춤 견적."
 >
   <Nav />
 
   <section class="bg-hero-gradient text-white py-20">
     <div class="container-narrow text-center max-w-3xl">
-      <p class="label-uppercase text-white/70 mb-4">요금제</p>
-      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
-        투명한 가격, 숨김 없음.
+      <p class="eyebrow text-white/70 mb-4">요금제</p>
+      <h1 class="font-display text-display-l tracking-tight mb-5">
+        투명한 가격,<br/>맞춤 세팅.
       </h1>
-      <p class="text-lg text-white/85 leading-relaxed">
-        SaaS 가격은 공개, 대행 서비스는 맞춤 견적.
+      <p class="text-body-l text-white/85 leading-relaxed">
+        하우스맨 OS는 셋업비 + 호실당 월구독 2축. 대행은 별도 맞춤 견적.
       </p>
     </div>
   </section>
 
   <PricingPlans />
 
-  <!-- 기능 비교표 -->
+  <!-- 공통 기능 + 건물별 하드코딩 -->
   <section class="container-narrow py-section">
-    <div class="text-center mb-10">
-      <p class="label-uppercase mb-3">기능 비교</p>
-      <h2 class="text-2xl md:text-3xl font-bold text-navy-700">
-        플랜별 포함 기능
+    <div class="text-center mb-10 max-w-2xl mx-auto">
+      <p class="eyebrow mb-3">OS에 무엇이 들어가나요?</p>
+      <h2 class="font-display text-h2 text-ink tracking-tight">
+        공통 기능은 모두 동일, 건물 룰만 하드코딩.
       </h2>
     </div>
-    <div class="card p-0 overflow-hidden max-w-4xl mx-auto">
-      <table class="w-full text-sm">
-        <thead>
-          <tr class="bg-ink-soft">
-            <th class="text-left py-4 px-5 label-uppercase">기능</th>
-            <th class="text-center py-4 px-4 label-uppercase">Starter</th>
-            <th class="text-center py-4 px-4 label-uppercase text-navy-700">Pro</th>
-            <th class="text-center py-4 px-4 label-uppercase">Enterprise</th>
-          </tr>
-        </thead>
-        <tbody>
-          {comparison.map((row, i) => (
-            <tr class={i < comparison.length - 1 ? 'border-b border-ink-line' : ''}>
-              <td class="py-3 px-5 font-medium text-ink">{row.feature}</td>
-              <td class="py-3 px-4 text-center text-ink-muted">{row.starter}</td>
-              <td class="py-3 px-4 text-center text-navy-700 font-semibold">{row.pro}</td>
-              <td class="py-3 px-4 text-center text-ink">{row.ent}</td>
-            </tr>
+    <div class="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
+      <div class="bg-white border border-ink-line rounded-card-lg p-8 shadow-card">
+        <p class="label-uppercase mb-5">모든 건물 공통 (OS 기본)</p>
+        <ul class="space-y-3">
+          {commonFeatures.map(({ feature, body }) => (
+            <li class="flex gap-3">
+              <span class="text-navy-700 mt-0.5 shrink-0">✓</span>
+              <div>
+                <p class="font-semibold text-ink">{feature}</p>
+                <p class="text-sm text-ink-body">{body}</p>
+              </div>
+            </li>
           ))}
-        </tbody>
-      </table>
+        </ul>
+      </div>
+      <div class="bg-white border border-navy-700 rounded-card-lg p-8 shadow-card">
+        <p class="label-uppercase text-navy-700 mb-5">건물별 하드코딩 (셋업비 대상)</p>
+        <ul class="space-y-3">
+          {customItems.map(({ feature, body }) => (
+            <li class="flex gap-3">
+              <span class="text-navy-700 mt-0.5 shrink-0 font-bold">+</span>
+              <div>
+                <p class="font-semibold text-ink">{feature}</p>
+                <p class="text-sm text-ink-body">{body}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -103,23 +124,26 @@ const faqs = [
   <section class="bg-ink-soft py-section">
     <div class="container-narrow max-w-4xl">
       <div class="text-center mb-10">
-        <p class="label-uppercase mb-3">대행 서비스</p>
-        <h2 class="text-2xl md:text-3xl font-bold text-navy-700">
-          대행은 맞춤 견적입니다. 이런 요소로 결정됩니다.
+        <p class="eyebrow mb-3">대행 서비스 (별도 상품)</p>
+        <h2 class="font-display text-h2 text-ink tracking-tight">
+          OS가 아닌, 하우스맨이 직접 운영합니다.
         </h2>
+        <p class="mt-4 text-body text-ink-body max-w-2xl mx-auto">
+          대행은 건물 크기·서비스 범위별 맞춤 견적입니다. OS와 조합해서 쓰실 수도 있습니다.
+        </p>
       </div>
       <div class="grid md:grid-cols-2 gap-5">
         {agencyFactors.map(({ icon, title, body }) => (
           <div class="card">
-            <div class="text-2xl mb-3">{icon}</div>
+            <div class="w-8 h-8 rounded-full bg-navy-700 text-white font-bold flex items-center justify-center mb-3">{icon}</div>
             <h3 class="text-lg font-bold text-ink mb-2">{title}</h3>
-            <p class="text-sm text-ink-muted leading-relaxed">{body}</p>
+            <p class="text-sm text-ink-body leading-relaxed">{body}</p>
           </div>
         ))}
       </div>
       <div class="text-center mt-10">
         <a href="tel:1544-4150" class="btn-primary">
-          맞춤 견적 받기 1544-4150
+          대행 견적 상담 1544-4150
         </a>
       </div>
     </div>
@@ -128,8 +152,8 @@ const faqs = [
   <!-- FAQ -->
   <section class="container-narrow py-section max-w-3xl">
     <div class="text-center mb-10">
-      <p class="label-uppercase mb-3">요금제 FAQ</p>
-      <h2 class="text-2xl md:text-3xl font-bold text-navy-700">자주 묻는 질문</h2>
+      <p class="eyebrow mb-3">요금제 FAQ</p>
+      <h2 class="font-display text-h2 text-ink tracking-tight">자주 묻는 질문</h2>
     </div>
     <div class="space-y-3">
       {faqs.map(({ q, a }) => (
@@ -138,7 +162,7 @@ const faqs = [
             <span class="font-semibold text-ink">{q}</span>
             <span class="text-navy-700 text-xl transition-transform group-open:rotate-45">+</span>
           </summary>
-          <p class="mt-4 text-ink-muted leading-relaxed text-[15px]">{a}</p>
+          <p class="mt-4 text-ink-body leading-relaxed text-[15px]">{a}</p>
         </details>
       ))}
     </div>

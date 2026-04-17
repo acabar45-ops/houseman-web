@@ -6,36 +6,45 @@ import FinalCTA from '../components/FinalCTA.astro';
 import PricingPlans from '../components/PricingPlans.astro';
 import SaasUIMockup from '../components/SaasUIMockup.astro';
 
-const capabilities = [
+const setupSteps = [
   {
-    title: '자동 청구',
-    body: '매월 지정일에 월세·관리비·공과금이 자동 계산되어 청구서가 만들어집니다.',
-    badge: '매월 자동',
+    step: '01',
+    duration: '약 3분',
+    title: '질문지 작성',
+    body: '건물 유형, 호실 수, 현재 청구 방식, 수금 채널, 특이 룰, 연락 선호도 — 20문항 내외의 질문지를 채워주세요.',
+    items: ['건물 구조·유형', '호실별 계약 조건', '청구·알림·정산 룰', '하우스맨 확인용 자료 업로드'],
   },
   {
-    title: '알림톡 자동 발송',
-    body: '카톡 알림톡으로 청구서·납부확인·독촉까지 자동 발송. 실패 시 SMS 폴백.',
-    badge: '5종 템플릿',
+    step: '02',
+    duration: '5~10영업일',
+    title: '하우스맨이 하드코딩',
+    body: '공통 OS 위에 당신 건물의 룰을 코드로 반영합니다. 청구 공식, 알림 시점·문구, 정산 분배 방식, 특수 케이스까지.',
+    items: ['건물별 설정 레이어 구축', '기존 데이터 이관 (엑셀/PDF/스캔)', '테스트 환경에서 청구·알림 검증', '이관 완료 후 최종 확인'],
   },
   {
-    title: '입금 매칭',
-    body: '은행 계좌 입금을 자동 매칭해서 수금 완료 처리. 사장님 수기 확인 불필요.',
-    badge: '실시간',
+    step: '03',
+    duration: '1시간 교육 + 30일 밀착',
+    title: '이관 & 운영 시작',
+    body: '실제 계정으로 로그인해 시연 교육을 받고, 첫 달은 하우스맨이 바로 옆에서 지원합니다.',
+    items: ['담당자 1시간 교육 (온/오프라인)', '첫 청구·정산 사이클 함께 운영', '카톡 핫라인 30일', '이후 월 1회 정기 점검'],
+  },
+] as const;
+
+const customExamples = [
+  {
+    building: '강남 A 사옥 (상가 + 오피스)',
+    rule: '월세는 기본, 관리비는 월매출 연동, 공과금은 면적 배분',
+    impact: '기존 수기 계산 3시간 → 매월 자동 2분',
   },
   {
-    title: '정산 리포트',
-    body: '월말 자동 정산서 PDF 생성. 건물주 이메일 또는 카톡으로 자동 전송.',
-    badge: '월말 자동',
+    building: '역삼 B 원룸 (단기임대)',
+    rule: '3개월 계약, 보증금 없음, 일할 정산, 체크인일에 알림톡',
+    impact: '미수금 0원 · 공실일 평균 4일 단축',
   },
   {
-    title: '검침 자동화',
-    body: '외부 담당자 앱으로 전기·가스·수도 검침 입력 → 자동 반영.',
-    badge: '모바일',
-  },
-  {
-    title: '민원·A/S 관리',
-    body: 'QR 코드로 임차인이 직접 민원 접수. 담당자 앱으로 즉시 배정.',
-    badge: 'QR 접수',
+    building: '논현 C 빌딩 (다중 건물주)',
+    rule: '지분 40:35:25, 각 건물주에게 월별 자동 분배 이체',
+    impact: '분배 계산·이체 20분 → 버튼 한 번 (0분)',
   },
 ];
 
@@ -49,79 +58,138 @@ const kakaoTemplates = [
 
 const faqs = [
   {
-    q: 'SaaS만 써도 되나요?',
-    a: '네. 건물주가 직접 관리하면서 청구·수금·정산·알림톡만 자동화하고 싶으시면 SaaS 플랜(월 3만원부터)만 선택 가능합니다.',
+    q: '왜 셋업비가 필요한가요?',
+    a: '건물 관리 룰이 건물마다 완전히 달라 범용 SaaS로는 실제 업무가 안 됩니다. 하우스맨은 질문지 기반으로 당신 건물의 룰을 코드에 직접 반영하는 맞춤 개발비입니다. 30~100만원 범위 내에서 복잡도에 따라 결정됩니다.',
   },
   {
-    q: '데이터 이전은 어떻게 하나요?',
-    a: '기존 엑셀·수기 장부를 스캔 또는 파일로 주시면 하우스맨이 초기 세팅합니다. 보통 1~2주 내 완료.',
+    q: '셋업 기간 동안 기존 관리는 어떻게 하나요?',
+    a: '이관 완료 전까지 기존 방식(엑셀/수기/다른 툴)을 그대로 쓰시면 됩니다. 병행 운영 1주일 동안 하우스맨 OS 데이터가 기존과 일치하는지 검증한 후 최종 전환합니다.',
   },
   {
-    q: '임차인이 앱을 꼭 설치해야 하나요?',
-    a: '아닙니다. 임차인은 카톡 알림톡만 받으면 됩니다. 별도 앱 설치 없이 카톡 채널로 상담·민원 가능.',
+    q: '룰이 바뀌면 또 셋업비를 내야 하나요?',
+    a: '경미한 수정(문구·시점·단가)은 무료 지원. 큰 로직 변경은 시간당 5만원 기준으로 견적 드립니다. 분기당 1회 정기 리뷰·조정은 무료입니다.',
+  },
+  {
+    q: '임차인이 앱을 설치해야 하나요?',
+    a: '아닙니다. 임차인은 카톡 알림톡만 받습니다. 건물주·관리자만 하우스맨 OS 웹에 로그인해서 관리합니다.',
+  },
+  {
+    q: '해지하면 데이터는?',
+    a: '언제든 CSV/엑셀로 내보내기 가능. 해지 후 30일간 데이터 보존, 이 기간 내 재계약 시 그대로 복구됩니다.',
+  },
+  {
+    q: 'SaaS만 써도 되나요? 아니면 대행도 꼭 해야 하나요?',
+    a: '독립 상품입니다. OS만 쓰고 건물주가 직접 운영하셔도 되고, 대행도 같이 의뢰하셔도 됩니다. 조합 자유.',
   },
 ];
 ---
 
 <BaseLayout
-  title="하우스맨 SaaS — 건물관리 자동화 플랫폼"
-  description="청구·수금·정산·알림톡을 완전 자동화. 월 3만원부터, 14일 무료 체험. 1,100+ 호실이 이미 쓰고 있습니다."
+  title="하우스맨 OS — 건물별 맞춤 관리 시스템"
+  description="범용 SaaS가 못한 걸 합니다. 질문지 기반으로 당신 건물 룰을 하드코딩. 셋업비 30~100만원 + 호실당 월 3천원."
 >
   <Nav />
 
   <!-- 히어로 -->
-  <section class="bg-hero-gradient text-white py-24 md:py-32">
-    <div class="container-narrow grid md:grid-cols-5 gap-10 items-center">
+  <section class="relative overflow-hidden bg-hero-gradient text-white py-24 md:py-32">
+    <div class="hero-wave-dark"></div>
+    <div class="relative container-narrow grid md:grid-cols-5 gap-10 items-center">
       <div class="md:col-span-3">
-        <p class="label-uppercase text-white/70 mb-4">하우스맨 SaaS</p>
-        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-6">
-          청구부터 정산까지,<br/>매달 자동으로.
+        <p class="eyebrow text-white/70 mb-5">
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-white/80 mr-2 align-middle"></span>
+          HOUSEMAN OS
+        </p>
+        <h1 class="font-display text-display-xl tracking-tight mb-6">
+          범용 SaaS가 못한 걸,<br/>
+          <span class="bg-gradient-to-r from-white via-white/90 to-white/70 bg-clip-text text-transparent">
+            하우스맨 OS는 합니다.
+          </span>
         </h1>
-        <p class="text-lg md:text-xl text-white/85 leading-relaxed mb-8">
-          1,100+ 호실을 이미 자동화하고 있는<br/>
-          하우스맨 자체 개발 SaaS 플랫폼.
+        <p class="text-body-l text-white/85 leading-relaxed mb-8 max-w-[540px]">
+          건물마다 다른 청구·정산·알림 룰, 엑셀로도 SaaS로도 못 풀었습니다.
+          하우스맨은 질문지 기반으로 당신 건물의 룰을 코드에 직접 반영합니다.
         </p>
         <div class="flex flex-wrap gap-3">
-          <a href="/pricing" class="btn-primary bg-white !text-navy-700 hover:!bg-ink-soft">14일 무료 체험</a>
-          <a href="#demo" class="btn-secondary">1분 데모 영상</a>
+          <a href="/onboarding" class="btn-primary bg-white !text-navy-700 hover:!bg-ink-soft">
+            셋업 견적 받기 (3분) →
+          </a>
+          <a href="#setup-flow" class="btn-secondary">세팅 3단계 보기</a>
         </div>
       </div>
-      <!-- 오른쪽 데모 이미지 placeholder -->
       <div class="md:col-span-2 hidden md:block">
-        <div class="aspect-[4/5] bg-white/10 rounded-card border border-white/20 flex items-center justify-center text-white/50 text-sm">
-          대시보드 스크린샷<br/>(Phase 2에 교체)
+        <div class="aspect-[4/5] bg-white/10 rounded-card-lg border border-white/20 flex items-center justify-center text-white/50 text-sm backdrop-blur-sm">
+          OS 대시보드 스크린샷<br/>(실 데이터 촬영 예정)
         </div>
       </div>
     </div>
   </section>
 
-  <SaasUIMockup />
-
-  <!-- 6대 기능 -->
-  <section class="container-narrow py-section">
-    <div class="text-center mb-12">
-      <p class="label-uppercase mb-3">기능</p>
-      <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
-        건물 운영의 6가지 반복 업무, 모두 자동화.
+  <!-- 세팅 3단계 플로우 -->
+  <section id="setup-flow" class="container-narrow py-section">
+    <div class="text-center mb-14 max-w-2xl mx-auto">
+      <p class="eyebrow mb-3">세팅 프로세스</p>
+      <h2 class="font-display text-h2 text-ink tracking-tight">
+        3분 질문지 → 5~10영업일 세팅 → 운영 시작.
       </h2>
     </div>
-    <div class="grid md:grid-cols-3 gap-5">
-      {capabilities.map(({ title, body, badge }) => (
-        <div class="card h-full">
-          <div class="label-uppercase mb-3">{badge}</div>
-          <h3 class="text-lg font-bold text-navy-700 mb-2">{title}</h3>
-          <p class="text-sm text-ink-muted leading-relaxed">{body}</p>
+    <div class="space-y-5 max-w-4xl mx-auto">
+      {setupSteps.map(({ step, duration, title, body, items }) => (
+        <div class="bg-white border border-ink-line rounded-card-lg p-8 shadow-card grid md:grid-cols-12 gap-6">
+          <div class="md:col-span-3">
+            <p class="font-display text-5xl font-extrabold text-navy-700 leading-none">{step}</p>
+            <p class="text-xs text-ink-label tracking-wider uppercase mt-3">{duration}</p>
+          </div>
+          <div class="md:col-span-9">
+            <h3 class="font-display text-h3 text-ink mb-3 tracking-tight">{title}</h3>
+            <p class="text-body text-ink-body mb-4 leading-relaxed">{body}</p>
+            <ul class="grid sm:grid-cols-2 gap-2 text-sm text-ink-body">
+              {items.map((it) => (
+                <li class="flex gap-2"><span class="text-navy-700 mt-0.5">·</span><span>{it}</span></li>
+              ))}
+            </ul>
+          </div>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- 알림톡 5종 템플릿 -->
+  <!-- 실제 하드코딩 사례 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-5xl">
+      <div class="text-center mb-12">
+        <p class="eyebrow mb-3">하드코딩 사례</p>
+        <h2 class="font-display text-h2 text-ink tracking-tight">
+          실제로 이렇게 반영됩니다.
+        </h2>
+        <p class="mt-3 text-sm text-ink-label">* 건물명은 가명 처리</p>
+      </div>
+      <div class="space-y-4">
+        {customExamples.map(({ building, rule, impact }) => (
+          <div class="bg-white border border-ink-line rounded-card-lg p-6 md:p-7 shadow-card grid md:grid-cols-12 gap-5 items-center">
+            <div class="md:col-span-3">
+              <p class="font-semibold text-ink">{building}</p>
+            </div>
+            <div class="md:col-span-6">
+              <p class="text-sm text-ink-body"><strong class="text-ink">룰:</strong> {rule}</p>
+            </div>
+            <div class="md:col-span-3">
+              <p class="text-sm text-navy-700 font-semibold">→ {impact}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 이관 후 사용 화면 -->
+  <SaasUIMockup />
+
+  <!-- 알림톡 5종 -->
   <section class="bg-ink-soft py-section">
     <div class="container-narrow max-w-3xl">
       <div class="text-center mb-12">
-        <p class="label-uppercase mb-3">알림톡 템플릿</p>
-        <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+        <p class="eyebrow mb-3">알림톡 템플릿</p>
+        <h2 class="font-display text-h2 text-ink tracking-tight">
           임차인이 받는 실제 카톡.
         </h2>
       </div>
@@ -134,32 +202,18 @@ const faqs = [
         ))}
       </div>
       <p class="text-center text-xs text-ink-label mt-6">
-        ※ 실제 발송 시 호실·금액·날짜가 자동 치환됩니다
+        ※ 호실·금액·날짜·문구는 건물별 하드코딩으로 완전 맞춤
       </p>
-    </div>
-  </section>
-
-  <!-- 데모 영상 -->
-  <section id="demo" class="container-narrow py-section">
-    <div class="text-center mb-12">
-      <p class="label-uppercase mb-3">1분 데모</p>
-      <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
-        청구 → 알림톡 → 수금 → 정산, 1분 만에.
-      </h2>
-    </div>
-    <div class="card max-w-4xl mx-auto aspect-video flex items-center justify-center text-ink-muted">
-      영상 임베드 예정 (Phase 2 Week 6)
-      <!-- TODO: 화면 녹화 완료 후 <video> 또는 YouTube 임베드 -->
     </div>
   </section>
 
   <PricingPlans />
 
-  <!-- FAQ 3개 -->
+  <!-- FAQ -->
   <section class="container-narrow py-section max-w-3xl">
     <div class="text-center mb-10">
-      <p class="label-uppercase mb-3">SaaS FAQ</p>
-      <h2 class="text-2xl md:text-3xl font-bold text-navy-700">자주 묻는 질문</h2>
+      <p class="eyebrow mb-3">OS FAQ</p>
+      <h2 class="font-display text-h2 text-ink tracking-tight">자주 묻는 질문</h2>
     </div>
     <div class="space-y-3">
       {faqs.map(({ q, a }) => (
@@ -168,7 +222,7 @@ const faqs = [
             <span class="font-semibold text-ink">{q}</span>
             <span class="text-navy-700 text-xl transition-transform group-open:rotate-45">+</span>
           </summary>
-          <p class="mt-4 text-ink-muted leading-relaxed text-[15px]">{a}</p>
+          <p class="mt-4 text-ink-body leading-relaxed text-[15px]">{a}</p>
         </details>
       ))}
     </div>

@@ -17,11 +17,11 @@
   <!-- 메인 카피 -->
   <text x="80" y="320" font-family="Pretendard, system-ui, sans-serif"
         font-weight="800" font-size="84" fill="#ffffff" letter-spacing="-0.03em">
-    건물관리, 이제
+    당신 건물의
   </text>
   <text x="80" y="430" font-family="Pretendard, system-ui, sans-serif"
         font-weight="800" font-size="84" fill="#ffffff" letter-spacing="-0.03em">
-    네비게이션처럼.
+    운영체제. 하우스맨 OS.
   </text>
 
   <!-- 숫자 -->

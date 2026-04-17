@@ -1,0 +1,404 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const sections = [
+  { num: '01', title: '건물 기본', desc: '유형·호실 수·위치' },
+  { num: '02', title: '현재 관리 방식', desc: '청구·수금·인력' },
+  { num: '03', title: '청구 룰', desc: '항목·공과금·부가세' },
+  { num: '04', title: '알림·소통', desc: '채널·시점·독촉' },
+  { num: '05', title: '정산·연락처', desc: '건물주 구조·담당자' },
+] as const;
+---
+
+<BaseLayout
+  title="셋업 견적 받기 | 하우스맨 OS"
+  description="3분 질문지로 당신 건물에 맞는 하우스맨 OS 셋업 견적을 받아보세요. 20문항 내외."
+>
+  <Nav />
+
+  <!-- 히어로 -->
+  <section class="relative overflow-hidden bg-hero-gradient text-white py-20">
+    <div class="hero-wave-dark"></div>
+    <div class="relative container-narrow text-center max-w-3xl">
+      <p class="eyebrow text-white/70 mb-4">ONBOARDING · 3분 질문지</p>
+      <h1 class="font-display text-display-l tracking-tight mb-5">
+        당신 건물에 맞춘<br/>OS 견적을 받으세요.
+      </h1>
+      <p class="text-body-l text-white/85 leading-relaxed">
+        질문지 기반으로 하우스맨이 맞춤 견적을 드립니다. 2~3영업일 내 회신.
+      </p>
+    </div>
+  </section>
+
+  <!-- 진행 섹션 인덱스 -->
+  <section class="container-narrow py-10">
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-4xl mx-auto">
+      {sections.map(({ num, title, desc }) => (
+        <a href={`#sec-${num}`} class="p-4 rounded-card border border-ink-line hover:border-navy-700 transition text-center">
+          <p class="font-display text-2xl font-extrabold text-navy-700">{num}</p>
+          <p class="text-sm font-semibold text-ink mt-1">{title}</p>
+          <p class="text-[11px] text-ink-label mt-0.5">{desc}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- 질문지 폼 -->
+  <section class="container-narrow pb-section max-w-3xl">
+    <form id="onboarding-form" class="space-y-10">
+      <!-- Web3Forms (사장님이 access key 발급 후 교체) -->
+      <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY" />
+      <input type="hidden" name="subject" value="[하우스맨 OS] 셋업 견적 요청" />
+      <input type="hidden" name="from_name" value="하우스맨 온보딩 폼" />
+
+      <!-- 01. 건물 기본 -->
+      <div id="sec-01" class="card scroll-mt-24">
+        <div class="flex items-baseline gap-3 mb-6 pb-4 border-b border-ink-line">
+          <span class="font-display text-3xl font-extrabold text-navy-700">01</span>
+          <div>
+            <h2 class="font-display text-h3 text-ink">건물 기본</h2>
+            <p class="text-sm text-ink-label">유형과 규모부터 알려주세요.</p>
+          </div>
+        </div>
+        <div class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-ink mb-2">건물 유형 *</label>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {['주거 (원룸·오피스텔)', '상업 (근생·사옥)', '단기임대', '복합'].map((t) => (
+                <label class="flex items-center gap-2 p-3 rounded-card border border-ink-line cursor-pointer hover:border-navy-700">
+                  <input type="radio" name="building_type" value={t} required class="accent-navy-700" />
+                  <span class="text-sm">{t}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-ink mb-2">호실 수 *</label>
+              <input name="room_count" type="number" min="1" required
+                     placeholder="예: 20"
+                     class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-ink mb-2">건물 수</label>
+              <input name="building_count" type="number" min="1" value="1"
+                     class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none" />
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-ink mb-2">건물 주소 (대략) *</label>
+            <input name="address" type="text" required
+                   placeholder="서울 강남구 논현동"
+                   class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none" />
+          </div>
+        </div>
+      </div>
+
+      <!-- 02. 현재 관리 방식 -->
+      <div id="sec-02" class="card scroll-mt-24">
+        <div class="flex items-baseline gap-3 mb-6 pb-4 border-b border-ink-line">
+          <span class="font-display text-3xl font-extrabold text-navy-700">02</span>
+          <div>
+            <h2 class="font-display text-h3 text-ink">현재 관리 방식</h2>
+            <p class="text-sm text-ink-label">지금 어떻게 운영하고 계신가요?</p>
+          </div>
+        </div>
+        <div class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-ink mb-2">현재 청구 방식 *</label>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {['수기 (문자/카톡)', '엑셀 관리', '다른 SaaS', '직접 운영 없음'].map((t) => (
+                <label class="flex items-center gap-2 p-3 rounded-card border border-ink-line cursor-pointer hover:border-navy-700">
+                  <input type="radio" name="current_billing" value={t} required class="accent-navy-700" />
+                  <span class="text-sm">{t}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-ink mb-2">수금 채널 (복수 선택)</label>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {['계좌이체', '자동이체', '현금', '카드'].map((t) => (
+                <label class="flex items-center gap-2 p-3 rounded-card border border-ink-line cursor-pointer hover:border-navy-700">
+                  <input type="checkbox" name="payment_channels" value={t} class="accent-navy-700" />
+                  <span class="text-sm">{t}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-ink mb-2">월평균 미납 건수</label>
+              <select name="overdue_count"
+                      class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none bg-white">
+                <option value="">선택하세요</option>
+                <option>거의 없음 (0~1건)</option>
+                <option>가끔 (2~5건)</option>
+                <option>많음 (6~10건)</option>
+                <option>심각 (10건+)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-ink mb-2">관리 인력</label>
+              <select name="management_staff"
+                      class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none bg-white">
+                <option value="">선택하세요</option>
+                <option>건물주 직접</option>
+                <option>직원 1명</option>
+                <option>직원 2명+</option>
+                <option>외부 대행</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03. 청구 룰 -->
+      <div id="sec-03" class="card scroll-mt-24">
+        <div class="flex items-baseline gap-3 mb-6 pb-4 border-b border-ink-line">
+          <span class="font-display text-3xl font-extrabold text-navy-700">03</span>
+          <div>
+            <h2 class="font-display text-h3 text-ink">청구 룰</h2>
+            <p class="text-sm text-ink-label">건물 고유 룰을 알려주시면 하드코딩 반영합니다.</p>
+          </div>
+        </div>
+        <div class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-ink mb-2">청구 항목 (복수 선택)</label>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {['월세', '관리비', '공과금', '기타'].map((t) => (
+                <label class="flex items-center gap-2 p-3 rounded-card border border-ink-line cursor-pointer hover:border-navy-700">
+                  <input type="checkbox" name="billing_items" value={t} class="accent-navy-700" />
+                  <span class="text-sm">{t}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-ink mb-2">공과금 분담 방식</label>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {['면적 비례', '균등 분담', '호실별 계량', '기타/복합'].map((t) => (
+                <label class="flex items-center gap-2 p-3 rounded-card border border-ink-line cursor-pointer hover:border-navy-700">
+                  <input type="radio" name="utility_split" value={t} class="accent-navy-700" />
+                  <span class="text-sm">{t}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-ink mb-2">지연손해금 부과</label>
+              <select name="late_fee"
+                      class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none bg-white">
+                <option value="">선택하세요</option>
+                <option>부과함 (정률)</option>
+                <option>부과함 (정액)</option>
+                <option>부과 안 함</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-ink mb-2">부가세 처리</label>
+              <select name="vat"
+                      class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none bg-white">
+                <option value="">선택하세요</option>
+                <option>별도 (상업)</option>
+                <option>포함</option>
+                <option>면세 (주거)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04. 알림·소통 -->
+      <div id="sec-04" class="card scroll-mt-24">
+        <div class="flex items-baseline gap-3 mb-6 pb-4 border-b border-ink-line">
+          <span class="font-display text-3xl font-extrabold text-navy-700">04</span>
+          <div>
+            <h2 class="font-display text-h3 text-ink">알림·소통</h2>
+            <p class="text-sm text-ink-label">임차인과 어떻게 소통하시나요?</p>
+          </div>
+        </div>
+        <div class="space-y-5">
+          <div>
+            <label class="block text-sm font-semibold text-ink mb-2">선호 알림 채널 (복수 선택)</label>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {['카톡 알림톡', 'SMS', '이메일', '전화'].map((t) => (
+                <label class="flex items-center gap-2 p-3 rounded-card border border-ink-line cursor-pointer hover:border-navy-700">
+                  <input type="checkbox" name="alert_channels" value={t} class="accent-navy-700" />
+                  <span class="text-sm">{t}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-ink mb-2">독촉 방식</label>
+            <div class="grid md:grid-cols-3 gap-2">
+              {['단계별 자동 (권장)', '일괄 수동', '수기 전화'].map((t) => (
+                <label class="flex items-center gap-2 p-3 rounded-card border border-ink-line cursor-pointer hover:border-navy-700">
+                  <input type="radio" name="dunning_method" value={t} class="accent-navy-700" />
+                  <span class="text-sm">{t}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 05. 정산·연락처 -->
+      <div id="sec-05" class="card scroll-mt-24">
+        <div class="flex items-baseline gap-3 mb-6 pb-4 border-b border-ink-line">
+          <span class="font-display text-3xl font-extrabold text-navy-700">05</span>
+          <div>
+            <h2 class="font-display text-h3 text-ink">정산 · 연락처</h2>
+            <p class="text-sm text-ink-label">마지막 단계입니다.</p>
+          </div>
+        </div>
+        <div class="space-y-5">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-semibold text-ink mb-2">건물주 구조</label>
+              <select name="owner_structure"
+                      class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none bg-white">
+                <option value="">선택하세요</option>
+                <option>단일 건물주</option>
+                <option>다중 건물주 (지분)</option>
+                <option>법인</option>
+                <option>신탁</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-ink mb-2">정산 주기</label>
+              <select name="settlement_cycle"
+                      class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none bg-white">
+                <option value="">선택하세요</option>
+                <option>월 1회 (권장)</option>
+                <option>분기</option>
+                <option>반기</option>
+                <option>연</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-ink-line">
+            <p class="label-uppercase mb-4">담당자 정보</p>
+            <div class="grid md:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-semibold text-ink mb-2">이름 *</label>
+                <input name="contact_name" type="text" required
+                       placeholder="홍길동"
+                       class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none" />
+              </div>
+              <div>
+                <label class="block text-sm font-semibold text-ink mb-2">연락처 *</label>
+                <input name="contact_phone" type="tel" required
+                       placeholder="010-1234-5678"
+                       class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none" />
+              </div>
+            </div>
+            <div class="mt-4">
+              <label class="block text-sm font-semibold text-ink mb-2">이메일</label>
+              <input name="contact_email" type="email"
+                     placeholder="owner@example.com"
+                     class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-ink mb-2">희망 세팅 시점</label>
+            <div class="grid md:grid-cols-3 gap-2">
+              {['즉시 (1주 내)', '한 달 내', '천천히 (3개월 내)'].map((t) => (
+                <label class="flex items-center gap-2 p-3 rounded-card border border-ink-line cursor-pointer hover:border-navy-700">
+                  <input type="radio" name="desired_timing" value={t} class="accent-navy-700" />
+                  <span class="text-sm">{t}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-ink mb-2">특이 요구사항 · 하고 싶은 말</label>
+            <textarea name="notes" rows="4"
+                      placeholder="예) 다중 건물주 3명 지분 분배, 상가는 월매출 연동 관리비, 미납 14일 후 단전 프로세스 등 — 자유롭게 적어주세요."
+                      class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none"></textarea>
+          </div>
+
+          <label class="flex items-start gap-2 text-xs text-ink-body leading-relaxed pt-2">
+            <input type="checkbox" name="consent" required class="mt-0.5" />
+            <span>개인정보 수집·이용 및 견적 회신 동의 (<a href="/privacy" class="underline">자세히</a>)</span>
+          </label>
+
+          <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" />
+
+          <button type="submit" class="btn-primary w-full justify-center text-lg py-4">
+            견적 요청 제출 →
+          </button>
+
+          <div id="onboarding-result" class="hidden">
+            <div class="card bg-navy-50/40 border-navy-700 text-center">
+              <p class="font-display text-h3 text-navy-700 mb-2">✓ 접수 완료</p>
+              <p class="text-sm text-ink-body">
+                2~3영업일 내 견적서를 이메일/카톡으로 보내드립니다.<br/>
+                급한 건은 <a href="tel:1544-4150" class="font-bold text-navy-700 underline">1544-4150</a>으로 전화 주세요.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </section>
+
+  <Footer />
+
+  <script is:inline>
+    const form = document.getElementById('onboarding-form');
+    const result = document.getElementById('onboarding-result');
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+
+        const key = data.get('access_key');
+        if (key === 'YOUR_WEB3FORMS_KEY') {
+          const leads = JSON.parse(localStorage.getItem('onboarding_leads') || '[]');
+          leads.push(Object.fromEntries(data));
+          localStorage.setItem('onboarding_leads', JSON.stringify(leads));
+          console.log('[onboarding·DRY] Web3Forms 미연결. localStorage 저장:', Object.fromEntries(data));
+          result.classList.remove('hidden');
+          result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (typeof gtag !== 'undefined') {
+            gtag('event', 'onboarding_submit', {
+              building_type: data.get('building_type'),
+              room_count: data.get('room_count'),
+            });
+          }
+          return;
+        }
+
+        try {
+          const res = await fetch('https://api.web3forms.com/submit', {
+            method: 'POST', body: data,
+          });
+          const json = await res.json();
+          if (json.success) {
+            result.classList.remove('hidden');
+            result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (typeof gtag !== 'undefined') {
+              gtag('event', 'onboarding_submit', {
+                building_type: data.get('building_type'),
+                room_count: data.get('room_count'),
+              });
+            }
+            form.reset();
+          } else {
+            alert('전송 실패: ' + (json.message || '다시 시도해주세요'));
+          }
+        } catch (err) {
+          alert('네트워크 오류. 1544-4150으로 전화 부탁드립니다.');
+        }
+      });
+    }
+  </script>
+</BaseLayout>

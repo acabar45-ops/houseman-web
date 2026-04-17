@@ -14,18 +14,30 @@ import FinalCTA from '../../components/FinalCTA.astro';
 
   <section class="bg-hero-gradient text-white py-20">
     <div class="container-narrow text-center max-w-3xl">
-      <p class="label-uppercase text-white/70 mb-4">도구</p>
-      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-5">
-        단기임대 전환하면<br/>얼마 벌까요?
+      <p class="eyebrow text-white/70 mb-4">도구</p>
+      <h1 class="font-display text-display-l tracking-tight mb-5">
+        숫자로 먼저 확인하세요.
       </h1>
-      <p class="text-lg text-white/85 leading-relaxed">
-        3가지만 입력하세요. 예상 연 수익과 회수 기간을 즉시 계산합니다.<br/>
-        <span class="text-white/60 text-sm">※ 참고용 시뮬레이션. 실제는 상담 필수.</span>
+      <p class="text-body-l text-white/85 leading-relaxed">
+        단기임대 전환 수익, 또는 하우스맨 OS 투자 회수 기간을 즉시 계산합니다.<br/>
+        <span class="text-white/60 text-sm">※ 참고용 시뮬레이션. 정확한 진단은 상담에서.</span>
       </p>
     </div>
   </section>
 
-  <section class="container-narrow py-section max-w-5xl">
+  <!-- 탭 -->
+  <section class="container-narrow pt-12 max-w-5xl">
+    <div class="flex gap-2 border-b border-ink-line">
+      <button type="button" data-tab="shortterm" class="tab-btn active">
+        단기임대 전환 수익
+      </button>
+      <button type="button" data-tab="os" class="tab-btn">
+        하우스맨 OS 투자 회수
+      </button>
+    </div>
+  </section>
+
+  <section id="panel-shortterm" class="calc-panel container-narrow py-section max-w-5xl">
     <div class="grid md:grid-cols-5 gap-6">
       <!-- 좌측: 입력 폼 -->
       <div class="md:col-span-2 card">
@@ -165,6 +177,126 @@ import FinalCTA from '../../components/FinalCTA.astro';
     </div>
   </section>
 
+  <!-- OS 투자 회수 계산기 (탭 2) -->
+  <section id="panel-os" class="calc-panel container-narrow py-section max-w-5xl hidden">
+    <div class="grid md:grid-cols-5 gap-6">
+      <!-- 입력 -->
+      <div class="md:col-span-2 card">
+        <p class="label-uppercase mb-4">입력</p>
+        <div class="space-y-5">
+          <div>
+            <label class="block text-sm font-bold text-ink mb-2">관리 호실 수</label>
+            <input
+              id="os-rooms-calc"
+              type="number"
+              value="30"
+              min="5"
+              max="500"
+              class="w-full px-4 py-3 rounded-card border border-ink-line text-lg font-bold text-navy-700 focus:border-navy-700 focus:outline-none"
+            />
+            <p class="text-xs text-ink-label mt-1">월 구독료 계산 기준</p>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-ink mb-2">현재 월 관리 비용 (만원)</label>
+            <input
+              id="os-current-cost"
+              type="number"
+              value="300"
+              min="0"
+              max="2000"
+              class="w-full px-4 py-3 rounded-card border border-ink-line text-lg font-bold text-navy-700 focus:border-navy-700 focus:outline-none"
+            />
+            <p class="text-xs text-ink-label mt-1">직원 인건비 · 대행비 · 내 시간 환산</p>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-ink mb-2">셋업 복잡도</label>
+            <div class="grid grid-cols-3 gap-2">
+              <button type="button" data-os-setup="30" class="os-setup-btn active">Light<br/><span class="text-[11px] opacity-80">30만</span></button>
+              <button type="button" data-os-setup="60" class="os-setup-btn">Standard<br/><span class="text-[11px] opacity-80">60만</span></button>
+              <button type="button" data-os-setup="100" class="os-setup-btn">Complex<br/><span class="text-[11px] opacity-80">100만</span></button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-ink mb-2">예상 공실 단축 효과 (월 만원)</label>
+            <input
+              id="os-vacancy-save"
+              type="number"
+              value="50"
+              min="0"
+              max="500"
+              class="w-full px-4 py-3 rounded-card border border-ink-line text-lg font-bold text-navy-700 focus:border-navy-700 focus:outline-none"
+            />
+            <p class="text-xs text-ink-label mt-1">800+ 부동산 네트워크 매칭 효과</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 결과 -->
+      <div class="md:col-span-3 space-y-4">
+        <div class="card bg-ink-soft">
+          <p class="label-uppercase mb-4">하우스맨 OS 비용</p>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="text-xs text-ink-muted mb-1">셋업비 (1회)</div>
+              <div id="os-setup-cost" class="text-2xl font-extrabold text-ink">30만원</div>
+            </div>
+            <div>
+              <div class="text-xs text-ink-muted mb-1">월 구독료 (호실당 3천원)</div>
+              <div id="os-monthly-cost" class="text-2xl font-extrabold text-ink">9만원</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-2 border-navy-700">
+          <p class="label-uppercase mb-4 text-navy-700">월 절감 효과</p>
+          <div class="grid grid-cols-2 gap-4 mb-5">
+            <div>
+              <div class="text-xs text-ink-muted mb-1">인건비·시간 절감</div>
+              <div id="os-labor-save" class="text-2xl font-extrabold text-navy-700">270만원</div>
+            </div>
+            <div>
+              <div class="text-xs text-ink-muted mb-1">공실 단축 기여</div>
+              <div id="os-vacancy-label" class="text-2xl font-extrabold text-navy-700">50만원</div>
+            </div>
+          </div>
+          <div class="pt-5 border-t border-ink-line grid grid-cols-2 gap-4">
+            <div>
+              <div class="text-xs text-ink-muted mb-1">월 순 절감액</div>
+              <div id="os-net-monthly" class="text-3xl font-extrabold text-emphasis">+311만원</div>
+            </div>
+            <div>
+              <div class="text-xs text-ink-muted mb-1">연 순 절감액</div>
+              <div id="os-net-yearly" class="text-3xl font-extrabold text-emphasis">+3,732만원</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <p class="label-uppercase mb-3">셋업비 회수 기간</p>
+          <p class="text-sm text-ink-body leading-relaxed mb-3">
+            셋업비 <strong><span id="os-setup-label">30만원</span></strong>을 월 순 절감액으로 회수하는 기간:
+            <strong class="text-navy-700 text-xl"><span id="os-payback">1개월</span></strong>
+          </p>
+          <p class="text-sm text-ink-body leading-relaxed">
+            3년 누적 순이익: <strong class="text-navy-700 text-xl"><span id="os-3year-net">1.11억원</span></strong>
+          </p>
+          <p class="text-xs text-ink-label mt-3">
+            ※ 실제 효과는 건물 특성·기존 관리 효율에 따라 다릅니다.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3 pt-2">
+          <a href="/onboarding" class="btn-primary flex-1 justify-center">
+            셋업 견적 받기 (3분) →
+          </a>
+          <a href="/pricing" class="btn-ghost flex-1 justify-center">
+            가격 자세히
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- 가정 설명 -->
   <section class="container-narrow py-section max-w-3xl">
     <p class="label-uppercase mb-3 text-center">계산 가정</p>
@@ -202,6 +334,24 @@ import FinalCTA from '../../components/FinalCTA.astro';
       @apply bg-navy-700 text-white border-navy-700;
     }
     .option-btn:hover:not(.active) {
+      @apply border-navy-700 text-navy-700;
+    }
+    .tab-btn {
+      @apply px-5 py-3 text-sm font-semibold text-ink-muted border-b-2 border-transparent transition cursor-pointer;
+    }
+    .tab-btn.active {
+      @apply text-navy-700 border-navy-700;
+    }
+    .tab-btn:hover:not(.active) {
+      @apply text-navy-700;
+    }
+    .os-setup-btn {
+      @apply py-3 px-2 rounded-card border border-ink-line text-xs font-bold text-ink-muted transition cursor-pointer leading-tight;
+    }
+    .os-setup-btn.active {
+      @apply bg-navy-700 text-white border-navy-700;
+    }
+    .os-setup-btn:hover:not(.active) {
       @apply border-navy-700 text-navy-700;
     }
   </style>
@@ -274,6 +424,85 @@ import FinalCTA from '../../components/FinalCTA.astro';
         el.addEventListener('change', calc);
       });
 
+      calc();
+    })();
+
+    // 탭 전환
+    (function () {
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      const panels = document.querySelectorAll('.calc-panel');
+      tabBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          tabBtns.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          const target = btn.dataset.tab;
+          panels.forEach((p) => {
+            if (p.id === 'panel-' + target) p.classList.remove('hidden');
+            else p.classList.add('hidden');
+          });
+        });
+      });
+    })();
+
+    // OS 회수 계산기
+    (function () {
+      const roomsEl = document.getElementById('os-rooms-calc');
+      const costEl = document.getElementById('os-current-cost');
+      const vacancyEl = document.getElementById('os-vacancy-save');
+      const setupBtns = document.querySelectorAll('[data-os-setup]');
+      if (!roomsEl || !costEl) return;
+
+      const setupCostEl = document.getElementById('os-setup-cost');
+      const setupLabelEl = document.getElementById('os-setup-label');
+      const monthlyCostEl = document.getElementById('os-monthly-cost');
+      const laborSaveEl = document.getElementById('os-labor-save');
+      const vacancyLabelEl = document.getElementById('os-vacancy-label');
+      const netMonthlyEl = document.getElementById('os-net-monthly');
+      const netYearlyEl = document.getElementById('os-net-yearly');
+      const paybackEl = document.getElementById('os-payback');
+      const threeYearNetEl = document.getElementById('os-3year-net');
+
+      let setupFee = 30;
+      const fmt = (n) => Math.round(n).toLocaleString() + '만원';
+      const fmtBig = (n) => {
+        if (n >= 10000) return (n / 10000).toFixed(2) + '억원';
+        return Math.round(n).toLocaleString() + '만원';
+      };
+
+      function calc() {
+        const rooms = Number(roomsEl.value) || 0;
+        const currentCost = Number(costEl.value) || 0;
+        const vacancySave = Number(vacancyEl.value) || 0;
+        const monthlyOs = Math.round(rooms * 0.3);
+        const laborSave = Math.max(0, currentCost - monthlyOs);
+        const netMonthly = laborSave + vacancySave;
+        const netYearly = netMonthly * 12;
+        const paybackMonths = netMonthly > 0 ? Math.max(1, Math.ceil(setupFee / netMonthly)) : 0;
+        const threeYearNet = netYearly * 3 - setupFee;
+
+        setupCostEl.textContent = setupFee + '만원';
+        setupLabelEl.textContent = setupFee + '만원';
+        monthlyCostEl.textContent = fmt(monthlyOs);
+        laborSaveEl.textContent = fmt(laborSave);
+        vacancyLabelEl.textContent = fmt(vacancySave);
+        netMonthlyEl.textContent = (netMonthly >= 0 ? '+' : '') + fmt(netMonthly);
+        netYearlyEl.textContent = (netYearly >= 0 ? '+' : '') + fmtBig(netYearly);
+        paybackEl.textContent = paybackMonths > 0 ? paybackMonths + '개월' : '즉시';
+        threeYearNetEl.textContent = fmtBig(threeYearNet);
+      }
+
+      setupBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          setupBtns.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          setupFee = Number(btn.dataset.osSetup);
+          calc();
+        });
+      });
+      [roomsEl, costEl, vacancyEl].forEach((el) => {
+        el.addEventListener('input', calc);
+        el.addEventListener('change', calc);
+      });
       calc();
     })();
   </script>
