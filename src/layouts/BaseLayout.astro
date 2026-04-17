@@ -99,7 +99,7 @@ const localBusinessSchema = {
     <slot />
 
     <!-- 스크롤 페이드인 옵저버 (전역) -->
-    <script>
+    <script is:inline>
       if ('IntersectionObserver' in window) {
         const io = new IntersectionObserver(
           (entries) => {

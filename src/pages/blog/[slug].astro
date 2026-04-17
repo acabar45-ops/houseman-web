@@ -62,8 +62,74 @@ const featuredImage =
     >
     </div>
 
-    <!-- 공유·다음글 (Phase 2 Week 6 이후 추가) -->
+    <!-- 공유 버튼 -->
+    <div class="mt-16 pt-8 border-t border-ink-line">
+      <p class="label-uppercase mb-4">공유하기</p>
+      <div class="flex flex-wrap gap-2">
+        <button
+          data-share="copy"
+          class="share-btn"
+          type="button"
+        >
+          🔗 링크 복사
+        </button>
+        <a
+          href={`https://share.naver.com/web/shareView?url=${encodeURIComponent(Astro.url.href)}&title=${encodeURIComponent(title)}`}
+          target="_blank"
+          rel="noopener"
+          class="share-btn"
+        >
+          N 네이버 공유
+        </a>
+        <a
+          href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(Astro.url.href)}&text=${encodeURIComponent(title)}`}
+          target="_blank"
+          rel="noopener"
+          class="share-btn"
+        >
+          X 공유
+        </a>
+      </div>
+    </div>
+
+    <!-- 작성자 카드 -->
+    <aside class="mt-10 card bg-ink-soft">
+      <div class="flex items-center gap-4">
+        <div class="w-12 h-12 rounded-full bg-navy-700 text-white flex items-center justify-center font-extrabold text-xl">
+          H
+        </div>
+        <div>
+          <div class="font-bold text-navy-700">하우스맨 편집부</div>
+          <div class="text-xs text-ink-muted mt-1">
+            2012년부터 서울 강남 기반 100+ 건물 1,100+ 호실 운영 경험
+          </div>
+        </div>
+      </div>
+    </aside>
   </article>
+
+  <style>
+    .share-btn {
+      @apply inline-flex items-center gap-1 px-4 py-2 text-sm font-semibold
+             border border-ink-line rounded-full text-ink-muted
+             hover:border-navy-700 hover:text-navy-700 transition cursor-pointer;
+    }
+  </style>
+
+  <script is:inline>
+    document.querySelectorAll('[data-share="copy"]').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          const original = btn.textContent;
+          btn.textContent = '✓ 복사됨';
+          setTimeout(() => { btn.textContent = original; }, 1800);
+        } catch (e) {
+          alert('복사 실패: 주소를 수동으로 복사해주세요.');
+        }
+      });
+    });
+  </script>
 
   <FinalCTA />
   <Footer />

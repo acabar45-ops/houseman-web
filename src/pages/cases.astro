@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+
+const cases = [
+  {
+    id: 'gw-6f-gangnam',
+    badge: '공실 해소',
+    category: '중소형 빌딩',
+    headline: '18개월 공실 6층 상가 빌딩, 14일 만에 전층 계약',
+    metric: '14일',
+    metricLabel: '전층 계약 완료',
+    client: '강남구 역삼동 A빌딩 (익명)',
+    problem:
+      '상가 빌딩 3개 층이 1년 반째 비어있음. 기존 중개사 2곳과 협업했지만 문의 자체가 거의 없었고, 건물주는 매달 관리비만 부담하는 상황이었음.',
+    approach: [
+      '하우스맨 800+ 부동산 네트워크에 동시 등록',
+      '전문 사진사로 공간 촬영 + 가상 레이아웃 제안',
+      '임대조건 재설계 (보증금 30% 인하, 인테리어 지원 포함)',
+      '잠재 임차인 10곳 대상 현장 투어 진행',
+    ],
+    result:
+      '등록 후 9일 만에 1층·2층 임차 계약, 14일째 3층까지 계약 완료. 공실로 인한 손실 월 1,800만원이 즉시 임대 수익으로 전환됨.',
+  },
+  {
+    id: 'lt-2y-overdue',
+    badge: '미납 회수',
+    category: '중소형 주택',
+    headline: '2년 누적 미납 수천만원, 3개월 내 90% 회수',
+    metric: '90%',
+    metricLabel: '3개월 내 회수',
+    client: '강남·서초 일대 다가구 건물 (익명, 10호실)',
+    problem:
+      '건물주가 임차인 개별 연락에 지쳐 미납 독촉을 방치. 2년간 10호실에 걸쳐 수천만원의 미납금이 누적된 상태. 법적 조치는 부담스럽고 그렇다고 놓칠 수도 없는 딜레마.',
+    approach: [
+      '임차인별 미납 현황 재구성 (계약서·입금 내역 감사)',
+      '하우스맨 표준 3단계 알림톡 시스템 가동 (청구 전·당일·연체 후)',
+      '지급 의사 있는 임차인에게 분납 계획 제안',
+      '회피·장기 미납 2호실은 내용증명·명도 절차 병행',
+    ],
+    result:
+      '3개월 시점에 누적 미납금의 90% 회수 완료. 2호실은 명도 소송으로 퇴실 + 보증금 공제. 이후 동일 건물에 재발하지 않도록 자동 알림톡 상시 가동.',
+  },
+  {
+    id: 'porsche-sago',
+    badge: '기업 시설 관리',
+    category: '법인 사옥',
+    headline: '포르쉐 코리아 사옥 유지관리 통합 위탁',
+    metric: '10+년',
+    metricLabel: '장기 파트너십',
+    client: '포르쉐 코리아',
+    problem:
+      '사옥 시설·경비·미화·에너지 관리를 각각 다른 업체에 위탁 중이었음. 계약 관리·비용 통제·품질 유지가 복잡해 내부 관리팀의 부담이 컸고, 법정 점검 이력 관리도 체계적이지 않았음.',
+    approach: [
+      '시설 유지관리 + 경비·미화 + 에너지 점검 + 법정 이력을 하우스맨이 단일 위탁',
+      '월간 보고서 + 실시간 이슈 대응 체계 구축',
+      '전담 매니저 배정으로 고객사 관리팀과 단일 창구',
+      '방문객 응대·소방·승강기·냉난방 등 법정 점검 자동화',
+    ],
+    result:
+      '관리 일원화로 내부 관리팀 부담 대폭 감소. 방문객·협력사 응대 품질 상승으로 기업 이미지 향상. 현재까지 10년 이상 파트너십 유지 중.',
+  },
+];
+---
+
+<BaseLayout
+  title="케이스 스터디 | 하우스맨"
+  description="공실 해소·미납 회수·기업 시설 관리 실제 사례. 18개월 공실 14일 만에 해결, 2년 미납 90% 회수, 포르쉐 10년 파트너십 등."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-20">
+    <div class="container-narrow text-center max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">케이스 스터디</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
+        숫자로 증명합니다.
+      </h1>
+      <p class="text-lg text-white/85 leading-relaxed">
+        공실·미납·기업 시설 관리 실제 사례. 이름만 가린 진짜 이야기.
+      </p>
+    </div>
+  </section>
+
+  <section class="container-narrow py-section space-y-16">
+    {cases.map((c, i) => (
+      <article id={c.id} class="scroll-mt-24">
+        <div class="grid md:grid-cols-5 gap-10">
+          <!-- 좌 숫자 -->
+          <div class="md:col-span-2">
+            <div class="card bg-ink-soft text-center py-14 sticky top-24">
+              <div class="label-uppercase mb-3">{c.badge}</div>
+              <div class="text-6xl md:text-7xl font-extrabold text-emphasis mb-2 tracking-tight">
+                {c.metric}
+              </div>
+              <div class="text-sm text-ink-muted">{c.metricLabel}</div>
+            </div>
+          </div>
+
+          <!-- 우 본문 -->
+          <div class="md:col-span-3">
+            <div class="label-uppercase mb-3">{c.category}</div>
+            <h2 class="text-2xl md:text-3xl font-bold text-navy-700 leading-tight mb-4">
+              {c.headline}
+            </h2>
+            <p class="text-sm text-ink-label mb-6">고객: {c.client}</p>
+
+            <h3 class="label-uppercase mb-2 mt-8">문제</h3>
+            <p class="text-ink leading-relaxed mb-6">{c.problem}</p>
+
+            <h3 class="label-uppercase mb-2">접근</h3>
+            <ul class="space-y-2 mb-6">
+              {c.approach.map((step) => (
+                <li class="flex items-start gap-2 text-ink leading-relaxed">
+                  <span class="text-navy-700 font-bold mt-0.5 flex-shrink-0">·</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ul>
+
+            <h3 class="label-uppercase mb-2">결과</h3>
+            <p class="text-ink leading-relaxed">{c.result}</p>
+          </div>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>
