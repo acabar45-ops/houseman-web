@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const effectiveDate = '2026-04-17';
+---
+
+<BaseLayout
+  title="개인정보처리방침 | 하우스맨"
+  description="(주)하우스맨 개인정보처리방침. 수집·이용 목적, 보유 기간, 이용자 권리."
+>
+  <Nav />
+
+  <article class="container-narrow py-section max-w-3xl">
+    <p class="label-uppercase mb-3">법적 고지</p>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-navy-700 mb-3">
+      개인정보처리방침
+    </h1>
+    <p class="text-sm text-ink-muted mb-10">시행일: {effectiveDate}</p>
+
+    <div class="prose prose-neutral max-w-none
+                prose-headings:text-navy-700 prose-headings:font-bold
+                prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-3
+                prose-p:text-ink prose-p:leading-relaxed
+                prose-strong:text-navy-700">
+      <p>
+        (주)하우스맨(이하 "회사")은 「개인정보 보호법」 제30조에 따라 정보주체의 개인정보를
+        보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 다음과 같이 개인정보
+        처리방침을 수립·공개합니다.
+      </p>
+
+      <h2>제1조 (개인정보의 처리 목적)</h2>
+      <p>회사는 다음의 목적을 위해 개인정보를 처리합니다. 처리 중인 개인정보는 다음 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우 별도의 동의를 받습니다.</p>
+      <ul>
+        <li>홈페이지 상담 문의 접수 및 응대</li>
+        <li>건물관리 계약 체결·이행 및 요금 정산</li>
+        <li>알림톡·SMS·이메일을 통한 안내 발송</li>
+        <li>고객 민원 처리 및 분쟁 해결</li>
+      </ul>
+
+      <h2>제2조 (처리하는 개인정보 항목)</h2>
+      <ul>
+        <li>필수: 이름, 연락처, 이메일, 건물 주소</li>
+        <li>선택: 호실 정보, 월세·관리비 설정 등 계약 세부사항</li>
+      </ul>
+
+      <h2>제3조 (개인정보의 보유·이용 기간)</h2>
+      <p>회사는 법령에 따른 보유·이용 기간 또는 정보주체로부터 수집 시 동의받은 기간 내에서 처리합니다. 구체적 보유 기간은 다음과 같습니다.</p>
+      <ul>
+        <li>상담 문의: 1년</li>
+        <li>계약 관계 개인정보: 계약 종료 후 5년 (전자상거래법 등 관련 법령 준거)</li>
+      </ul>
+
+      <h2>제4조 (개인정보의 제3자 제공)</h2>
+      <p>회사는 정보주체의 동의, 법률의 특별한 규정 등 「개인정보 보호법」 제17조 및 제18조에 해당하는 경우에만 개인정보를 제3자에게 제공합니다.</p>
+
+      <h2>제5조 (처리 위탁)</h2>
+      <p>회사는 원활한 업무 수행을 위해 다음과 같이 위탁합니다.</p>
+      <ul>
+        <li>이메일·알림톡·SMS 발송: 솔라피(Solapi)</li>
+        <li>클라우드 인프라: Supabase, Vercel, Cloudflare</li>
+      </ul>
+
+      <h2>제6조 (정보주체의 권리·의무)</h2>
+      <p>정보주체는 언제든지 개인정보 열람·정정·삭제·처리정지를 요구할 수 있습니다. 요청 시 아래 연락처로 문의 바랍니다.</p>
+
+      <h2>제7조 (개인정보 보호책임자)</h2>
+      <ul>
+        <li>성명: 박종호</li>
+        <li>연락처: 1544-4150</li>
+        <li>이메일: <a href="mailto:contact@houseman.co.kr">contact@houseman.co.kr</a></li>
+      </ul>
+
+      <h2>제8조 (변경 사항 고지)</h2>
+      <p>본 방침이 변경될 경우 변경사항을 홈페이지 공지사항 등을 통해 고지합니다.</p>
+
+      <p class="text-sm text-ink-muted mt-10">
+        ※ 본 문서는 초안이며, 서비스 실제 운영 범위에 따라 업데이트됩니다.
+        정확한 법적 자문은 변호사 상담을 권합니다.
+      </p>
+    </div>
+  </article>
+
+  <Footer />
+</BaseLayout>

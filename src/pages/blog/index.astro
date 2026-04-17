@@ -2,12 +2,12 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
-import { fetchPosts, fetchAllCategories, type WPPost } from '../../lib/wp.ts';
+import { fetchPosts, fetchAllCategories, type WPPost, type WPCategory } from '../../lib/wp.ts';
 
 // 빌드 타임에 WordPress REST API에서 포스트 가져오기
 // WP가 아직 세팅 안 되어 있으면 fetchPosts가 빈 배열 반환 (에러 아님)
 let posts: WPPost[] = [];
-let categories = [];
+let categories: WPCategory[] = [];
 
 try {
   [posts, categories] = await Promise.all([

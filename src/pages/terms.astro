@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const effectiveDate = '2026-04-17';
+---
+
+<BaseLayout
+  title="이용약관 | 하우스맨"
+  description="(주)하우스맨 서비스 이용약관. SaaS 구독 및 대행 서비스의 조건, 권리와 의무."
+>
+  <Nav />
+
+  <article class="container-narrow py-section max-w-3xl">
+    <p class="label-uppercase mb-3">법적 고지</p>
+    <h1 class="text-3xl md:text-4xl font-extrabold text-navy-700 mb-3">
+      이용약관
+    </h1>
+    <p class="text-sm text-ink-muted mb-10">시행일: {effectiveDate}</p>
+
+    <div class="prose prose-neutral max-w-none
+                prose-headings:text-navy-700 prose-headings:font-bold
+                prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-3
+                prose-p:text-ink prose-p:leading-relaxed
+                prose-strong:text-navy-700">
+
+      <h2>제1조 (목적)</h2>
+      <p>
+        본 약관은 (주)하우스맨(이하 "회사")이 제공하는 건물관리 SaaS 플랫폼 및 대행 서비스
+        (이하 "서비스")의 이용 조건, 이용자의 권리와 의무에 관한 사항을 규정함을 목적으로 합니다.
+      </p>
+
+      <h2>제2조 (서비스의 내용)</h2>
+      <ul>
+        <li><strong>SaaS 플랜:</strong> Starter / Pro / Enterprise — 청구·수금·정산·알림톡 자동화 소프트웨어 구독</li>
+        <li><strong>대행 서비스:</strong> 중소형 빌딩·주택·단기임대·기업시설·비상주 관리사무소 위탁 운영</li>
+      </ul>
+
+      <h2>제3조 (이용계약의 성립)</h2>
+      <p>
+        이용자가 본 약관에 동의하고 회사가 정한 절차에 따라 신청하며, 회사가 이를 승낙함으로써
+        이용계약이 성립합니다. SaaS는 월 단위, 대행은 최소 3개월 단위 계약을 기본으로 합니다.
+      </p>
+
+      <h2>제4조 (요금 및 결제)</h2>
+      <ul>
+        <li>SaaS 요금은 홈페이지(/pricing)에 공개된 플랜에 따릅니다 (VAT 별도).</li>
+        <li>대행 서비스 요금은 건물 크기·유형·서비스 범위에 따라 맞춤 견적으로 산정됩니다.</li>
+        <li>결제 실패 시 회사는 서비스를 일시 정지할 수 있습니다.</li>
+      </ul>
+
+      <h2>제5조 (이용자의 의무)</h2>
+      <ul>
+        <li>정확한 정보 제공 의무</li>
+        <li>계정·비밀번호 관리 책임</li>
+        <li>서비스 이용 중 관계 법령 준수</li>
+        <li>임차인 개인정보의 적법한 수집·이용</li>
+      </ul>
+
+      <h2>제6조 (회사의 의무)</h2>
+      <ul>
+        <li>안정적인 서비스 제공 및 개인정보 보호</li>
+        <li>고객 문의·민원의 신속한 처리</li>
+        <li>중대한 서비스 변경 시 사전 고지</li>
+      </ul>
+
+      <h2>제7조 (계약 해지)</h2>
+      <ul>
+        <li>SaaS 플랜: 이용자는 언제든 해지 가능하며, 결제 주기 종료 시점에 효력 발생</li>
+        <li>대행 서비스: 최소 계약 기간 이후 1개월 전 서면 통보로 해지 가능</li>
+        <li>중대한 약관 위반 시 회사는 즉시 해지할 수 있습니다</li>
+      </ul>
+
+      <h2>제8조 (책임 제한)</h2>
+      <p>
+        회사는 천재지변, 통신망 장애, 제3자의 귀책사유로 인한 서비스 중단 등 회사의 합리적
+        통제를 벗어난 사유로 발생한 손해에 대해 책임을 지지 않습니다.
+      </p>
+
+      <h2>제9조 (분쟁 해결)</h2>
+      <p>
+        본 약관에 관한 분쟁은 협의로 해결하며, 협의가 이루어지지 않을 경우 회사 본사 소재지를
+        관할하는 법원을 제1심 관할법원으로 합니다.
+      </p>
+
+      <h2>제10조 (문의)</h2>
+      <p>
+        서비스 및 약관 관련 문의:
+        <a href="tel:1544-4150">1544-4150</a> · <a href="mailto:contact@houseman.co.kr">contact@houseman.co.kr</a>
+      </p>
+
+      <p class="text-sm text-ink-muted mt-10">
+        ※ 본 문서는 초안이며, 서비스 실제 운영 범위에 따라 업데이트됩니다.
+        정확한 법적 자문은 변호사 상담을 권합니다.
+      </p>
+    </div>
+  </article>
+
+  <Footer />
+</BaseLayout>
