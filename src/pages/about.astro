@@ -6,6 +6,19 @@ import FinalCTA from '../components/FinalCTA.astro';
 import LogoCarousel from '../components/LogoCarousel.astro';
 import StatsGrid from '../components/StatsGrid.astro';
 
+const team = [
+  { name: '박종호', role: '대표이사 · Founder',
+    story: '2012년 신축·리모델링으로 창업 후 14년간 100+ 건물 운영. 현장에서 배운 것을 시스템으로.',
+    initial: '박' },
+  { name: '현장 운영팀', role: '시설·긴급대응',
+    story: '15년 평균 경력. 서울 전역 24시간 긴급 대응. 법정 점검·민원·공사 전문.',
+    initial: '현' },
+  { name: '자산관리팀', role: 'PM·세무·법무',
+    story: '임대차 계약·세무·법무 지원. 미납 회수·명도 절차 실무.', initial: '자' },
+  { name: '개발·운영팀', role: 'SaaS Product',
+    story: '자체 SaaS를 매일 운영·개선. 알림톡·청구·정산 자동화 엔진 담당.', initial: '개' },
+];
+
 const timeline = [
   { year: '2012', event: '하우스맨 설립. 신축·리모델링 사업으로 시작.' },
   { year: '2015', event: '건물관리 위탁 사업 본격 전환. 강남 원룸·오피스텔 다수 수주.' },
@@ -111,6 +124,33 @@ const values = [
           <p class="text-ink leading-relaxed">{event}</p>
         </div>
       ))}
+    </div>
+  </section>
+
+  <!-- 팀 섹션 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-5xl">
+      <div class="text-center mb-12">
+        <p class="label-uppercase mb-3">사람</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+          하우스맨은 이 사람들로 만들어집니다.
+        </h2>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {team.map(({ name, role, story, initial }) => (
+          <div class="card h-full flex flex-col items-start">
+            <div class="w-14 h-14 rounded-full bg-navy-700 text-white flex items-center justify-center text-xl font-extrabold mb-4">
+              {initial}
+            </div>
+            <h3 class="font-bold text-navy-700 mb-1">{name}</h3>
+            <p class="text-xs text-ink-label uppercase tracking-wider mb-3">{role}</p>
+            <p class="text-sm text-ink-muted leading-relaxed">{story}</p>
+          </div>
+        ))}
+      </div>
+      <p class="text-center text-xs text-ink-label mt-8">
+        ※ 팀 소개는 익명 프로필입니다. 실제 구성원 사진·프로필은 런칭 전 교체 예정.
+      </p>
     </div>
   </section>
 

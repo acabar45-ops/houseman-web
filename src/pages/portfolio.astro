@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import { buildings } from '../data/portfolio.ts';
+
+const types = ['전체', '주거', '근생', '사옥', '복합'] as const;
+
+const counts: Record<string, number> = {
+  전체: buildings.length,
+  주거: buildings.filter((b) => b.type === '주거').length,
+  근생: buildings.filter((b) => b.type === '근생').length,
+  사옥: buildings.filter((b) => b.type === '사옥').length,
+  복합: buildings.filter((b) => b.type === '복합').length,
+};
+
+function fmtSince(iso: string): string {
+  const [y, m] = iso.split('-');
+  return `${y}년 ${parseInt(m)}월부터`;
+}
+---
+
+<BaseLayout
+  title="관리 건물 포트폴리오 | 하우스맨"
+  description="하우스맨이 운영 중인 서울 전역 100+ 건물 중 대표 사례. 주거·근생·사옥·복합 카테고리별 확인."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-20">
+    <div class="container-narrow text-center max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">포트폴리오</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
+        하우스맨이 운영 중인 건물들
+      </h1>
+      <p class="text-lg text-white/85 leading-relaxed">
+        서울 전역 100+ 건물 · 1,100+ 호실 중 공개 동의받은 대표 사례.<br/>
+        <span class="text-white/60 text-sm">(일부는 계약상 익명 처리)</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Featured 강조 -->
+  <section class="container-narrow pt-section">
+    <p class="label-uppercase text-center mb-3">대기업·기관 레퍼런스</p>
+    <div class="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+      {buildings.filter((b) => b.featured).map((b) => (
+        <div class="card bg-navy-900 text-white border-navy-700">
+          <div class="label-uppercase text-white/60 mb-2">{b.type}</div>
+          <h3 class="text-xl font-bold mb-2">{b.name}</h3>
+          <p class="text-sm text-white/80 mb-3">{b.area} · {fmtSince(b.since)}</p>
+          <p class="text-sm text-white/90 leading-relaxed">{b.highlight}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 필터 -->
+  <section class="container-narrow py-section">
+    <div class="flex flex-wrap justify-center gap-3 mb-10">
+      {types.map((t, i) => (
+        <button
+          type="button"
+          data-filter={t}
+          class={`pf-btn px-5 py-2 rounded-full text-sm font-semibold border transition ${
+            i === 0 ? 'active bg-navy-700 text-white border-navy-700' : 'border-ink-line text-ink-muted'
+          }`}
+        >
+          {t} <span class="ml-1 text-xs opacity-70">({counts[t] ?? 0})</span>
+        </button>
+      ))}
+    </div>
+
+    <!-- 그리드 -->
+    <div id="pf-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {buildings.map((b) => (
+        <article
+          data-type={b.type}
+          class="pf-card card hover:border-navy-700 transition flex flex-col"
+        >
+          <!-- 이미지 자리 (실제 사진 수집 후 교체) -->
+          <div class="aspect-[4/3] bg-ink-soft rounded-lg mb-4 flex items-center justify-center">
+            <span class="text-xs text-ink-label">사진 자리 ({b.name})</span>
+          </div>
+
+          <div class="flex items-center justify-between mb-2">
+            <span class="label-uppercase">{b.type}</span>
+            <span class="text-xs text-ink-label">{b.area}</span>
+          </div>
+          <h3 class="font-bold text-ink mb-1">
+            {b.name}
+            {b.anonymous && (
+              <span class="text-xs text-ink-label font-normal ml-1">(익명)</span>
+            )}
+          </h3>
+          <p class="text-sm text-ink-muted mb-3">
+            {b.rooms}{b.type === '사옥' ? '개 층' : '호실'} · {fmtSince(b.since)}
+          </p>
+          <p class="text-sm text-ink-muted leading-relaxed flex-1 italic">"{b.highlight}"</p>
+
+          <div class="mt-4 pt-4 border-t border-ink-line flex flex-wrap gap-1.5">
+            {b.tags.map((t) => (
+              <span class="text-[11px] font-semibold text-ink-muted bg-ink-soft rounded-full px-2.5 py-0.5">
+                #{t}
+              </span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <p class="text-center text-xs text-ink-label mt-10">
+      ※ 100+ 건물 중 12건 공개. 나머지는 건물주 동의 및 계약상 비공개.
+    </p>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+
+  <script is:inline>
+    const btns = document.querySelectorAll('.pf-btn');
+    const cards = document.querySelectorAll('.pf-card');
+    btns.forEach((b) => b.addEventListener('click', () => {
+      btns.forEach((x) => {
+        x.classList.remove('active', 'bg-navy-700', 'text-white', 'border-navy-700');
+        x.classList.add('border-ink-line', 'text-ink-muted');
+      });
+      b.classList.add('active', 'bg-navy-700', 'text-white', 'border-navy-700');
+      b.classList.remove('border-ink-line', 'text-ink-muted');
+      const f = b.dataset.filter;
+      cards.forEach((c) => {
+        c.style.display = (f === '전체' || c.dataset.type === f) ? '' : 'none';
+      });
+    }));
+  </script>
+</BaseLayout>

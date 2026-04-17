@@ -1,9 +1,26 @@
 ---
 // 푸터 — Stripe급 정보 밀도 + 사업자정보 전면 공개 (AEO 신뢰 신호)
+import NewsletterForm from './NewsletterForm.astro';
 const currentYear = new Date().getFullYear();
 ---
 
 <footer class="border-t border-ink-line bg-ink-soft">
+  <!-- 뉴스레터 배너 -->
+  <div class="border-b border-ink-line bg-white">
+    <div class="container-narrow py-10 grid md:grid-cols-2 gap-6 items-center">
+      <div>
+        <p class="label-uppercase mb-2">뉴스레터</p>
+        <h3 class="text-xl md:text-2xl font-bold text-navy-700 leading-tight">
+          건물관리 실무 요약을<br class="md:hidden"/> 월 1회 이메일로.
+        </h3>
+        <p class="text-sm text-ink-muted mt-2">
+          미납 대응·세무·공실 전략·업계 뉴스. 광고 없음.
+        </p>
+      </div>
+      <NewsletterForm />
+    </div>
+  </div>
+
   <div class="container-narrow py-16 grid md:grid-cols-5 gap-8">
     <!-- 브랜드 -->
     <div class="md:col-span-2">

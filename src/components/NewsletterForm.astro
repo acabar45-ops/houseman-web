@@ -1,0 +1,49 @@
+---
+// 뉴스레터 구독 폼 — 푸터 또는 랜딩 하단에 삽입
+// 현재는 localStorage 저장, Phase 3에서 메일링 서비스 연동
+---
+
+<form id="newsletter-form" class="w-full">
+  <div class="flex flex-col sm:flex-row gap-2">
+    <input
+      id="nl-email"
+      name="email"
+      type="email"
+      required
+      placeholder="이메일 주소"
+      aria-label="뉴스레터 이메일"
+      class="flex-1 min-w-0 px-4 py-2.5 rounded-card border border-ink-line bg-white text-ink text-sm focus:border-navy-700 focus:outline-none"
+    />
+    <button
+      type="submit"
+      class="px-5 py-2.5 rounded-card bg-navy-700 text-white text-sm font-semibold hover:bg-navy-800 transition"
+    >
+      구독
+    </button>
+  </div>
+  <p class="mt-2 text-[11px] text-ink-label">
+    월 1회 건물관리 실무 요약. 언제든 해지 가능.
+  </p>
+  <p id="nl-success" class="hidden mt-2 text-xs text-navy-700 font-semibold">
+    ✓ 구독되었습니다. 다음 소식을 기대해주세요.
+  </p>
+</form>
+
+<script is:inline>
+  const nlForm = document.getElementById('newsletter-form');
+  const nlSuccess = document.getElementById('nl-success');
+  if (nlForm) {
+    nlForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('nl-email').value;
+      const subs = JSON.parse(localStorage.getItem('newsletter_subs') || '[]');
+      if (!subs.includes(email)) subs.push(email);
+      localStorage.setItem('newsletter_subs', JSON.stringify(subs));
+      nlSuccess.classList.remove('hidden');
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'newsletter_subscribe', { method: 'footer' });
+      }
+      nlForm.reset();
+    });
+  }
+</script>
