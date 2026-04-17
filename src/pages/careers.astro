@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+
+const openings = [
+  { title: '시설 관리 전문가 (경력)', team: '현장 운영팀', location: '서울 강남', type: '정규직',
+    summary: '다수 건물 시설 유지관리 현장 책임. 법정 점검·민원 대응.',
+    open: false },
+  { title: '자산관리 매니저 (PM)', team: '자산관리팀', location: '서울 강남', type: '정규직',
+    summary: '담당 건물군의 임대차·미납·법무 이슈 일원 관리.',
+    open: false },
+  { title: 'Full-stack 엔지니어', team: '개발팀', location: '서울 강남 · 재택 병행', type: '정규직',
+    summary: 'SaaS 대시보드·알림톡 엔진·자동화 파이프라인 개발.',
+    open: false },
+];
+
+const values = [
+  { title: '현장에서 배운다', body: '탁상공론 금지. 직접 건물에 가고 임차인과 대화하고 데이터로 결정합니다.' },
+  { title: '시스템을 만든다', body: '한 번 수동으로 하면, 두 번째는 자동화합니다. 반복은 시스템의 몫.' },
+  { title: '건물주 편이다', body: '중개보수 쉐어 X. 보이지 않는 수수료 X. 건물주 수익 극대화가 유일한 기준.' },
+];
+---
+
+<BaseLayout
+  title="채용 | 하우스맨"
+  description="건물관리의 새로운 기준을 함께 만들 동료를 찾습니다. 시설·자산·개발 포지션."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-20">
+    <div class="container-narrow max-w-3xl text-center">
+      <p class="label-uppercase text-white/70 mb-4">채용</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
+        건물관리의 새 기준을<br/>함께 만들 동료
+      </h1>
+      <p class="text-lg text-white/85 leading-relaxed">
+        14년 현장 경험이 시스템이 됩니다. 같이 하실 분을 기다립니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- 일하는 원칙 -->
+  <section class="container-narrow py-section max-w-4xl">
+    <div class="text-center mb-10">
+      <p class="label-uppercase mb-3">일하는 원칙</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700">3가지 문화</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5">
+      {values.map(({ title, body }) => (
+        <div class="card h-full">
+          <h3 class="font-bold text-navy-700 mb-3">{title}</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">{body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 오픈 포지션 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-4xl">
+      <div class="text-center mb-10">
+        <p class="label-uppercase mb-3">오픈 포지션</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-navy-700">현재 모집 중</h2>
+      </div>
+      <div class="space-y-3">
+        {openings.map(({ title, team, location, type, summary, open }) => (
+          <div class="card flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <h3 class="text-lg font-bold text-ink">{title}</h3>
+                <span class={`text-[11px] font-bold px-2 py-0.5 rounded ${open ? 'bg-navy-700 text-white' : 'bg-ink-soft text-ink-muted border border-ink-line'}`}>
+                  {open ? '모집 중' : '상시 채용'}
+                </span>
+              </div>
+              <p class="text-sm text-ink-muted mb-2">{summary}</p>
+              <div class="flex flex-wrap gap-3 text-xs text-ink-label">
+                <span>🏢 {team}</span>
+                <span>📍 {location}</span>
+                <span>💼 {type}</span>
+              </div>
+            </div>
+            <a href="mailto:careers@houseman.co.kr" class="btn-ghost">
+              지원 이메일
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <div class="card mt-8 bg-white text-center">
+        <p class="font-bold text-navy-700 mb-2">맞는 포지션이 없어도 괜찮습니다</p>
+        <p class="text-sm text-ink-muted mb-5">
+          건물관리·부동산·SaaS에 관심 있으시면 자유 양식으로 제안 주세요.
+        </p>
+        <a href="mailto:careers@houseman.co.kr" class="btn-primary">
+          careers@houseman.co.kr
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>

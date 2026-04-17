@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+// Placeholder 보도자료 — 실제 언론 노출 시 실 기사 URL로 교체
+const news = [
+  { date: '2026-04-17', source: '하우스맨', title: '하우스맨, 홈페이지 전면 리뉴얼 착수 — 6월 중순 런칭', link: '/' },
+  { date: '2026-03-10', source: '하우스맨', title: '자체 SaaS 첫 베타 운영 — 청구·수금 자동화 검증 완료', link: '/saas' },
+  { date: '2026-01-15', source: '하우스맨', title: '관리 호실 1,100개 돌파 — 업계 2위 규모 진입', link: '/about' },
+  { date: '2025-11-01', source: '하우스맨', title: '포르쉐 코리아 사옥 유지관리 재계약', link: '/services/corporate' },
+  { date: '2025-09-05', source: '하우스맨', title: '보건복지부 이브릿지 시설관리 개시', link: '/services/corporate' },
+];
+
+const media = [
+  { type: '로고 (PNG)', size: '500×500', href: '/logo-500.png' },
+  { type: '로고 (SVG)', size: 'Vector', href: '/logo.svg' },
+  { type: '회사 소개서 PDF', size: '5MB', href: '#' },
+  { type: '대표 사진', size: '2000×2000', href: '#' },
+];
+---
+
+<BaseLayout
+  title="보도자료 · 언론 | 하우스맨"
+  description="하우스맨 주요 소식·보도 타임라인 및 미디어 킷."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-20">
+    <div class="container-narrow max-w-3xl text-center">
+      <p class="label-uppercase text-white/70 mb-4">보도·언론</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
+        하우스맨 소식
+      </h1>
+      <p class="text-lg text-white/85 leading-relaxed">
+        회사 주요 이벤트 및 언론 노출 타임라인
+      </p>
+    </div>
+  </section>
+
+  <!-- 타임라인 -->
+  <section class="container-narrow py-section max-w-3xl">
+    <div class="space-y-4">
+      {news.map(({ date, source, title, link }) => (
+        <a href={link} class="card flex gap-5 hover:border-navy-700 transition">
+          <div class="w-24 flex-shrink-0">
+            <div class="text-xs text-ink-label uppercase tracking-wider">{source}</div>
+            <div class="text-sm font-bold text-navy-700 mt-1">{date}</div>
+          </div>
+          <div class="flex-1">
+            <h3 class="font-bold text-ink leading-snug mb-1">{title}</h3>
+            <span class="text-xs text-ink-label">자세히 →</span>
+          </div>
+        </a>
+      ))}
+    </div>
+    <p class="text-center text-xs text-ink-label mt-10">
+      보도·협업 문의: <a href="mailto:press@houseman.co.kr" class="underline">press@houseman.co.kr</a>
+    </p>
+  </section>
+
+  <!-- 미디어 킷 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-3xl">
+      <div class="text-center mb-10">
+        <p class="label-uppercase mb-3">미디어 킷</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-navy-700">
+          로고·이미지·소개서 다운로드
+        </h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-3">
+        {media.map(({ type, size, href }) => (
+          <a href={href} class="card flex items-center justify-between hover:border-navy-700 transition">
+            <div>
+              <div class="font-semibold text-ink">{type}</div>
+              <div class="text-xs text-ink-label">{size}</div>
+            </div>
+            <span class="text-navy-700">⬇</span>
+          </a>
+        ))}
+      </div>
+      <p class="text-center text-xs text-ink-label mt-6">
+        ※ 미디어 파일은 Phase 2 런칭 전 최종 업로드 예정.
+      </p>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>

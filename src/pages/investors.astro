@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import StatsGrid from '../components/StatsGrid.astro';
+
+const milestones = [
+  { year: '2012', value: '회사 설립', detail: '신축·리모델링 시작' },
+  { year: '2018', value: '100+ 건물 돌파', detail: '주거·상업 복합 운영 확장' },
+  { year: '2021', value: '기업·기관 위탁', detail: '포르쉐·보건복지부 등' },
+  { year: '2024', value: '자체 SaaS 개발', detail: '청구·수금·정산 자동화' },
+  { year: '2026', value: 'SaaS 정식 런칭', detail: '1,100+ 호실 자동화 운영' },
+];
+
+const thesis = [
+  {
+    title: '거대 시장',
+    body: '국내 주택임대관리 대상 건물 약 45만 동. 현재 시장 1위도 1,400채 수준이라 블루오션.',
+  },
+  {
+    title: '기술 + 현장',
+    body: '대부분 경쟁사는 기술 또는 현장 한쪽만 잘함. 하우스맨은 14년 현장 + 자체 SaaS 둘 다.',
+  },
+  {
+    title: '복합 포트폴리오',
+    body: '주거·상업·근생·사옥·단기임대까지 한 시스템. 고객 확장성 ×5.',
+  },
+  {
+    title: '증명된 실적',
+    body: '100+ 건물 1,100+ 호실 실 운영. 포르쉐·공공기관 레퍼런스. 미납 회수율 95%+.',
+  },
+];
+---
+
+<BaseLayout
+  title="투자자 IR | 하우스맨"
+  description="하우스맨 투자 안내. 시장·팀·제품·실적 요약. IR 상세 자료 요청."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-20">
+    <div class="container-narrow max-w-3xl text-center">
+      <p class="label-uppercase text-white/70 mb-4">IR · 투자자</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
+        작은 시장의 거대한 기회
+      </h1>
+      <p class="text-lg text-white/85 leading-relaxed">
+        45만 동의 국내 중소형 건물 시장. 아직 10위 업체도 2천 건물을 넘지 못했습니다.
+      </p>
+    </div>
+  </section>
+
+  <StatsGrid />
+
+  <!-- 투자 논리 4가지 -->
+  <section class="container-narrow py-section max-w-5xl">
+    <div class="text-center mb-12">
+      <p class="label-uppercase mb-3">Investment Thesis</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700">왜 하우스맨인가</h2>
+    </div>
+    <div class="grid md:grid-cols-2 gap-5">
+      {thesis.map(({ title, body }) => (
+        <div class="card h-full">
+          <h3 class="text-lg font-bold text-navy-700 mb-3">{title}</h3>
+          <p class="text-sm text-ink leading-relaxed">{body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 마일스톤 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-4xl">
+      <div class="text-center mb-10">
+        <p class="label-uppercase mb-3">Milestones</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-navy-700">14년의 궤적</h2>
+      </div>
+      <div class="space-y-3">
+        {milestones.map(({ year, value, detail }) => (
+          <div class="card flex items-center gap-5">
+            <div class="text-2xl font-extrabold text-navy-700 w-20 flex-shrink-0">{year}</div>
+            <div class="flex-1">
+              <div class="font-bold text-ink">{value}</div>
+              <div class="text-sm text-ink-muted">{detail}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- IR 자료 요청 -->
+  <section class="container-narrow py-section max-w-2xl text-center">
+    <p class="label-uppercase mb-3">IR 자료 요청</p>
+    <h2 class="text-2xl md:text-3xl font-bold text-navy-700 mb-5">
+      자세한 IR 자료는 이메일로 드립니다
+    </h2>
+    <p class="text-ink-muted mb-8 leading-relaxed">
+      재무·실사용 데이터·로드맵·팀 상세는 NDA 체결 후 공유드립니다.
+    </p>
+    <a href="mailto:ir@houseman.co.kr?subject=IR%20%EC%9E%90%EB%A3%8C%20%EC%9A%94%EC%B2%AD" class="btn-primary">
+      ir@houseman.co.kr 로 요청
+    </a>
+  </section>
+
+  <Footer />
+</BaseLayout>

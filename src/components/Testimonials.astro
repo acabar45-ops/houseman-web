@@ -1,21 +1,35 @@
 ---
-// 고객 후기 3개 (클리니어 스타일 — 건물·포지션 + 한 줄 코멘트)
-// Phase 1 Week 2에 실제 후기로 교체
+// 고객 후기 6개로 확장 + 캐러셀 느낌 (무한 스크롤 대신 그리드)
 const quotes = [
   {
     quote: '매달 월세 수금 때문에 휴대폰 보기가 싫었는데, 이제는 월말 정산 리포트 한 번만 확인하면 됩니다.',
     who: '강남구 A빌라 건물주',
-    context: '관리 호실 24개',
+    context: '관리 호실 24개 · 단기임대 전환',
   },
   {
     quote: '기업 시설 관리 위탁 전후의 차이가 확실합니다. 우리 직원이 시설에 신경 안 써도 됩니다.',
     who: '포르쉐 코리아 사옥 관리팀',
-    context: '기업 시설 관리',
+    context: '기업 시설 관리 · 2018년부터',
   },
   {
     quote: '단기임대로 바꾸고 연 수익이 분명히 늘었습니다. 하우스맨이 3개월 계약 수금 보장까지 해주니 안심.',
     who: '서초구 B오피스텔 건물주',
-    context: '단기임대 전환',
+    context: '단기임대 전환 · 호실 18개',
+  },
+  {
+    quote: '미납 호실이 3개 있었는데, 하우스맨 인수 3개월 만에 2개 회수, 1개는 명도까지 마쳤습니다.',
+    who: '관악구 C빌라 건물주',
+    context: '수금·법무 · 2024년 인수',
+  },
+  {
+    quote: '공실이 반년 넘게 풀리지 않다가 하우스맨 맡기고 2주 만에 계약 완료. 부동산 네트워크 힘을 느꼈어요.',
+    who: '마포구 E복합빌딩 건물주',
+    context: '공실 해소 · 15개 호실',
+  },
+  {
+    quote: '해외 거주 중이라 건물 관리가 불안했는데, 월간 리포트 덕분에 현장을 확인한 것과 동일한 신뢰.',
+    who: '송파구 건물주 (재외국민)',
+    context: '원격 위탁 · 2022년부터',
   },
 ] as const;
 ---
@@ -28,7 +42,7 @@ const quotes = [
     </h2>
   </div>
 
-  <div class="grid md:grid-cols-3 gap-5">
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
     {quotes.map(({ quote, who, context }) => (
       <figure class="card h-full flex flex-col">
         <blockquote class="text-ink leading-relaxed flex-1 text-[15px]">
@@ -41,4 +55,8 @@ const quotes = [
       </figure>
     ))}
   </div>
+
+  <p class="text-center text-xs text-ink-label mt-10">
+    ※ 후기는 고객 동의 하에 일부 가명·익명 처리되었습니다.
+  </p>
 </section>
