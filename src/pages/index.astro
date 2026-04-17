@@ -18,18 +18,99 @@ import RiskList from '../components/RiskList.astro';
 import FAQ from '../components/FAQ.astro';
 import FinalCTA from '../components/FinalCTA.astro';
 import Footer from '../components/Footer.astro';
+
+// ─────────────────────────────────────────────────────────────
+// CMS 연동 — SaaS 앱의 /homepage-edit 에서 편집된 값 빌드 타임 pull
+// 원본 기본값: C:\클로드코드수업\260228\src\pages\HomepageEditPage.jsx:5-30
+// (사장님이 /homepage-edit 에서 저장한 값으로 덮어쓰므로, 기본값은
+//  SaaS 원본과 정확히 일치해야 함. 자의로 수정 금지.)
+//
+// 참고: 현재 Astro Hero/FinalCTA 는 Stripe 스타일 포지셔닝 카피
+// ("건물마다 다른 운영체제")를 이미 채용 중이며, 이는
+// project_homepage_positioning.md 의 확정 카피다.
+// 각 컴포넌트 내부에서 props 가 비어 있으면 기존 Stripe 스타일
+// 카피를 그대로 유지하도록 fallback 을 두었다.
+// ─────────────────────────────────────────────────────────────
+
+// SaaS HomepageEditPage 의 default 값을 그대로 복제
+// (사장님이 CMS 에서 한 번도 저장하지 않은 필드 fallback)
+// 주의: ctaTitle 에 "당신의 건물" 표현이 원본에 있음 — 메모리
+// feedback_b2b_copy_no_daseon.md 와 충돌하나, SaaS 원본 기본값을
+// 그대로 유지하라는 지시에 따라 수정하지 않음. 사장님이 /homepage-edit
+// 에서 직접 수정하실 것.
+const DEFAULTS = {
+  heroSub: '15년 경험 · 서울 100여 건물 관리',
+  heroTitle: '건물 운영의 격을\n다르게 합니다',
+  heroDesc: '현실을 아는 운영, 숫자로 증명되는 결과.',
+  aboutTitle: '실전에서 증명된 운영 전문 기업, HOUSEMAN',
+  aboutBody1:
+    'HOUSEMAN은 단순히 스타트업이 아니라, 14년간 현장을 누비며 건물 운영의 본질을 지켜온 실전형 전문가 조직입니다. 건물 관리는 단순히 시스템을 도입하거나 IT 기술을 흉내낸다고 해서 운영이 되는 일이 아닙니다.',
+  aboutBody2:
+    'HOUSEMAN은 2012년 설립 이후 수많은 건물을 직접 관리하며 축적한 현장 중심의 노하우를 바탕으로, 운영 프로세스 개선, 기술 도입, 문제 해결력 강화를 멈추지 않고 이어가고 있습니다. 기술도 경험도 함께 갖춘, 가장 현실적이고 신뢰할 수 있는 운영 파트너, 그 이름이 바로 HOUSEMAN입니다.',
+  highlightTitle: '하우스맨은 중개보수를\n쉐어하지 않습니다.',
+  highlightDesc: '그래서 더 많은 중개사가 움직이고,\n공실은 더 빨리 사라집니다.',
+  // 주의: "당신의 건물" — SaaS 원본 기본값 그대로 (메모리 feedback_b2b_copy_no_daseon.md 와 충돌)
+  ctaTitle: '당신의 건물,\n하우스맨이 책임집니다.',
+  ctaDesc: '표준화된 매뉴얼과 AI 기반 시스템으로\n공실 없는 건물, 수익 중심의 운영을 실현합니다.',
+  stat1Num: '15',
+  stat2Num: '100',
+  stat3Num: '800',
+  stat4Num: '98',
+};
+
+// 빌드 타임 Supabase pull.
+// supabase.ts 는 env 가 없으면 import 시점에 throw 하므로
+// dynamic import + try/catch 로 감싸 빌드 실패 방지.
+// (env 미설정 환경에서는 DEFAULTS 만 사용 → 디자인 안전)
+let cmsContent: Record<string, string> = {};
+try {
+  const { supabase } = await import('../lib/supabase');
+  const { data, error } = await supabase
+    .from('app_settings')
+    .select('value')
+    .eq('key', 'homepage_content')
+    .maybeSingle();
+  if (error) {
+    console.warn('[homepage] CMS fetch error:', error.message);
+  } else if (data?.value && typeof data.value === 'object') {
+    cmsContent = data.value as Record<string, string>;
+  }
+} catch (e) {
+  console.warn(
+    '[homepage] CMS fetch 실패 (env 누락 또는 네트워크 오류), DEFAULTS 사용:',
+    (e as Error)?.message ?? e,
+  );
+}
+
+const content = { ...DEFAULTS, ...cmsContent };
 ---
 
 <BaseLayout
-  title="하우스맨 OS — 당신 건물의 운영체제"
-  description="범용 SaaS가 못한 걸, 하우스맨 OS는 합니다. 15년 현장 경험 + 질문지 기반 맞춤 세팅. 100+ 건물 1,100+ 호실. 포르쉐·보건복지부 선택."
+  title="하우스맨 OS — 건물마다 다른 운영체제"
+  description="건물마다 특징이 달라 건물관리엔 정석이 없습니다. 하우스맨은 그 다름을 읽어 건물마다의 정석을 만듭니다. 1,100+ 호실 · 15년 현장 · 포르쉐·보건복지부 운영."
 >
   <Nav />
 
   <main>
-    <Hero />
+    {/*
+      Hero/FinalCTA — 현재 Astro 는 Stripe 스타일 포지셔닝 카피
+      ("건물마다 다른 운영체제") 를 쓰고 있으며, 이는 확정 카피다.
+      CMS 에서 사장님이 실제로 편집했을 때만 덮어쓰도록,
+      DEFAULTS 가 아닌 cmsContent 원본에서만 값을 읽어 주입한다.
+      (DEFAULTS 만 있는 상태 = 미편집 → 컴포넌트 내부 Stripe 카피 유지)
+    */}
+    <Hero
+      heroSub={cmsContent.heroSub}
+      heroTitle={cmsContent.heroTitle}
+      heroDesc={cmsContent.heroDesc}
+    />
     <LogoCarousel />
-    <StatsGrid />
+    <StatsGrid
+      stat1Num={content.stat1Num}
+      stat2Num={content.stat2Num}
+      stat3Num={content.stat3Num}
+      stat4Num={content.stat4Num}
+    />
     <ServiceCardGrid />
     <OnboardingTeaser />
     <PainPoint />
@@ -42,7 +123,10 @@ import Footer from '../components/Footer.astro';
     <PricingPlans />
     <RiskList />
     <FAQ />
-    <FinalCTA />
+    <FinalCTA
+      ctaTitle={cmsContent.ctaTitle}
+      ctaDesc={cmsContent.ctaDesc}
+    />
   </main>
 
   <Footer />

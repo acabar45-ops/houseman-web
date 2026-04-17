@@ -2,10 +2,93 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
-import { vacancies } from '../../data/vacancies.ts';
+import { supabase } from '../../lib/supabase';
+
+// ─────────────────────────────────────────────────────────
+// 빌드 타임 Supabase 조회 — 공실(홍보중·계약중)만 가져옴
+// RLS 정책상 anon에게 rooms / buildings 읽기 허용돼 있어야 함
+// ─────────────────────────────────────────────────────────
+const { data: rooms, error } = await supabase
+  .from('rooms')
+  .select(`
+    id, room_number, room_layout, area, vacancy_status,
+    standard_deposit, standard_rent, standard_management_fee,
+    standard_water_fee, standard_internet_fee, standard_cleaning_fee,
+    standard_broker_fee, standard_broker_fee_rate,
+    standard_parking_type, standard_parking_fee, standard_parking_remote_deposit,
+    external_parking_note, extra_occupant_fee, rent_discount_limit,
+    room_photo_urls, room_layout,
+    buildings!inner(
+      id, building_name,
+      is_short_term_rental, is_long_term_rental, is_commercial, is_management_agency,
+      parking_total_spaces, max_occupants,
+      is_resident_registration_allowed, requires_broker_tax_invoice,
+      contract_special_terms_short_term,
+      contract_special_terms_long_term,
+      contract_special_terms_commercial
+    )
+  `)
+  .in('vacancy_status', ['홍보중', '계약중'])
+  .order('vacancy_status', { ascending: true });
+
+if (error) {
+  console.warn('[vacancies/index] Supabase error:', error.message);
+}
+
+// slug 생성: "건물명-호수" 공백을 하이픈으로
+function toSlug(buildingName: string, roomNumber: string | number) {
+  return `${buildingName}-${roomNumber}`.replace(/\s+/g, '-');
+}
+
+// 원 → 만원 변환
+const toManwon = (v: number | null | undefined) => (v ? Math.round(v / 10000) : 0);
+
+// 관리사무소 전용 건물은 제외 (공실 의미 없음)
+const filtered = (rooms ?? []).filter((r: any) => {
+  const b = r.buildings;
+  if (b.is_management_agency && !b.is_short_term_rental && !b.is_long_term_rental && !b.is_commercial) {
+    return false;
+  }
+  return true;
+});
+
+// 카테고리: 단기 > 근생 > 주택(일반임대) > 기타
+function categoryOf(b: any): '단기' | '근생' | '주택' {
+  if (b.is_short_term_rental) return '단기';
+  if (b.is_commercial) return '근생';
+  return '주택';
+}
+
+const vacancies = filtered.map((r: any) => {
+  const b = r.buildings;
+  return {
+    id: r.id,
+    slug: toSlug(b.building_name, r.room_number),
+    category: categoryOf(b),
+    building: b.building_name,
+    room: r.room_number,
+    deposit: toManwon(r.standard_deposit),
+    rent: toManwon(r.standard_rent),
+    mgmt: toManwon(r.standard_management_fee),
+    status: r.vacancy_status as string,
+    isContracting: r.vacancy_status === '계약중',
+    layout: r.room_layout || '',
+    areaSize: r.area ? `${r.area}㎡` : '',
+  };
+});
+
+// 정렬: 1순위 계약중 → 맨 위, 2순위 주택 → 근생 → 단기, 3순위 그대로
+const typeOrder: Record<string, number> = { 주택: 0, 근생: 1, 단기: 2 };
+vacancies.sort((a, b) => {
+  const ca = a.isContracting ? 0 : 1;
+  const cb = b.isContracting ? 0 : 1;
+  if (ca !== cb) return ca - cb;
+  const ta = typeOrder[a.category] ?? 3;
+  const tb = typeOrder[b.category] ?? 3;
+  return ta - tb;
+});
 
 const categories = ['전체', '단기', '근생', '주택'] as const;
-
 const counts: Record<string, number> = {
   전체: vacancies.length,
   단기: vacancies.filter((v) => v.category === '단기').length,
@@ -51,52 +134,74 @@ const counts: Record<string, number> = {
 
   <!-- 공실 목록 -->
   <section class="container-narrow pb-section">
-    <div id="vacancy-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-      {vacancies.map((v) => (
-        <article
-          data-category={v.category}
-          class="vacancy-card card hover:border-navy-700 transition flex flex-col"
-        >
-          <div class="flex items-center justify-between mb-3">
-            <span class={`label-uppercase ${v.category === '단기' ? 'text-emphasis' : 'text-navy-700'}`}>
-              {v.category}
-            </span>
-            <span class="text-xs text-ink-label">{v.area}</span>
-          </div>
-          <h3 class="text-lg font-bold text-ink mb-1">{v.building}</h3>
-          <p class="text-sm text-ink-muted mb-3">{v.room} · {v.layout} · {v.areaSize}</p>
-          {v.highlight && (
-            <p class="text-xs text-ink-muted italic mb-3">"{v.highlight}"</p>
-          )}
-          <div class="pt-4 border-t border-ink-line flex items-baseline gap-4 mt-auto">
-            <div>
-              <div class="text-[11px] text-ink-label mb-1">보증금</div>
-              <div class="font-bold text-ink">{v.deposit.toLocaleString()}만</div>
+    {vacancies.length === 0 ? (
+      <div class="text-center py-20 text-ink-muted">
+        현재 비어있는 호실이 없습니다.<br/>
+        <a href="https://pf.kakao.com/_hYmxjn/chat" target="_blank" rel="noopener"
+           class="inline-block mt-4 btn-primary">
+          대기자 등록 요청
+        </a>
+      </div>
+    ) : (
+      <div id="vacancy-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        {vacancies.map((v) => (
+          <article
+            data-category={v.category}
+            class="vacancy-card card hover:border-navy-700 transition flex flex-col"
+          >
+            <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center gap-2">
+                <span class={`label-uppercase ${v.category === '단기' ? 'text-emphasis' : 'text-navy-700'}`}>
+                  {v.category}
+                </span>
+                {v.isContracting && (
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emphasis text-white">계약중</span>
+                )}
+              </div>
+              {v.areaSize && <span class="text-xs text-ink-label">{v.areaSize}</span>}
             </div>
-            <div>
-              <div class="text-[11px] text-ink-label mb-1">월세</div>
-              <div class="font-bold text-navy-700">{v.rent}만</div>
+            <h3 class="text-lg font-bold text-ink mb-1">{v.building}</h3>
+            <p class="text-sm text-ink-muted mb-3">
+              {v.room}호{v.layout ? ` · ${v.layout}` : ''}
+            </p>
+            <div class="pt-4 border-t border-ink-line flex items-baseline gap-4 mt-auto">
+              <div>
+                <div class="text-[11px] text-ink-label mb-1">
+                  {v.category === '단기' ? '예치금' : '보증금'}
+                </div>
+                <div class="font-bold text-ink">{v.deposit.toLocaleString()}만</div>
+              </div>
+              <div>
+                <div class="text-[11px] text-ink-label mb-1">월세</div>
+                <div class="font-bold text-navy-700">{v.rent}만</div>
+              </div>
+              {v.mgmt > 0 && (
+                <div>
+                  <div class="text-[11px] text-ink-label mb-1">관리비</div>
+                  <div class="font-bold text-ink">{v.mgmt}만</div>
+                </div>
+              )}
             </div>
-          </div>
-          <div class="flex gap-2 mt-4">
-            <a
-              href={`/vacancies/${v.slug}`}
-              class="flex-1 text-center py-2 text-sm font-semibold text-navy-700 border border-navy-700 rounded hover:bg-navy-700 hover:text-white transition"
-            >
-              자세히
-            </a>
-            <a
-              href="https://pf.kakao.com/_hYmxjn/chat"
-              target="_blank"
-              rel="noopener"
-              class="flex-1 text-center py-2 text-sm font-semibold bg-navy-700 text-white rounded hover:bg-navy-800 transition"
-            >
-              카톡 상담
-            </a>
-          </div>
-        </article>
-      ))}
-    </div>
+            <div class="flex gap-2 mt-4">
+              <a
+                href={`/vacancies/${v.slug}`}
+                class="flex-1 text-center py-2 text-sm font-semibold text-navy-700 border border-navy-700 rounded hover:bg-navy-700 hover:text-white transition"
+              >
+                자세히
+              </a>
+              <a
+                href="https://pf.kakao.com/_hYmxjn/chat"
+                target="_blank"
+                rel="noopener"
+                class="flex-1 text-center py-2 text-sm font-semibold bg-navy-700 text-white rounded hover:bg-navy-800 transition"
+              >
+                카톡 상담
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    )}
 
     <p id="empty-state" class="hidden text-center py-20 text-ink-muted">
       이 카테고리에는 현재 공실이 없습니다.<br/>
@@ -107,7 +212,7 @@ const counts: Record<string, number> = {
     </p>
 
     <p class="text-center text-xs text-ink-label mt-10">
-      기준일: 2026-04 · 변동 가능 (카톡 상담 시 최신 상태 확인)
+      기준일: 빌드 시점 · 변동 가능 (카톡 상담 시 최신 상태 확인)
     </p>
   </section>
 

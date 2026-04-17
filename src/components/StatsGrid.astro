@@ -1,11 +1,38 @@
 ---
 // StatsGrid — Stripe 큰 숫자 스타일 (카운트업 + 2×2/4×1 그리드)
+//
+// CMS (app_settings.homepage_content) 에서 stat1~4Num 을 받아 숫자 치환.
+// 원본 SaaS 기본값: 15 / 100 / 800 / 98 — 라이프스타일상 label/sublabel 은
+// Astro 의 Stripe 스타일("관리 건물 · 서울 전역" 등)을 그대로 유지하고,
+// CMS 는 **숫자만** 덮어쓴다 (디자인 안전).
+export interface Props {
+  stat1Num?: string;
+  stat2Num?: string;
+  stat3Num?: string;
+  stat4Num?: string;
+}
+const {
+  stat1Num,
+  stat2Num,
+  stat3Num,
+  stat4Num,
+} = Astro.props as Props;
+
+// CMS 값을 숫자로 변환 — 실패 시 Astro 기본 target 유지
+const toNum = (v: string | undefined, fallback: number): number => {
+  if (!v) return fallback;
+  const n = parseInt(String(v).replace(/[^0-9]/g, ''), 10);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+};
+
 const stats = [
-  { target: 100, suffix: '+', label: '관리 건물', sublabel: '서울 전역' },
-  { target: 1100, suffix: '+', label: '관리 호실', sublabel: '주거·상업 복합' },
-  { target: 800, suffix: '+', label: '부동산 네트워크', sublabel: '공실 매칭' },
-  { target: 15, suffix: '년', label: '운영 경험', sublabel: '2012년 설립' },
+  { target: toNum(stat2Num, 100),  suffix: '+', label: '관리 건물',       sublabel: '서울 전역' },
+  { target: 1100,                   suffix: '+', label: '관리 호실',       sublabel: '주거·상업 복합' },
+  { target: toNum(stat3Num, 800),  suffix: '+', label: '부동산 네트워크', sublabel: '공실 매칭' },
+  { target: toNum(stat1Num, 15),   suffix: '년', label: '운영 경험',       sublabel: '2012년 설립' },
 ] as const;
+// 주: stat4Num(입주율 98%)은 현재 Astro StatsGrid 레이아웃에 슬롯이
+//     없음(호실 1,100+ 가 이미 4번째). 필요 시 후속 PR 에서 섹션 추가.
 
 const baseDate = '2026-04';
 ---
@@ -13,9 +40,9 @@ const baseDate = '2026-04';
 <section class="bg-ink-soft">
   <div class="container-narrow py-section">
     <div class="text-center mb-14">
-      <p class="eyebrow mb-3">숫자로 본 하우스맨</p>
+      <p class="eyebrow mb-3">15년 현장, OS의 토대</p>
       <h2 class="font-display text-h2 text-ink">
-        숫자가 실력을 증명합니다.
+        OS 뒤엔 1,100+ 호실의 실전이 있습니다.
       </h2>
     </div>
 

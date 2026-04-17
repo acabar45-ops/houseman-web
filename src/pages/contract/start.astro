@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import ContractWizard from '../../components/contract/ContractWizard';
+
+// 클라이언트 전용 — room ID는 쿼리에서 읽고 Supabase로 로드.
+// SSR prerender는 하지 않는다 (개인정보성 데이터, URL 조합 무한).
+---
+<BaseLayout
+  title="계약 신청 — 하우스맨"
+  description="하우스맨 공실 계약 신청 — 부동산 인증부터 입주금 안내까지 5단계."
+>
+  <Nav />
+  <main style="min-height:100vh;background:#F5F6F8;padding:40px 0 80px">
+    <ContractWizard client:only="react" />
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,5 +1,16 @@
 ---
 // 최종 CTA — Stripe식 풀블리드 그라디언트 섹션 (하우스맨 네이비 버전)
+//
+// CMS (app_settings.homepage_content) ctaTitle / ctaDesc 를 옵션으로 받아
+// 있으면 치환, 없으면 현재 Stripe 카피 유지.
+// SaaS 원본 ctaTitle 기본값에는 "당신의 건물" 표현이 있으나 (메모리
+// feedback_b2b_copy_no_daseon.md 와 충돌) 사장님이 /homepage-edit 에서
+// 직접 수정하실 것이므로 여기서 자의로 치환하지 않는다.
+export interface Props {
+  ctaTitle?: string;
+  ctaDesc?: string;
+}
+const { ctaTitle, ctaDesc } = Astro.props as Props;
 ---
 
 <section class="relative overflow-hidden bg-cta-gradient text-white py-section">
@@ -11,14 +22,26 @@
       지금 시작하세요
     </p>
 
-    <h2 class="font-display text-display-l tracking-tight text-white mb-6">
-      당신 건물 스타일 그대로,<br/>하우스맨 OS로 세팅.
-    </h2>
+    {ctaTitle ? (
+      <h2 class="font-display text-display-l tracking-tight text-white mb-6" style="white-space: pre-line;">
+        {ctaTitle}
+      </h2>
+    ) : (
+      <h2 class="font-display text-display-l tracking-tight text-white mb-6">
+        해오던 스타일 그대로,<br/>하우스맨 OS로 세팅.
+      </h2>
+    )}
 
-    <p class="text-body-l text-white/80 mb-10 max-w-xl mx-auto">
-      셋업비 <strong class="text-white">30~100만원</strong> · 월 <strong class="text-white">호실당 3천원</strong>부터.<br/>
-      3분 질문지로 당신 건물 맞춤 견적을 받아보세요.
-    </p>
+    {ctaDesc ? (
+      <p class="text-body-l text-white/80 mb-10 max-w-xl mx-auto" style="white-space: pre-line;">
+        {ctaDesc}
+      </p>
+    ) : (
+      <p class="text-body-l text-white/80 mb-10 max-w-xl mx-auto">
+        셋업비 <strong class="text-white">30~100만원</strong> · 월 <strong class="text-white">호실당 3천원</strong>부터.<br/>
+        3분 질문지로 건물 맞춤 견적을 받아보세요.
+      </p>
+    )}
 
     <div class="flex flex-wrap justify-center gap-3">
       <a href="/onboarding" class="btn-primary bg-white !text-navy-700 hover:!bg-white/95">

@@ -1,0 +1,10 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContractLink from '../../components/contract/ContractLink';
+---
+
+<BaseLayout title="계약 진행" description="하우스맨 전자계약">
+  <main class="min-h-screen bg-ink-soft">
+    <ContractLink client:only="react" />
+  </main>
+</BaseLayout>

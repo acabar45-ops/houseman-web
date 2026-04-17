@@ -1,6 +1,32 @@
 ---
 // Hero — Stripe 체계 벤치마크 적용 (타이포·리듬·CTA·웨이브)
 // 색상은 하우스맨 네이비 유지 (Apple/Stripe 복제 X)
+
+// CMS (app_settings.homepage_content) 에서 props 주입.
+// 값이 비어 있으면 현재 Stripe 스타일 포지셔닝 카피를 그대로 유지한다.
+// (project_homepage_positioning.md — "건물마다 다른 운영체제")
+export interface Props {
+  heroSub?: string;
+  heroTitle?: string;
+  heroDesc?: string;
+}
+const { heroSub, heroTitle, heroDesc } = Astro.props as Props;
+
+// 우측 대시보드 초기 데이터 — "엄청난 처리량·다단 프로세스" 규모감 시각화.
+// 목업 수치. SaaS 런칭 후 실제 Supabase 집계로 빌드타임 치환 예정.
+const metrics = [
+  { key: 'bill',   label: '청구서 발행', value: 1287, delta: 12 },
+  { key: 'alert',  label: '알림톡 발송', value: 3421, delta: 48 },
+  { key: 'match',  label: '수금 매칭',   value: 956,  delta: 8 },
+  { key: 'settle', label: '정산 이체',   value: 412,  delta: 3 },
+];
+const initialLogs = [
+  { time: '방금',    body: '역삼101호 청구서 생성' },
+  { time: '10초 전', body: '강남B 사옥 검침 완료' },
+  { time: '25초 전', body: '단기203호 알림톡 발송' },
+  { time: '48초 전', body: '논현C 정산 이체 완료' },
+  { time: '1분 전',  body: '역삼102호 납부 확인' },
+];
 ---
 
 <section class="relative overflow-hidden bg-hero-blobs">
@@ -11,20 +37,32 @@
     <div class="md:col-span-7">
       <p class="eyebrow mb-5">
         <span class="inline-block w-1.5 h-1.5 rounded-full bg-navy-700 mr-2 align-middle"></span>
-        HOUSEMAN OS · 건물 운영체제
+        {heroSub ?? 'HOUSEMAN OS · 건물 운영체제'}
       </p>
 
-      <h1 class="font-display text-display-xl text-ink">
-        당신 건물의<br/>
-        <span class="bg-gradient-to-r from-navy-900 via-navy-700 to-navy-500 bg-clip-text text-transparent">
-          운영체제.
-        </span>
-      </h1>
+      {heroTitle ? (
+        <h1 class="font-display text-display-xl text-ink" style="white-space: pre-line;">
+          {heroTitle}
+        </h1>
+      ) : (
+        <h1 class="font-display text-display-xl text-ink">
+          건물마다 다른<br/>
+          <span class="bg-gradient-to-r from-navy-900 via-navy-700 to-navy-500 bg-clip-text text-transparent">
+            운영체제.
+          </span>
+        </h1>
+      )}
 
-      <p class="mt-6 text-body-l text-ink-body max-w-[560px]">
-        당신 건물 스타일 그대로, 하우스맨이 시스템으로 짜 드립니다.<br/>
-        15년 현장 경험 + <strong class="text-navy-700">하우스맨 OS</strong>로 건물별 맞춤 세팅.
-      </p>
+      {heroDesc ? (
+        <p class="mt-6 text-body-l text-ink-body max-w-[560px]" style="white-space: pre-line;">
+          {heroDesc}
+        </p>
+      ) : (
+        <p class="mt-6 text-body-l text-ink-body max-w-[560px]">
+          건물마다 특징이 달라, 건물관리엔 정석이 없습니다.<br/>
+          하우스맨은 그 다름을 읽어, <strong class="text-navy-700">건물마다의 정석을 만듭니다.</strong>
+        </p>
+      )}
 
       <div class="mt-9 flex flex-wrap items-center gap-4">
         <a href="/onboarding" class="btn-primary">
@@ -39,56 +77,57 @@
       <!-- 신뢰 지표 인라인 -->
       <div class="mt-12 flex flex-wrap gap-6 text-sm text-ink-body">
         <div class="flex items-center gap-2">
-          <span class="font-bold text-ink">100+</span>
-          <span class="text-ink-label">관리 건물</span>
+          <span class="font-bold text-ink">1,100+</span>
+          <span class="text-ink-label">호실 운영 중</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-bold text-ink">1,100+</span>
-          <span class="text-ink-label">호실</span>
+          <span class="font-bold text-ink">15년</span>
+          <span class="text-ink-label">현장 (2012~)</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="font-bold text-ink">800+</span>
           <span class="text-ink-label">부동산 네트워크</span>
         </div>
         <div class="flex items-center gap-2">
-          <span class="font-bold text-ink">15년</span>
-          <span class="text-ink-label">경력</span>
+          <span class="font-bold text-ink">포르쉐 · 보건복지부</span>
+          <span class="text-ink-label">운영 중</span>
         </div>
       </div>
     </div>
 
-    <!-- 우 5 — 알림톡 비주얼 (Stripe UI 목업 자리 차용) -->
-    <div class="md:col-span-5 relative h-[460px] hidden md:block">
-      <div class="absolute right-0 top-0 w-full space-y-4">
-        <div class="alertkakao-card delay-0">
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
-            <span class="text-[11px] font-bold text-ink-label tracking-wider">[하우스맨]</span>
-            <span class="text-[11px] text-ink-label ml-auto">방금</span>
-          </div>
-          <p class="text-sm text-ink leading-relaxed">
-            역삼101호 월세 <strong class="text-navy-700">85만원</strong> 청구서가 도착했습니다.
-          </p>
+    <!-- 우 5 — OS 실시간 대시보드 (처리량 · 4단 프로세스 시각화) -->
+    <div class="md:col-span-5 hidden md:block">
+      <div class="os-dashboard">
+        <div class="os-header">
+          <span class="os-live-dot" aria-hidden="true"></span>
+          <span class="os-brand">HOUSEMAN OS</span>
+          <span class="os-live-tag">LIVE</span>
+          <span class="os-today">오늘</span>
         </div>
-        <div class="alertkakao-card delay-1">
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
-            <span class="text-[11px] font-bold text-ink-label tracking-wider">[하우스맨]</span>
-            <span class="text-[11px] text-ink-label ml-auto">1분 전</span>
-          </div>
-          <p class="text-sm text-ink leading-relaxed">
-            역삼101호 <strong class="text-navy-700">납부 완료</strong>가 확인되었습니다.
-          </p>
+
+        <div class="os-metrics">
+          {metrics.map((m) => (
+            <div class="os-metric" data-key={m.key}>
+              <div class="os-metric-label">{m.label}</div>
+              <div class="os-metric-value" data-value={m.value}>{m.value.toLocaleString()}</div>
+              <div class="os-metric-delta">+<span class="os-delta-num">{m.delta}</span><span class="os-arrow">↑</span></div>
+            </div>
+          ))}
         </div>
-        <div class="alertkakao-card delay-2">
-          <div class="flex items-center gap-2 mb-1.5">
-            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
-            <span class="text-[11px] font-bold text-ink-label tracking-wider">[하우스맨]</span>
-            <span class="text-[11px] text-ink-label ml-auto">방금</span>
-          </div>
-          <p class="text-sm text-ink leading-relaxed">
-            금월 정산 리포트 PDF가 이메일로 발송되었습니다.
-          </p>
+
+        <div class="os-log-head">
+          <span>최근 이벤트</span>
+          <span>실시간</span>
+        </div>
+
+        <div id="os-log" class="os-log">
+          {initialLogs.slice(0, 5).map((log) => (
+            <div class="os-log-row">
+              <span class="os-log-dot" aria-hidden="true"></span>
+              <span class="os-log-body">{log.body}</span>
+              <span class="os-log-time">{log.time}</span>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -96,22 +135,141 @@
 </section>
 
 <style>
-  .alertkakao-card {
-    @apply bg-white text-ink rounded-card-lg p-4 shadow-mockup border border-ink-line
-           opacity-0 translate-y-4;
+  .os-dashboard {
+    @apply bg-white rounded-card-lg shadow-mockup border border-ink-line p-5 w-full;
   }
-  @media (prefers-reduced-motion: no-preference) {
-    .alertkakao-card {
-      animation: slide-in 0.7s cubic-bezier(0.2, 1, 0.2, 1) forwards;
-    }
-    .alertkakao-card.delay-0 { animation-delay: 0.4s; }
-    .alertkakao-card.delay-1 { animation-delay: 1.4s; }
-    .alertkakao-card.delay-2 { animation-delay: 2.4s; }
+  .os-header {
+    @apply flex items-center gap-2 text-[11px] font-bold tracking-wider
+           text-ink-label mb-4 pb-3 border-b border-ink-line;
   }
+  .os-brand { @apply text-navy-700; }
+  .os-live-tag {
+    @apply bg-red-50 text-red-600 px-1.5 py-0.5 rounded text-[9px];
+  }
+  .os-today { @apply ml-auto font-normal; }
+  .os-live-dot {
+    @apply w-1.5 h-1.5 rounded-full bg-red-500;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55);
+    animation: os-live-pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes os-live-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55); }
+    50%      { box-shadow: 0 0 0 5px rgba(239, 68, 68, 0);  }
+  }
+
+  .os-metrics {
+    @apply grid grid-cols-2 gap-2.5 mb-4;
+  }
+  .os-metric {
+    @apply bg-ink-soft rounded-lg px-3 py-2.5 border border-ink-line;
+    transition: background-color 0.35s ease-out;
+  }
+  .os-metric.flash { @apply bg-navy-700/5; }
+  .os-metric-label {
+    @apply text-[10px] font-semibold text-ink-label uppercase tracking-wider mb-1;
+  }
+  .os-metric-value {
+    @apply text-[22px] font-extrabold text-ink leading-none font-display;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.35s ease-out;
+  }
+  .os-metric.flash .os-metric-value { @apply text-navy-700; }
+  .os-metric-delta {
+    @apply text-[10px] font-semibold text-emerald-600 mt-1 inline-flex items-center gap-0.5;
+  }
+  .os-arrow { @apply text-[9px] ml-0.5; }
+
+  .os-log-head {
+    @apply flex justify-between text-[10px] font-semibold uppercase tracking-wider
+           text-ink-label mb-2;
+  }
+  .os-log { @apply space-y-1.5 min-h-[132px]; }
+  .os-log-row {
+    @apply flex items-center gap-2 text-xs text-ink-body py-1;
+    animation: os-log-in 0.5s cubic-bezier(0.2, 1, 0.2, 1);
+  }
+  .os-log-dot {
+    @apply w-1.5 h-1.5 rounded-full shrink-0 bg-navy-700;
+  }
+  .os-log-body { @apply flex-1 truncate; }
+  .os-log-time {
+    @apply text-[10px] text-ink-label shrink-0;
+    font-variant-numeric: tabular-nums;
+  }
+  @keyframes os-log-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .alertkakao-card { opacity: 1; transform: none; }
-  }
-  @keyframes slide-in {
-    to { opacity: 1; transform: translateY(0); }
+    .os-live-dot,
+    .os-log-row,
+    .os-metric,
+    .os-metric-value { animation: none !important; transition: none !important; }
   }
 </style>
+
+<script is:inline>
+  (() => {
+    const dashboard = document.querySelector('.os-dashboard');
+    if (!dashboard) return;
+    if (typeof matchMedia !== 'function') return;
+    if (!matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+
+    // 1) Metric 카운터 천천히 증가 (5.2초마다 +1~3 랜덤)
+    const metrics = dashboard.querySelectorAll('.os-metric');
+    const tickMetrics = () => {
+      metrics.forEach((m) => {
+        const valEl = m.querySelector('.os-metric-value');
+        const deltaNum = m.querySelector('.os-delta-num');
+        if (!valEl || !deltaNum) return;
+        const cur = parseInt(valEl.getAttribute('data-value') || '0', 10);
+        const inc = 1 + Math.floor(Math.random() * 3);
+        const next = cur + inc;
+        valEl.setAttribute('data-value', String(next));
+        valEl.textContent = next.toLocaleString();
+        const curDelta = parseInt(deltaNum.textContent || '0', 10) + inc;
+        deltaNum.textContent = String(curDelta);
+        m.classList.add('flash');
+        setTimeout(() => m.classList.remove('flash'), 850);
+      });
+    };
+    setInterval(tickMetrics, 5200);
+
+    // 2) 로그 피드 (4.5초마다 새 이벤트, 5개 유지)
+    const buildings = [
+      '역삼101호', '역삼102호', '역삼205호', '강남B 사옥', '논현C 빌딩',
+      '단기203호', '단기401호', '상가B1', '어반그레이 1층',
+      '서우하우스 401호', '유석빌딩 402호', '미진빌딩 5층', '문화빌딩 2층',
+    ];
+    const eventTypes = [
+      '청구서 생성', '검침 완료', '알림톡 발송', '정산 이체 완료',
+      '납부 확인', '수금 매칭', '계약 만료 30일 전', '체크인 24시간 전',
+    ];
+    const logEl = dashboard.querySelector('#os-log');
+    if (!logEl) return;
+    const timeLabels = ['방금', '5초 전', '12초 전', '30초 전', '1분 전'];
+
+    const pushLog = () => {
+      const b = buildings[Math.floor(Math.random() * buildings.length)];
+      const e = eventTypes[Math.floor(Math.random() * eventTypes.length)];
+      const row = document.createElement('div');
+      row.className = 'os-log-row';
+      row.innerHTML =
+        '<span class="os-log-dot" aria-hidden="true"></span>' +
+        '<span class="os-log-body">' + b + ' ' + e + '</span>' +
+        '<span class="os-log-time">방금</span>';
+      logEl.insertBefore(row, logEl.firstChild);
+
+      const rows = logEl.querySelectorAll('.os-log-row');
+      rows.forEach((r, i) => {
+        const t = r.querySelector('.os-log-time');
+        if (t && timeLabels[i]) t.textContent = timeLabels[i];
+      });
+      while (logEl.children.length > 5) {
+        logEl.removeChild(logEl.lastChild);
+      }
+    };
+    setInterval(pushLog, 4500);
+  })();
+</script>

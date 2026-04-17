@@ -2,45 +2,136 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
-import { vacancies, type Vacancy } from '../../data/vacancies.ts';
+import VacancyGallery from '../../components/vacancies/VacancyGallery.tsx';
+import { PriorityRestrictionsBadge } from '../../components/PriorityRestrictionsBadge';
+import { supabase } from '../../lib/supabase';
 
 export async function getStaticPaths() {
-  return vacancies.map((v) => ({
-    params: { slug: v.slug },
-    props: { vacancy: v },
+  const { data: rooms, error } = await supabase
+    .from('rooms')
+    .select(`
+      id, room_number, room_layout, area, vacancy_status,
+      standard_deposit, standard_rent, standard_management_fee,
+      standard_water_fee, standard_internet_fee, standard_cleaning_fee,
+      standard_broker_fee, standard_broker_fee_rate,
+      standard_parking_type, standard_parking_fee, standard_parking_remote_deposit,
+      external_parking_note, extra_occupant_fee, rent_discount_limit,
+      room_photo_urls,
+      buildings!inner(
+        id, building_name,
+        is_short_term_rental, is_long_term_rental, is_commercial, is_management_agency,
+        parking_total_spaces, max_occupants,
+        is_resident_registration_allowed, requires_broker_tax_invoice,
+        contract_special_terms_short_term,
+        contract_special_terms_long_term,
+        contract_special_terms_commercial
+      )
+    `)
+    .in('vacancy_status', ['홍보중', '계약중']);
+
+  if (error) {
+    console.warn('[vacancies/[slug]] Supabase error:', error.message);
+    return [];
+  }
+
+  const filtered = (rooms ?? []).filter((r: any) => {
+    const b = r.buildings;
+    if (b.is_management_agency && !b.is_short_term_rental && !b.is_long_term_rental && !b.is_commercial) {
+      return false;
+    }
+    return true;
+  });
+
+  return filtered.map((r: any) => ({
+    params: {
+      slug: `${r.buildings.building_name}-${r.room_number}`.replace(/\s+/g, '-'),
+    },
+    props: { vacancy: r },
   }));
 }
 
-const { vacancy } = Astro.props as { vacancy: Vacancy };
+const { vacancy } = Astro.props as { vacancy: any };
+const b = vacancy.buildings;
 
-// 같은 카테고리의 다른 공실 3개
-const related = vacancies
-  .filter((v) => v.category === vacancy.category && v.slug !== vacancy.slug)
-  .slice(0, 3);
+// ─── 카테고리 판별 ───
+const category: '단기' | '근생' | '주택' = b.is_short_term_rental
+  ? '단기'
+  : b.is_commercial
+    ? '근생'
+    : '주택';
 
+const isContracting = vacancy.vacancy_status === '계약중';
+const canContract = vacancy.vacancy_status === '홍보중';
+const depositLabel = category === '단기' ? '예치금' : '보증금';
+
+// ─── 금액 변환 (원 → 만원) ───
+const toManwon = (v: number | null | undefined) =>
+  v ? Math.round(v / 10000) : 0;
+
+const deposit = toManwon(vacancy.standard_deposit);
+const rent = toManwon(vacancy.standard_rent);
+const mgmt = toManwon(vacancy.standard_management_fee);
+// 소액 공과금은 원 단위 그대로 표기
+const waterFee = vacancy.standard_water_fee ?? 0;
+const internetFee = vacancy.standard_internet_fee ?? 0;
+const cleaningFee = vacancy.standard_cleaning_fee ?? 0;
+const brokerFee = vacancy.standard_broker_fee ?? 0;
+
+// ─── 특약 ───
+// 건물 단위 contract_special_terms_* 는 [{text: '...'}, ...] 형태의 JSONB 배열
+function termsToList(v: unknown): string[] {
+  if (!Array.isArray(v)) return [];
+  return v
+    .map((c) => {
+      if (typeof c === 'string') return c;
+      if (c && typeof c === 'object' && 'text' in c) {
+        const t = (c as { text?: unknown }).text;
+        return typeof t === 'string' ? t : '';
+      }
+      return '';
+    })
+    .filter((s) => s.trim().length > 0);
+}
+
+const termsKey =
+  category === '단기'
+    ? 'contract_special_terms_short_term'
+    : category === '근생'
+      ? 'contract_special_terms_commercial'
+      : 'contract_special_terms_long_term';
+const terms = termsToList(b[termsKey]);
+
+// ─── 이미지 ───
+const images: string[] = Array.isArray(vacancy.room_photo_urls)
+  ? vacancy.room_photo_urls.filter((u: any) => typeof u === 'string' && u.trim())
+  : [];
+
+// ─── 상세 필드 ───
 const fields = [
-  { label: '카테고리', value: vacancy.category },
-  { label: '건물', value: vacancy.building },
-  { label: '호실', value: vacancy.room },
-  { label: '지역', value: vacancy.area },
-  { label: '방 구조', value: vacancy.layout ?? '-' },
-  { label: '전용 면적', value: vacancy.areaSize ?? '-' },
-  { label: '층', value: vacancy.floor ?? '-' },
-  { label: '엘리베이터', value: vacancy.elevator ? '있음' : '없음' },
-  { label: '주차', value: vacancy.parking ?? '-' },
-  { label: '지하철', value: vacancy.subway ?? '-' },
-  { label: '옵션', value: vacancy.option ?? '-' },
-  { label: '입주 가능일', value: vacancy.availableFrom ?? '협의' },
+  { label: '카테고리', value: `${category}임대` },
+  { label: '건물', value: b.building_name },
+  { label: '호실', value: `${vacancy.room_number}호` },
+  { label: '방 구조', value: vacancy.room_layout || '-' },
+  { label: '전용 면적', value: vacancy.area ? `${vacancy.area}㎡` : '-' },
+  {
+    label: '주차',
+    value:
+      vacancy.standard_parking_type ||
+      vacancy.external_parking_note ||
+      '-',
+  },
 ];
+
+const description = `${b.building_name} ${vacancy.room_number}호. ${depositLabel} ${deposit}만 / 월세 ${rent}만. 하우스맨이 직접 운영하는 ${category}임대 호실.`;
 ---
 
 <BaseLayout
-  title={`${vacancy.building} ${vacancy.room} | ${vacancy.area} ${vacancy.category}임대 공실 | 하우스맨`}
-  description={`${vacancy.area} ${vacancy.building} ${vacancy.room}. 보증금 ${vacancy.deposit}만 / 월세 ${vacancy.rent}만. ${vacancy.highlight ?? ''} 하우스맨이 직접 운영하는 ${vacancy.category}임대 호실.`}
+  title={`${b.building_name} ${vacancy.room_number}호 | ${category}임대 공실 | 하우스맨`}
+  description={description}
 >
   <Nav />
 
-  <article class="container-narrow py-section max-w-5xl">
+  <article class="container-narrow py-section max-w-4xl">
     <!-- 뒤로 가기 -->
     <div class="mb-6">
       <a href="/vacancies" class="text-sm text-ink-muted hover:text-navy-700">
@@ -49,56 +140,166 @@ const fields = [
     </div>
 
     <!-- 헤더 -->
-    <header class="mb-10">
-      <div class="flex items-center gap-3 mb-3">
-        <span class={`label-uppercase px-2 py-1 rounded ${vacancy.category === '단기' ? 'bg-red-50 text-emphasis' : 'bg-ink-soft text-navy-700'}`}>
-          {vacancy.category}임대
+    <header class="mb-8">
+      <div class="flex items-center gap-2 mb-3 flex-wrap">
+        <span class={`label-uppercase px-2 py-1 rounded ${category === '단기' ? 'bg-red-50 text-emphasis' : 'bg-ink-soft text-navy-700'}`}>
+          {category}임대
         </span>
-        <span class="text-sm text-ink-muted">{vacancy.area}</span>
+        {isContracting && (
+          <span class="text-xs font-bold px-2 py-1 rounded bg-emphasis text-white">계약중</span>
+        )}
       </div>
       <h1 class="text-3xl md:text-5xl font-extrabold text-navy-700 tracking-tight mb-3">
-        {vacancy.building}
+        {b.building_name}
       </h1>
-      <p class="text-xl text-ink">{vacancy.room} · {vacancy.layout}</p>
-      {vacancy.highlight && (
-        <p class="mt-4 text-lg text-ink-muted italic">"{vacancy.highlight}"</p>
-      )}
+      <p class="text-xl text-ink">
+        {vacancy.room_number}호
+        {vacancy.room_layout && <span class="text-ink-muted"> · {vacancy.room_layout}</span>}
+        {vacancy.area && <span class="text-ink-muted"> · {vacancy.area}㎡</span>}
+      </p>
     </header>
+
+    <!-- 이미지 갤러리 (React Island) -->
+    <div class="mb-10">
+      <VacancyGallery
+        client:load
+        images={images}
+        alt={`${b.building_name} ${vacancy.room_number}호`}
+      />
+    </div>
 
     <!-- 가격 강조 + CTA -->
     <section class="card bg-ink-soft mb-10">
       <div class="grid md:grid-cols-3 gap-6 items-center">
         <div>
-          <div class="label-uppercase mb-1">보증금</div>
+          <div class="label-uppercase mb-1">{depositLabel}</div>
           <div class="text-3xl font-extrabold text-ink">
-            {vacancy.deposit.toLocaleString()}<span class="text-base text-ink-muted ml-1">만원</span>
+            {deposit.toLocaleString()}<span class="text-base text-ink-muted ml-1">만원</span>
           </div>
         </div>
         <div>
           <div class="label-uppercase mb-1">월세</div>
           <div class="text-3xl font-extrabold text-navy-700">
-            {vacancy.rent}<span class="text-base text-ink-muted ml-1">만원</span>
+            {rent}<span class="text-base text-ink-muted ml-1">만원</span>
           </div>
         </div>
         <div class="flex flex-col gap-2">
+          {canContract ? (
+            <a
+              href={`/contract/start?room=${vacancy.id}`}
+              class="btn-primary justify-center"
+            >
+              계약하기
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled
+              class="inline-flex items-center justify-center px-4 py-3 rounded font-semibold text-sm bg-ink-line text-ink-label cursor-not-allowed"
+            >
+              계약 진행중
+            </button>
+          )}
           <a
             href="https://pf.kakao.com/_hYmxjn/chat"
             target="_blank"
             rel="noopener"
-            class="btn-primary justify-center"
+            class="btn-ghost justify-center"
           >
-            카톡으로 상담
-          </a>
-          <a href="tel:1544-4150" class="btn-ghost justify-center">
-            1544-4150 전화
+            카톡 상담
           </a>
         </div>
       </div>
     </section>
 
+    <!-- 가격 테이블 -->
+    <section class="mb-10">
+      <h2 class="label-uppercase mb-4">비용 안내</h2>
+      <div class="border border-ink-line rounded-card overflow-hidden">
+        <table class="w-full text-sm">
+          <tbody>
+            <tr class="border-b border-ink-line">
+              <td class="px-4 py-3 bg-ink-soft font-semibold text-ink-muted w-1/3">{depositLabel}</td>
+              <td class="px-4 py-3 font-bold">{deposit.toLocaleString()}만원</td>
+            </tr>
+            <tr class="border-b border-ink-line">
+              <td class="px-4 py-3 bg-ink-soft font-semibold text-ink-muted">월세</td>
+              <td class="px-4 py-3 font-bold text-navy-700">{rent}만원</td>
+            </tr>
+            {mgmt > 0 && (
+              <tr class="border-b border-ink-line">
+                <td class="px-4 py-3 bg-ink-soft font-semibold text-ink-muted">관리비</td>
+                <td class="px-4 py-3 font-semibold">{mgmt}만원</td>
+              </tr>
+            )}
+            {waterFee > 0 && (
+              <tr class="border-b border-ink-line">
+                <td class="px-4 py-3 bg-ink-soft font-semibold text-ink-muted">수도</td>
+                <td class="px-4 py-3 font-semibold">{Number(waterFee).toLocaleString()}원</td>
+              </tr>
+            )}
+            {internetFee > 0 && (
+              <tr class="border-b border-ink-line">
+                <td class="px-4 py-3 bg-ink-soft font-semibold text-ink-muted">인터넷</td>
+                <td class="px-4 py-3 font-semibold">{Number(internetFee).toLocaleString()}원</td>
+              </tr>
+            )}
+            {cleaningFee > 0 && (
+              <tr class="border-b border-ink-line">
+                <td class="px-4 py-3 bg-ink-soft font-semibold text-ink-muted">퇴실청소비</td>
+                <td class="px-4 py-3 font-semibold">{Number(cleaningFee).toLocaleString()}원</td>
+              </tr>
+            )}
+            {brokerFee > 0 && (
+              <tr>
+                <td class="px-4 py-3 bg-ink-soft font-semibold text-ink-muted">중개수수료</td>
+                <td class="px-4 py-3 font-semibold">{Number(brokerFee).toLocaleString()}원</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 단기 — 우선 제한 조건 섹션 (PriorityRestrictionsBadge React Island) -->
+    {category === '단기' && (
+      <section class="mb-10">
+        <PriorityRestrictionsBadge
+          client:load
+          building={b}
+          room={vacancy}
+          mode="view"
+          title="계약 전 반드시 확인"
+          parkingInfo={vacancy.standard_parking_type ? {
+            type: vacancy.standard_parking_type,
+            fee: vacancy.standard_parking_fee,
+            remoteDeposit: vacancy.standard_parking_remote_deposit,
+          } : undefined}
+          extraOccupantFee={vacancy.extra_occupant_fee}
+          externalParkingNote={vacancy.external_parking_note}
+        />
+      </section>
+    )}
+
+    <!-- 특약사항 -->
+    {terms.length > 0 && (
+      <section class="mb-10">
+        <h2 class="label-uppercase mb-4">계약 안내사항</h2>
+        <div class="card">
+          <ul class="space-y-2 text-sm text-ink-body leading-relaxed">
+            {terms.map((t) => (
+              <li class="pl-4 relative before:content-['•'] before:absolute before:left-0 before:text-navy-700 before:font-bold">
+                {t}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )}
+
     <!-- 상세 정보 -->
     <section class="mb-12">
-      <h2 class="label-uppercase mb-5">상세 정보</h2>
+      <h2 class="label-uppercase mb-4">상세 정보</h2>
       <dl class="grid md:grid-cols-2 gap-x-10 gap-y-1">
         {fields.map(({ label, value }) => (
           <div class="flex items-center justify-between py-3 border-b border-ink-line">
@@ -109,27 +310,41 @@ const fields = [
       </dl>
     </section>
 
-    <!-- 같은 카테고리 다른 공실 -->
-    {related.length > 0 && (
-      <section class="pt-10 border-t border-ink-line">
-        <h2 class="label-uppercase mb-5">같은 카테고리 다른 호실</h2>
-        <div class="grid md:grid-cols-3 gap-5">
-          {related.map((r) => (
-            <a href={`/vacancies/${r.slug}`} class="card hover:border-navy-700 transition">
-              <div class="flex items-center justify-between mb-2">
-                <span class={`label-uppercase ${r.category === '단기' ? 'text-emphasis' : 'text-navy-700'}`}>{r.category}</span>
-                <span class="text-xs text-ink-label">{r.area}</span>
-              </div>
-              <h3 class="font-bold text-ink mb-1">{r.building} {r.room}</h3>
-              <p class="text-sm text-ink-muted mb-3">{r.layout} · {r.areaSize}</p>
-              <div class="text-sm text-ink">
-                보증 <strong>{r.deposit.toLocaleString()}만</strong> / 월 <strong class="text-navy-700">{r.rent}만</strong>
-              </div>
-            </a>
-          ))}
-        </div>
-      </section>
-    )}
+    <!-- 하단 CTA -->
+    <section class="pt-10 border-t border-ink-line text-center">
+      <p class="text-ink-muted mb-4">
+        더 궁금한 점이 있으신가요? 카톡으로 바로 상담받으세요.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        {canContract ? (
+          <a
+            href={`/contract/start?room=${vacancy.id}`}
+            class="btn-primary"
+          >
+            이 호실 계약하기
+          </a>
+        ) : (
+          <button
+            type="button"
+            disabled
+            class="inline-flex items-center justify-center px-6 py-3 rounded font-semibold bg-ink-line text-ink-label cursor-not-allowed"
+          >
+            계약 진행중
+          </button>
+        )}
+        <a
+          href="https://pf.kakao.com/_hYmxjn/chat"
+          target="_blank"
+          rel="noopener"
+          class="btn-ghost"
+        >
+          카톡 상담
+        </a>
+        <a href="tel:1544-4150" class="btn-ghost">
+          1544-4150 전화
+        </a>
+      </div>
+    </section>
   </article>
 
   <Footer />
