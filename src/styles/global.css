@@ -2,17 +2,146 @@
 @tailwind components;
 @tailwind utilities;
 
-/* 스크롤 페이드인 — 뷰포트 진입 시 위로 슬라이드 + 페이드 */
+/* ============================================
+   Stripe 체계 벤치마크 — 모션 · 웨이브 · 유틸리티
+   Apple/Stripe 색 복제 금지 규칙 준수 (구조만 차용)
+   ============================================ */
+
+/* 스크롤 페이드인 — Stripe signature easing (.2,1,.2,1) */
 @media (prefers-reduced-motion: no-preference) {
   .fade-up {
     opacity: 0;
     transform: translateY(24px);
-    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    transition: opacity 600ms cubic-bezier(0.2, 1, 0.2, 1),
+                transform 600ms cubic-bezier(0.2, 1, 0.2, 1);
   }
   .fade-up.in-view {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* 저채도 웨이브 배경 (CSS-only, WebGL 대체) */
+.hero-wave {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(60% 50% at 20% 30%, rgba(146, 181, 220, 0.55) 0%, transparent 60%),
+    radial-gradient(55% 45% at 80% 20%, rgba(107, 134, 182, 0.40) 0%, transparent 65%),
+    radial-gradient(50% 50% at 70% 80%, rgba(190, 177, 228, 0.35) 0%, transparent 60%),
+    radial-gradient(45% 40% at 15% 85%, rgba(143, 193, 227, 0.40) 0%, transparent 60%);
+  filter: blur(80px) saturate(1.05);
+  opacity: 1;
+  z-index: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-wave {
+    animation: blobShift 60s linear infinite;
+  }
+}
+@keyframes blobShift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1.05); }
+  50%      { transform: translate3d(-3%, 2%, 0) scale(1.1); }
+}
+
+/* 다크 히어로용 웨이브 (네이비 위 파스텔 톤) */
+.hero-wave-dark {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(60% 50% at 20% 30%, rgba(95, 125, 175, 0.45) 0%, transparent 60%),
+    radial-gradient(55% 45% at 80% 20%, rgba(132, 103, 173, 0.35) 0%, transparent 65%),
+    radial-gradient(50% 50% at 70% 80%, rgba(82, 140, 194, 0.3) 0%, transparent 60%);
+  filter: blur(100px);
+  z-index: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-wave-dark {
+    animation: blobShift 75s linear infinite;
+  }
+}
+
+@layer base {
+  html {
+    font-family: 'Pretendard Variable', Pretendard, Inter, system-ui, sans-serif;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-white text-ink;
+  }
+  .dark body {
+    @apply bg-dk-bg text-dk-text;
+  }
+  .container-narrow {
+    @apply max-w-content mx-auto px-6 md:px-8;
+  }
+  /* Stripe eyebrow — 섹션 리듬의 핵심 */
+  .eyebrow {
+    @apply text-[13px] font-bold tracking-[0.08em] uppercase text-navy-700;
+  }
+  .label-uppercase {
+    @apply text-[11px] font-bold tracking-wider uppercase text-ink-label;
+  }
+}
+
+@layer components {
+  /* Pill CTA — Stripe 시그니처 (radius 20px + 미세 lift shadow) */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-pill
+           bg-navy-700 text-white font-semibold
+           shadow-cta hover:shadow-cta-hover hover:-translate-y-px
+           transition-all duration-240 ease-stripe;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-pill
+           border border-white/30 text-white font-medium
+           hover:bg-white/10 transition duration-240 ease-stripe;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-pill
+           border border-ink-line text-ink font-medium
+           hover:bg-ink-soft hover:border-navy-700 transition duration-240 ease-stripe;
+  }
+  /* 인라인 텍스트 CTA (Stripe "Learn more →" 패턴) */
+  .link-arrow {
+    @apply inline-flex items-center gap-1 font-semibold text-navy-700
+           hover:gap-2 transition-[gap] duration-240 ease-stripe;
+  }
+  /* Stripe 카드 — 얇은 보더 + 미세 그림자 + hover lift */
+  .card {
+    @apply bg-white border border-ink-line rounded-card p-8
+           shadow-card transition-all duration-240 ease-stripe;
+  }
+  .card-hover {
+    @apply hover:border-navy-700 hover:shadow-card-hover hover:-translate-y-1;
+  }
+  .dark .card {
+    @apply bg-dk-card border-dk-line;
+  }
+}
+
+@layer utilities {
+  /* 섹션 간격 */
+  .py-section { padding-top: 7.5rem; padding-bottom: 7.5rem; }
+  @media (max-width: 768px) {
+    .py-section { padding-top: 4rem; padding-bottom: 4rem; }
+  }
+}
+
+/* 스티키 네비 상태 — Stripe 블러 전환 */
+#site-nav.scrolled {
+  background: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid #E3E8EE;
+  box-shadow: 0 1px 2px rgba(14, 28, 46, 0.04);
+}
+.dark #site-nav.scrolled {
+  background: rgba(30, 30, 30, 0.85);
+  border-bottom-color: #3C3C3C;
 }
 
 @layer base {
