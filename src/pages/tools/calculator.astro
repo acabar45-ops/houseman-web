@@ -1,0 +1,280 @@
+---
+// 단기임대 전환 시 수익 계산기 — 완전 클라이언트 사이드 (개인정보 전송 0)
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
+---
+
+<BaseLayout
+  title="단기임대 수익 계산기 | 하우스맨"
+  description="지금 건물을 단기임대로 전환하면 얼마 벌 수 있을까요? 호실 수·월세·지역만 입력하면 즉시 예상 연 수익과 투자 회수 기간 계산."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-20">
+    <div class="container-narrow text-center max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">도구</p>
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-5">
+        단기임대 전환하면<br/>얼마 벌까요?
+      </h1>
+      <p class="text-lg text-white/85 leading-relaxed">
+        3가지만 입력하세요. 예상 연 수익과 회수 기간을 즉시 계산합니다.<br/>
+        <span class="text-white/60 text-sm">※ 참고용 시뮬레이션. 실제는 상담 필수.</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="container-narrow py-section max-w-5xl">
+    <div class="grid md:grid-cols-5 gap-6">
+      <!-- 좌측: 입력 폼 -->
+      <div class="md:col-span-2 card">
+        <p class="label-uppercase mb-4">입력</p>
+
+        <div class="space-y-5">
+          <div>
+            <label class="block text-sm font-bold text-ink mb-2">
+              관리 호실 수
+            </label>
+            <input
+              id="rooms"
+              type="number"
+              value="10"
+              min="1"
+              max="500"
+              class="w-full px-4 py-3 rounded-card border border-ink-line text-lg font-bold text-navy-700 focus:border-navy-700 focus:outline-none"
+            />
+            <p class="text-xs text-ink-label mt-1">원룸·오피스텔 기준</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-ink mb-2">
+              호실당 현재 월세 (만원)
+            </label>
+            <input
+              id="currentRent"
+              type="number"
+              value="70"
+              min="20"
+              max="500"
+              class="w-full px-4 py-3 rounded-card border border-ink-line text-lg font-bold text-navy-700 focus:border-navy-700 focus:outline-none"
+            />
+            <p class="text-xs text-ink-label mt-1">장기 임대 기준</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-ink mb-2">
+              지역
+            </label>
+            <select
+              id="region"
+              class="w-full px-4 py-3 rounded-card border border-ink-line text-base font-semibold text-navy-700 focus:border-navy-700 focus:outline-none bg-white"
+            >
+              <option value="1.5">강남·서초·논현 (수요 최상)</option>
+              <option value="1.4">송파·마포·용산 (수요 상)</option>
+              <option value="1.3" selected>성동·동작·관악 (수요 중)</option>
+              <option value="1.2">기타 서울 (수요 중하)</option>
+              <option value="1.15">경기 주요 지역</option>
+            </select>
+            <p class="text-xs text-ink-label mt-1">단기임대 수요·가격 배수</p>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-ink mb-2">
+              풀옵션 수준
+            </label>
+            <div class="grid grid-cols-2 gap-2">
+              <button type="button" data-option="basic" class="option-btn">
+                기본
+              </button>
+              <button type="button" data-option="premium" class="option-btn active">
+                프리미엄
+              </button>
+            </div>
+            <p class="text-xs text-ink-label mt-1">가구·가전·인테리어 수준</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 우측: 결과 -->
+      <div class="md:col-span-3 space-y-4">
+        <div class="card bg-ink-soft">
+          <p class="label-uppercase mb-4">현재 (장기 임대)</p>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <div class="text-xs text-ink-muted mb-1">월 수입 합계</div>
+              <div id="longMonthly" class="text-2xl font-extrabold text-ink">700만원</div>
+            </div>
+            <div>
+              <div class="text-xs text-ink-muted mb-1">연 수입 (공실 보정)</div>
+              <div id="longYearly" class="text-2xl font-extrabold text-ink">7,560만원</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card border-2 border-navy-700">
+          <p class="label-uppercase mb-4 text-navy-700">단기임대 전환 후</p>
+          <div class="grid grid-cols-2 gap-4 mb-5">
+            <div>
+              <div class="text-xs text-ink-muted mb-1">월 예상 수입</div>
+              <div id="shortMonthly" class="text-2xl font-extrabold text-navy-700">911만원</div>
+            </div>
+            <div>
+              <div class="text-xs text-ink-muted mb-1">연 예상 수입 (공실·수수료 반영)</div>
+              <div id="shortYearly" class="text-2xl font-extrabold text-navy-700">9,575만원</div>
+            </div>
+          </div>
+          <div class="pt-5 border-t border-ink-line grid grid-cols-2 gap-4">
+            <div>
+              <div class="text-xs text-ink-muted mb-1">연 수익 증가액</div>
+              <div id="diff" class="text-3xl font-extrabold text-emphasis">+2,015만원</div>
+            </div>
+            <div>
+              <div class="text-xs text-ink-muted mb-1">증가율</div>
+              <div id="diffPct" class="text-3xl font-extrabold text-emphasis">+27%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <p class="label-uppercase mb-3">초기 세팅 회수 기간 추정</p>
+          <p class="text-sm text-ink-muted leading-relaxed mb-3">
+            가구·가전·인테리어 초기 투자비를 <strong>호실당 <span id="initInvest">400만원</span></strong>
+            투입한다고 가정 시, 증가한 수익으로 약 <strong class="text-navy-700"><span id="payback">14개월</span></strong>
+            만에 회수됩니다.
+          </p>
+          <p class="text-xs text-ink-label">
+            ※ 실제 수익은 건물 위치·시즌·경쟁 상황에 따라 다릅니다. 정확한 진단은 무료 상담에서.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3 pt-2">
+          <a href="tel:1544-4150" class="btn-primary flex-1 justify-center">
+            📞 1544-4150 무료 상담
+          </a>
+          <a
+            href="https://pf.kakao.com/_hYmxjn/chat"
+            target="_blank"
+            rel="noopener"
+            class="btn-ghost flex-1 justify-center"
+          >
+            카톡으로 자세한 분석 받기
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 가정 설명 -->
+  <section class="container-narrow py-section max-w-3xl">
+    <p class="label-uppercase mb-3 text-center">계산 가정</p>
+    <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-8">
+      수익은 어떻게 계산되나요?
+    </h2>
+    <div class="card space-y-4 text-sm text-ink leading-relaxed">
+      <div>
+        <div class="font-bold text-navy-700 mb-1">단기임대 가격 배수</div>
+        <p class="text-ink-muted">지역별 수요에 따라 장기 월세의 1.15~1.5배. 강남은 평균 1.5배.</p>
+      </div>
+      <div>
+        <div class="font-bold text-navy-700 mb-1">공실률 보정</div>
+        <p class="text-ink-muted">장기: 10%, 단기: 15% (시즌성 반영). 하우스맨 800+ 부동산 네트워크로 공실 최소화.</p>
+      </div>
+      <div>
+        <div class="font-bold text-navy-700 mb-1">운영 수수료</div>
+        <p class="text-ink-muted">단기임대 하우스맨 위탁 시 월 임대료의 10%. 청구·수금·알림톡·정산 모두 포함.</p>
+      </div>
+      <div>
+        <div class="font-bold text-navy-700 mb-1">초기 투자</div>
+        <p class="text-ink-muted">프리미엄 풀옵션: 호실당 400만원 (가구·가전·인테리어·사진). 기본: 250만원.</p>
+      </div>
+    </div>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+
+  <style>
+    .option-btn {
+      @apply py-2 px-3 rounded-card border border-ink-line text-sm font-semibold text-ink-muted transition cursor-pointer;
+    }
+    .option-btn.active {
+      @apply bg-navy-700 text-white border-navy-700;
+    }
+    .option-btn:hover:not(.active) {
+      @apply border-navy-700 text-navy-700;
+    }
+  </style>
+
+  <script is:inline>
+    (function() {
+      const roomsEl = document.getElementById('rooms');
+      const rentEl = document.getElementById('currentRent');
+      const regionEl = document.getElementById('region');
+      const optionBtns = document.querySelectorAll('[data-option]');
+
+      const longMonthlyEl = document.getElementById('longMonthly');
+      const longYearlyEl = document.getElementById('longYearly');
+      const shortMonthlyEl = document.getElementById('shortMonthly');
+      const shortYearlyEl = document.getElementById('shortYearly');
+      const diffEl = document.getElementById('diff');
+      const diffPctEl = document.getElementById('diffPct');
+      const initInvestEl = document.getElementById('initInvest');
+      const paybackEl = document.getElementById('payback');
+
+      let selectedOption = 'premium';
+
+      function fmt(n) { return Math.round(n).toLocaleString() + '만원'; }
+
+      function calc() {
+        const rooms = Number(roomsEl.value) || 0;
+        const rent = Number(rentEl.value) || 0;
+        const regionMult = Number(regionEl.value) || 1.3;
+        const optionMult = selectedOption === 'premium' ? 1.08 : 0.95;
+        const initPerRoom = selectedOption === 'premium' ? 400 : 250;
+
+        // 장기임대 (공실률 10%)
+        const longMonthly = rooms * rent;
+        const longYearly = longMonthly * 12 * 0.90;
+
+        // 단기임대 (배수 × 옵션, 공실률 15%, 수수료 10%)
+        const shortRawMonthly = rooms * rent * regionMult * optionMult;
+        const shortMonthly = shortRawMonthly * 0.85 * 0.90;  // 공실·수수료
+        const shortYearly = shortMonthly * 12;
+
+        const diff = shortYearly - longYearly;
+        const diffPct = longYearly > 0 ? (diff / longYearly) * 100 : 0;
+
+        // 회수 기간 (월 기준)
+        const totalInit = rooms * initPerRoom;
+        const monthlyGain = (shortYearly - longYearly) / 12;
+        const paybackMonths = monthlyGain > 0 ? totalInit / monthlyGain : 0;
+
+        longMonthlyEl.textContent = fmt(longMonthly);
+        longYearlyEl.textContent = fmt(longYearly);
+        shortMonthlyEl.textContent = fmt(shortMonthly);
+        shortYearlyEl.textContent = fmt(shortYearly);
+        diffEl.textContent = (diff >= 0 ? '+' : '') + fmt(diff);
+        diffPctEl.textContent = (diffPct >= 0 ? '+' : '') + Math.round(diffPct) + '%';
+        initInvestEl.textContent = initPerRoom + '만원';
+        paybackEl.textContent = paybackMonths > 0 && isFinite(paybackMonths) ? Math.round(paybackMonths) + '개월' : '즉시';
+      }
+
+      optionBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          optionBtns.forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          selectedOption = btn.dataset.option;
+          calc();
+        });
+      });
+
+      [roomsEl, rentEl, regionEl].forEach((el) => {
+        el.addEventListener('input', calc);
+        el.addEventListener('change', calc);
+      });
+
+      calc();
+    })();
+  </script>
+</BaseLayout>

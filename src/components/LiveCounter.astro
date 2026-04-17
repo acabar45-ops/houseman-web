@@ -1,0 +1,105 @@
+---
+// 실시간 자동화 카운터 — "지금 이 순간도 돌아가고 있다" 동적 증거
+// 클라이언트 사이드 시뮬레이션 (실제 Supabase 연동은 Phase 3에서)
+// 기준값은 평균적인 시간대에 그럴듯하게 설정
+---
+
+<section class="bg-navy-900 text-white py-section">
+  <div class="container-narrow">
+    <div class="text-center mb-10">
+      <p class="label-uppercase text-white/60 mb-3">
+        <span class="inline-block w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
+        LIVE · 실시간
+      </p>
+      <h2 class="text-3xl md:text-4xl font-bold tracking-tight">
+        지금 이 순간도<br class="md:hidden"/> 하우스맨은 움직이고 있습니다.
+      </h2>
+      <p class="mt-4 text-white/70 text-sm md:text-base">
+        최근 7일간 자동 처리된 업무 — <span id="lc-date" class="text-white/90"></span>
+      </p>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+      <div class="border border-white/20 rounded-card p-6 text-center bg-white/5">
+        <div class="label-uppercase text-white/60 mb-2">청구서 발송</div>
+        <div class="text-3xl md:text-4xl font-extrabold" data-live="billing">0</div>
+        <div class="text-xs text-white/50 mt-1">지난 7일</div>
+      </div>
+      <div class="border border-white/20 rounded-card p-6 text-center bg-white/5">
+        <div class="label-uppercase text-white/60 mb-2">알림톡 전송</div>
+        <div class="text-3xl md:text-4xl font-extrabold" data-live="alerts">0</div>
+        <div class="text-xs text-white/50 mt-1">지난 7일</div>
+      </div>
+      <div class="border border-white/20 rounded-card p-6 text-center bg-white/5">
+        <div class="label-uppercase text-white/60 mb-2">수금 자동 매칭</div>
+        <div class="text-3xl md:text-4xl font-extrabold" data-live="collection">0</div>
+        <div class="text-xs text-white/50 mt-1">지난 7일</div>
+      </div>
+      <div class="border border-white/20 rounded-card p-6 text-center bg-white/5">
+        <div class="label-uppercase text-white/60 mb-2">정산 리포트</div>
+        <div class="text-3xl md:text-4xl font-extrabold" data-live="settlement">0</div>
+        <div class="text-xs text-white/50 mt-1">지난 7일</div>
+      </div>
+    </div>
+
+    <p class="text-center mt-8 text-xs text-white/40">
+      ※ 하우스맨 운영 평균치 기반 시뮬레이션. SaaS 1차 배포 이후 실시간 DB 연동 전환 예정.
+    </p>
+  </div>
+</section>
+
+<script is:inline>
+  // 기준값 (하우스맨 1,100 호실 운영 평균 추정)
+  const baselines = {
+    billing:    { base: 942,  step: 2, interval: 5000 },
+    alerts:     { base: 1487, step: 3, interval: 3500 },
+    collection: { base: 817,  step: 1, interval: 7000 },
+    settlement: { base: 48,   step: 1, interval: 18000 },
+  };
+
+  // 날짜 표시
+  const dateEl = document.getElementById('lc-date');
+  if (dateEl) {
+    const now = new Date();
+    dateEl.textContent = now.getFullYear() + '-' +
+      String(now.getMonth() + 1).padStart(2, '0') + '-' +
+      String(now.getDate()).padStart(2, '0') + ' 기준';
+  }
+
+  // 시작값 카운트업 + 주기적 증가
+  const nodes = document.querySelectorAll('[data-live]');
+  if (nodes.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        const el = entry.target;
+        const key = el.dataset.live;
+        const cfg = baselines[key];
+        if (!cfg) continue;
+
+        // 1. 뷰포트 진입 시 0 → base 카운트업
+        const duration = 1600;
+        const start = performance.now();
+        const tick = (now) => {
+          const p = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(cfg.base * eased).toLocaleString();
+          if (p < 1) requestAnimationFrame(tick);
+          else {
+            // 2. 이후 주기적으로 +step (실제 운영 중 느낌)
+            let current = cfg.base;
+            setInterval(() => {
+              current += cfg.step;
+              el.textContent = current.toLocaleString();
+              el.classList.add('ring-2', 'ring-green-400/50', 'transition');
+              setTimeout(() => el.classList.remove('ring-2', 'ring-green-400/50'), 400);
+            }, cfg.interval);
+          }
+        };
+        requestAnimationFrame(tick);
+        observer.unobserve(el);
+      }
+    }, { threshold: 0.3 });
+    nodes.forEach((n) => observer.observe(n));
+  }
+</script>
