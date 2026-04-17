@@ -1,0 +1,179 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import PricingPlans from '../components/PricingPlans.astro';
+import SaasUIMockup from '../components/SaasUIMockup.astro';
+
+const capabilities = [
+  {
+    title: '자동 청구',
+    body: '매월 지정일에 월세·관리비·공과금이 자동 계산되어 청구서가 만들어집니다.',
+    badge: '매월 자동',
+  },
+  {
+    title: '알림톡 자동 발송',
+    body: '카톡 알림톡으로 청구서·납부확인·독촉까지 자동 발송. 실패 시 SMS 폴백.',
+    badge: '5종 템플릿',
+  },
+  {
+    title: '입금 매칭',
+    body: '은행 계좌 입금을 자동 매칭해서 수금 완료 처리. 사장님 수기 확인 불필요.',
+    badge: '실시간',
+  },
+  {
+    title: '정산 리포트',
+    body: '월말 자동 정산서 PDF 생성. 건물주 이메일 또는 카톡으로 자동 전송.',
+    badge: '월말 자동',
+  },
+  {
+    title: '검침 자동화',
+    body: '외부 담당자 앱으로 전기·가스·수도 검침 입력 → 자동 반영.',
+    badge: '모바일',
+  },
+  {
+    title: '민원·A/S 관리',
+    body: 'QR 코드로 임차인이 직접 민원 접수. 담당자 앱으로 즉시 배정.',
+    badge: 'QR 접수',
+  },
+];
+
+const kakaoTemplates = [
+  '[하우스맨] 이번 달 월세 청구서가 도착했습니다. 납부 기한은 ○월 ○일입니다.',
+  '[하우스맨] 납부가 확인되었습니다. 감사합니다.',
+  '[하우스맨] 납부 기한이 지났습니다. 빠른 시일 내 납부 부탁드립니다.',
+  '[하우스맨] 퇴실 예정일이 다가왔습니다. 원상복구 확인 부탁드립니다.',
+  '[하우스맨] 긴급 A/S 접수가 완료되었습니다. 담당자가 곧 연락드립니다.',
+];
+
+const faqs = [
+  {
+    q: 'SaaS만 써도 되나요?',
+    a: '네. 건물주가 직접 관리하면서 청구·수금·정산·알림톡만 자동화하고 싶으시면 SaaS 플랜(월 3만원부터)만 선택 가능합니다.',
+  },
+  {
+    q: '데이터 이전은 어떻게 하나요?',
+    a: '기존 엑셀·수기 장부를 스캔 또는 파일로 주시면 하우스맨이 초기 세팅합니다. 보통 1~2주 내 완료.',
+  },
+  {
+    q: '임차인이 앱을 꼭 설치해야 하나요?',
+    a: '아닙니다. 임차인은 카톡 알림톡만 받으면 됩니다. 별도 앱 설치 없이 카톡 채널로 상담·민원 가능.',
+  },
+];
+---
+
+<BaseLayout
+  title="하우스맨 SaaS — 건물관리 자동화 플랫폼"
+  description="청구·수금·정산·알림톡을 완전 자동화. 월 3만원부터, 14일 무료 체험. 1,100+ 호실이 이미 쓰고 있습니다."
+>
+  <Nav />
+
+  <!-- 히어로 -->
+  <section class="bg-hero-gradient text-white py-24 md:py-32">
+    <div class="container-narrow grid md:grid-cols-5 gap-10 items-center">
+      <div class="md:col-span-3">
+        <p class="label-uppercase text-white/70 mb-4">하우스맨 SaaS</p>
+        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-6">
+          청구부터 정산까지,<br/>매달 자동으로.
+        </h1>
+        <p class="text-lg md:text-xl text-white/85 leading-relaxed mb-8">
+          1,100+ 호실을 이미 자동화하고 있는<br/>
+          하우스맨 자체 개발 SaaS 플랫폼.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a href="/pricing" class="btn-primary bg-white !text-navy-700 hover:!bg-ink-soft">14일 무료 체험</a>
+          <a href="#demo" class="btn-secondary">1분 데모 영상</a>
+        </div>
+      </div>
+      <!-- 오른쪽 데모 이미지 placeholder -->
+      <div class="md:col-span-2 hidden md:block">
+        <div class="aspect-[4/5] bg-white/10 rounded-card border border-white/20 flex items-center justify-center text-white/50 text-sm">
+          대시보드 스크린샷<br/>(Phase 2에 교체)
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <SaasUIMockup />
+
+  <!-- 6대 기능 -->
+  <section class="container-narrow py-section">
+    <div class="text-center mb-12">
+      <p class="label-uppercase mb-3">기능</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+        건물 운영의 6가지 반복 업무, 모두 자동화.
+      </h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5">
+      {capabilities.map(({ title, body, badge }) => (
+        <div class="card h-full">
+          <div class="label-uppercase mb-3">{badge}</div>
+          <h3 class="text-lg font-bold text-navy-700 mb-2">{title}</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">{body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 알림톡 5종 템플릿 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-3xl">
+      <div class="text-center mb-12">
+        <p class="label-uppercase mb-3">알림톡 템플릿</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+          임차인이 받는 실제 카톡.
+        </h2>
+      </div>
+      <div class="space-y-3">
+        {kakaoTemplates.map((text) => (
+          <div class="bg-white rounded-card p-4 border border-ink-line flex items-start gap-3">
+            <span class="w-2 h-2 rounded-full bg-yellow-400 mt-2 flex-shrink-0"></span>
+            <p class="text-sm text-ink leading-relaxed">{text}</p>
+          </div>
+        ))}
+      </div>
+      <p class="text-center text-xs text-ink-label mt-6">
+        ※ 실제 발송 시 호실·금액·날짜가 자동 치환됩니다
+      </p>
+    </div>
+  </section>
+
+  <!-- 데모 영상 -->
+  <section id="demo" class="container-narrow py-section">
+    <div class="text-center mb-12">
+      <p class="label-uppercase mb-3">1분 데모</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+        청구 → 알림톡 → 수금 → 정산, 1분 만에.
+      </h2>
+    </div>
+    <div class="card max-w-4xl mx-auto aspect-video flex items-center justify-center text-ink-muted">
+      영상 임베드 예정 (Phase 2 Week 6)
+      <!-- TODO: 화면 녹화 완료 후 <video> 또는 YouTube 임베드 -->
+    </div>
+  </section>
+
+  <PricingPlans />
+
+  <!-- FAQ 3개 -->
+  <section class="container-narrow py-section max-w-3xl">
+    <div class="text-center mb-10">
+      <p class="label-uppercase mb-3">SaaS FAQ</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700">자주 묻는 질문</h2>
+    </div>
+    <div class="space-y-3">
+      {faqs.map(({ q, a }) => (
+        <details class="card group">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-semibold text-ink">{q}</span>
+            <span class="text-navy-700 text-xl transition-transform group-open:rotate-45">+</span>
+          </summary>
+          <p class="mt-4 text-ink-muted leading-relaxed text-[15px]">{a}</p>
+        </details>
+      ))}
+    </div>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>

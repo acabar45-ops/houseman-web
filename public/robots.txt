@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://houseman.co.kr/sitemap-index.xml

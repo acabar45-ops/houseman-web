@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { fetchPosts, fetchAllCategories, type WPPost } from '../../lib/wp.ts';
+
+// 빌드 타임에 WordPress REST API에서 포스트 가져오기
+// WP가 아직 세팅 안 되어 있으면 fetchPosts가 빈 배열 반환 (에러 아님)
+let posts: WPPost[] = [];
+let categories = [];
+
+try {
+  [posts, categories] = await Promise.all([
+    fetchPosts({ perPage: 20 }),
+    fetchAllCategories(),
+  ]);
+} catch (e) {
+  // WP 미세팅 시 placeholder 목록 표시
+}
+
+// 5대 카테고리 placeholder (WP 세팅 전까지)
+const placeholderCategories = [
+  '건물주 실무 가이드',
+  '단기임대 전문',
+  '상업 건물 관리',
+  '하우스맨 케이스',
+  '하우스맨 SaaS 가이드',
+];
+
+const placeholderPosts = [
+  {
+    slug: 'coming-soon-1',
+    title: '임대료 미납 대응 5단계 — 내용증명부터 명도소송까지',
+    excerpt: '미납은 초기 대응이 가장 중요합니다. 법적 리스크를 피하면서 빠르게 해결하는 절차를 단계별로 정리합니다.',
+    category: '건물주 실무 가이드',
+    date: '발행 예정',
+  },
+  {
+    slug: 'coming-soon-2',
+    title: '강남 단기임대 수익률 계산법 (2026 최신)',
+    excerpt: '장기 월세 대비 단기임대로 전환 시 실제 수익이 얼마나 달라지는지, 하우스맨 운영 데이터로 분석.',
+    category: '단기임대 전문',
+    date: '발행 예정',
+  },
+  {
+    slug: 'coming-soon-3',
+    title: '근생 건물 관리비 누수 막는 3가지 체크포인트',
+    excerpt: '관리비가 왜 매년 오르는지 원인을 찾지 못하는 건물주들이 놓치는 3곳을 공개합니다.',
+    category: '상업 건물 관리',
+    date: '발행 예정',
+  },
+  {
+    slug: 'coming-soon-4',
+    title: '18개월 공실 건물을 30일 만에 만실로 만든 방법',
+    excerpt: '역삼동 6층 상가 빌딩 실제 케이스. 800+ 부동산 동시 매칭이 왜 결정적이었는지.',
+    category: '하우스맨 케이스',
+    date: '발행 예정',
+  },
+  {
+    slug: 'coming-soon-5',
+    title: '알림톡 자동 발송 설정 5분 튜토리얼',
+    excerpt: '하우스맨 SaaS에서 임차인에게 발송하는 알림톡 5종 템플릿을 설정하는 방법.',
+    category: '하우스맨 SaaS 가이드',
+    date: '발행 예정',
+  },
+];
+
+const displayPosts = posts.length > 0 ? posts : placeholderPosts;
+const displayCategories = categories.length > 0 ? categories.map((c) => c.name) : placeholderCategories;
+---
+
+<BaseLayout
+  title="하우스맨 블로그 — 건물주를 위한 실무 가이드"
+  description="건물주·임대인을 위한 실무 가이드. 미납 대응, 단기임대 수익률, 건물관리 팁. 매일 새 글 업데이트."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-20">
+    <div class="container-narrow text-center max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">블로그</p>
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
+        건물주의 실무 가이드.
+      </h1>
+      <p class="text-lg text-white/85 leading-relaxed">
+        미납·공실·세무·수익률. 현장에서 배운 것을 공유합니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- 카테고리 필터 -->
+  <section class="container-narrow py-10">
+    <div class="flex flex-wrap justify-center gap-3">
+      <button class="px-5 py-2 rounded-full text-sm font-semibold bg-navy-700 text-white">
+        전체
+      </button>
+      {displayCategories.map((name) => (
+        <button class="px-5 py-2 rounded-full text-sm font-semibold border border-ink-line text-ink-muted hover:border-navy-700 transition">
+          {name}
+        </button>
+      ))}
+    </div>
+  </section>
+
+  <!-- 포스트 그리드 -->
+  <section class="container-narrow pb-section">
+    {posts.length === 0 && (
+      <div class="text-center py-8 mb-8 bg-ink-soft rounded-card">
+        <p class="text-sm text-ink-muted">
+          블로그는 2026년 6월 중순부터 하루 1편씩 자동 발행됩니다.<br/>
+          (현재는 발행 예정 목록 미리보기)
+        </p>
+      </div>
+    )}
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {displayPosts.map((post: any) => (
+        <a
+          href={posts.length > 0 ? `/blog/${post.slug}` : '#'}
+          class="card h-full hover:border-navy-700 transition flex flex-col"
+        >
+          <div class="label-uppercase mb-3">
+            {post.category || (post._embedded?.['wp:term']?.[0]?.[0]?.name ?? '미분류')}
+          </div>
+          <h2 class="text-lg font-bold text-ink mb-2 leading-snug">
+            {post.title?.rendered || post.title}
+          </h2>
+          <p class="text-sm text-ink-muted leading-relaxed flex-1" set:html={post.excerpt?.rendered || post.excerpt}></p>
+          <div class="mt-5 pt-4 border-t border-ink-line text-xs text-ink-label">
+            {post.date}
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>

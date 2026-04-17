@@ -1,0 +1,97 @@
+---
+// SaaS 3단 플랜 + 대행 산정 기준 (A-1 + B-2 확정)
+const plans = [
+  {
+    name: 'Starter',
+    price: '30,000원',
+    unit: '/월',
+    target: '1~10 호실',
+    features: [
+      '기본 청구 자동화',
+      '기본 대시보드',
+      '기본 알림톡',
+      '월 정산 리포트',
+    ],
+    cta: '무료 체험 시작',
+    highlighted: false,
+  },
+  {
+    name: 'Pro',
+    price: '50,000원',
+    unit: '/월',
+    target: '11~50 호실',
+    features: [
+      'Starter의 모든 기능',
+      '알림톡 3단계 자동 독촉',
+      '검침 자동화',
+      '자동 정산 분배',
+      '미납 회수 지원',
+    ],
+    cta: '무료 체험 시작',
+    highlighted: true,
+  },
+  {
+    name: 'Enterprise',
+    price: '맞춤 견적',
+    unit: '',
+    target: '50+ 호실 또는 대행 패키지',
+    features: [
+      'Pro의 모든 기능',
+      '긴급 출동 포함',
+      '법무 지원',
+      '전담 매니저',
+      '기업 시설 관리',
+    ],
+    cta: '상담 받기',
+    highlighted: false,
+  },
+] as const;
+---
+
+<section class="bg-ink-soft py-section">
+  <div class="container-narrow">
+    <div class="text-center mb-12">
+      <p class="label-uppercase mb-3">요금제</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+        SaaS는 공개, 대행은 맞춤 견적.
+      </h2>
+      <p class="mt-3 text-ink-muted">14일 무료 체험, 언제든 해지 가능</p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+      {plans.map(({ name, price, unit, target, features, cta, highlighted }) => (
+        <div class={`card h-full flex flex-col ${highlighted ? 'border-navy-700 border-2 relative' : ''}`}>
+          {highlighted && (
+            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-navy-700 text-white text-[11px] font-bold px-3 py-1 rounded-full tracking-wider uppercase">
+              추천
+            </div>
+          )}
+          <div class="label-uppercase mb-2">{name}</div>
+          <div class="flex items-baseline gap-1 mb-1">
+            <span class="text-3xl font-extrabold text-navy-700">{price}</span>
+            <span class="text-sm text-ink-muted">{unit}</span>
+          </div>
+          <div class="text-xs text-ink-muted mb-6">{target}</div>
+          <ul class="space-y-2 text-sm text-ink flex-1 mb-6">
+            {features.map((f) => (
+              <li class="flex items-start gap-2">
+                <span class="text-navy-700 mt-1">✓</span>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+          <a
+            href={cta === '상담 받기' ? 'tel:1544-4150' : '/pricing'}
+            class={highlighted ? 'btn-primary justify-center w-full' : 'btn-ghost justify-center w-full'}
+          >
+            {cta}
+          </a>
+        </div>
+      ))}
+    </div>
+
+    <p class="text-center text-sm text-ink-muted mt-8">
+      VAT 별도 · 건물 규모·용도·긴급출동 포함 여부에 따라 맞춤 견적
+    </p>
+  </div>
+</section>

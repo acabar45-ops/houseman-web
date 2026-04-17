@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import LogoCarousel from '../components/LogoCarousel.astro';
+import StatsGrid from '../components/StatsGrid.astro';
+import ServiceCardGrid from '../components/ServiceCardGrid.astro';
+import PainPoint from '../components/PainPoint.astro';
+import NavigationMetaphor from '../components/NavigationMetaphor.astro';
+import AutomationProcess from '../components/AutomationProcess.astro';
+import ComparisonTable from '../components/ComparisonTable.astro';
+import CaseStudies from '../components/CaseStudies.astro';
+import Testimonials from '../components/Testimonials.astro';
+import PricingPlans from '../components/PricingPlans.astro';
+import RiskList from '../components/RiskList.astro';
+import FAQ from '../components/FAQ.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="하우스맨 - 건물관리, 이제 네비게이션처럼"
+  description="서울 강남 기반 15년차 건물관리 전문기업. 100+ 건물 1,100+ 호실 운영. 자체 SaaS로 청구·수금·정산 자동화. 포르쉐·보건복지부가 선택한 기업 시설 관리."
+>
+  <Nav />
+
+  <main>
+    <Hero />
+    <LogoCarousel />
+    <StatsGrid />
+    <ServiceCardGrid />
+    <PainPoint />
+    <NavigationMetaphor />
+    <AutomationProcess />
+    <ComparisonTable />
+    <CaseStudies />
+    <Testimonials />
+    <PricingPlans />
+    <RiskList />
+    <FAQ />
+    <FinalCTA />
+  </main>
+
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,43 @@
+---
+// 하우스맨 vs 직접 관리 비교표 (오피스B 벤치마킹)
+const rows = [
+  { item: '월세 수금',     direct: '수기 이체 확인',          houseman: '자동 입금 매칭' },
+  { item: '미납 대응',     direct: '전화·문자 일일이',        houseman: '3단계 알림톡 자동' },
+  { item: '공실 대응',     direct: '중개사 하나씩 연락',      houseman: '800+ 부동산 동시 매칭' },
+  { item: '정산',         direct: '엑셀 수기 계산',          houseman: '클릭 한 번에 PDF' },
+  { item: '검침',         direct: '직접 방문 체크',          houseman: '외부담당자 앱 + 자동 반영' },
+  { item: '긴급 출동',     direct: '직접 현장 방문',          houseman: '15년 경력팀 최단 대응' },
+  { item: '법무 분쟁',     direct: '변호사 개별 의뢰',        houseman: '명도·내용증명 지원' },
+  { item: '비용',         direct: '인건비 + 시간',           houseman: '정액 수수료' },
+] as const;
+---
+
+<section class="container-narrow py-section">
+  <div class="text-center mb-12">
+    <p class="label-uppercase mb-3">비교</p>
+    <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+      직접 관리와 무엇이 다른가요?
+    </h2>
+  </div>
+
+  <div class="card p-0 overflow-hidden max-w-4xl mx-auto">
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="bg-ink-soft">
+          <th class="text-left py-4 px-5 label-uppercase">항목</th>
+          <th class="text-left py-4 px-5 label-uppercase">직접 관리</th>
+          <th class="text-left py-4 px-5 label-uppercase text-navy-700">하우스맨</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(({ item, direct, houseman }, i) => (
+          <tr class={i < rows.length - 1 ? 'border-b border-ink-line' : ''}>
+            <td class="py-4 px-5 font-semibold text-ink">{item}</td>
+            <td class="py-4 px-5 text-ink-muted">{direct}</td>
+            <td class="py-4 px-5 text-ink font-medium">{houseman}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</section>

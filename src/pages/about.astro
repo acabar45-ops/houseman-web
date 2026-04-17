@@ -1,0 +1,158 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+import LogoCarousel from '../components/LogoCarousel.astro';
+import StatsGrid from '../components/StatsGrid.astro';
+
+const timeline = [
+  { year: '2012', event: '하우스맨 설립. 신축·리모델링 사업으로 시작.' },
+  { year: '2015', event: '건물관리 위탁 사업 본격 전환. 강남 원룸·오피스텔 다수 수주.' },
+  { year: '2018', event: '근생 빌딩 관리 영역 확장. 포르쉐 코리아 사옥 위탁 시작.' },
+  { year: '2021', event: '보건복지부 이브릿지 관리 수주. 기업 시설 관리 정규화.' },
+  { year: '2024', event: '자체 SaaS 플랫폼 개발 착수. 청구·수금·정산 자동화 프로토타입.' },
+  { year: '2026', event: 'SaaS 정식 런칭. 100+ 건물 1,100+ 호실 자동화 운영 본격화.' },
+];
+
+const values = [
+  {
+    title: '현장이 최우선',
+    body: '15년 현장에서 쌓은 경험이 시스템의 기반입니다. 탁상공론이 아닌 실제로 돌아가는 운영을 만듭니다.',
+  },
+  {
+    title: '시스템이 일합니다',
+    body: '사람의 실수·피로에 의존하지 않는 구조. 자동화된 시스템이 매달 같은 품질을 보장합니다.',
+  },
+  {
+    title: '건물주 편',
+    body: '중개보수 쉐어를 받지 않습니다. 건물주 수익 극대화가 유일한 기준입니다.',
+  },
+];
+---
+
+<BaseLayout
+  title="회사소개 | 하우스맨"
+  description="2012년 설립. 서울 강남 기반 15년차 건물관리 전문기업. 100+ 건물 1,100+ 호실 운영. 포르쉐·보건복지부가 선택한 파트너."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-24 md:py-28">
+    <div class="container-narrow max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">회사소개</p>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-6">
+        15년 현장에서 배운 것을<br/>시스템으로 바꿉니다.
+      </h1>
+      <p class="text-lg md:text-xl text-white/85 leading-relaxed">
+        하우스맨은 2012년 서울 강남에서 시작한 건물관리 전문기업입니다.
+        100+ 건물, 1,100+ 호실을 운영하며 업계의 기준을 만들어왔습니다.
+      </p>
+    </div>
+  </section>
+
+  <StatsGrid />
+
+  <!-- 창업 이야기 -->
+  <section class="container-narrow py-section max-w-3xl">
+    <p class="label-uppercase text-center mb-3">창업 이야기</p>
+    <h2 class="text-3xl md:text-4xl font-bold text-navy-700 text-center mb-10">
+      사람이 못 하는 걸, 시스템이 합니다.
+    </h2>
+    <div class="space-y-5 text-ink leading-relaxed">
+      <p>
+        2012년, 하우스맨은 신축·리모델링 사업으로 시작했습니다.
+        건물 올리고 나면 건물주가 반드시 마주하는 문제가 있었습니다 —
+        <strong>"이걸 누가 어떻게 관리하지?"</strong>
+      </p>
+      <p>
+        직접 운영하자니 시간이 없고, 관리업체에 맡기자니 불투명합니다.
+        결국 하우스맨이 직접 운영을 책임지기 시작했고, 14년 간
+        서울 전역 <strong>100+ 건물 1,100+ 호실</strong>을 운영해왔습니다.
+      </p>
+      <p>
+        그동안 배운 것은 명확합니다.
+        <strong class="text-navy-700">매달 반복되는 업무는 시스템이 훨씬 잘한다는 것.</strong>
+        그래서 하우스맨은 2024년부터 자체 SaaS를 개발해 청구·수금·정산·알림톡을
+        완전히 자동화했습니다. 사람은 긴급 출동과 판단이 필요한 곳에만 집중합니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- 가치 3개 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow">
+      <div class="text-center mb-12">
+        <p class="label-uppercase mb-3">하우스맨이 일하는 방식</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-navy-700">3가지 원칙.</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+        {values.map(({ title, body }) => (
+          <div class="card h-full">
+            <h3 class="text-lg font-bold text-navy-700 mb-3">{title}</h3>
+            <p class="text-sm text-ink-muted leading-relaxed">{body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 연혁 -->
+  <section class="container-narrow py-section max-w-3xl">
+    <p class="label-uppercase text-center mb-3">연혁</p>
+    <h2 class="text-3xl md:text-4xl font-bold text-navy-700 text-center mb-10">
+      14년의 궤적.
+    </h2>
+    <div class="space-y-4">
+      {timeline.map(({ year, event }) => (
+        <div class="flex gap-5 card">
+          <div class="text-2xl font-extrabold text-navy-700 w-20 flex-shrink-0">
+            {year}
+          </div>
+          <p class="text-ink leading-relaxed">{event}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <LogoCarousel />
+
+  <!-- 회사 정보 -->
+  <section class="container-narrow py-section max-w-3xl">
+    <div class="card">
+      <p class="label-uppercase mb-5">회사 정보</p>
+      <dl class="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm">
+        <div>
+          <dt class="text-ink-muted mb-1">법인명</dt>
+          <dd class="font-semibold text-ink">(주)하우스맨</dd>
+        </div>
+        <div>
+          <dt class="text-ink-muted mb-1">대표</dt>
+          <dd class="font-semibold text-ink">박종호</dd>
+        </div>
+        <div>
+          <dt class="text-ink-muted mb-1">사업자번호</dt>
+          <dd class="font-semibold text-ink">206-16-25497</dd>
+        </div>
+        <div>
+          <dt class="text-ink-muted mb-1">설립</dt>
+          <dd class="font-semibold text-ink">2012년</dd>
+        </div>
+        <div class="md:col-span-2">
+          <dt class="text-ink-muted mb-1">본사</dt>
+          <dd class="font-semibold text-ink">서울특별시 강남구 학동로8길 9, 5층</dd>
+        </div>
+        <div>
+          <dt class="text-ink-muted mb-1">대표번호</dt>
+          <dd class="font-semibold text-ink"><a href="tel:1544-4150">1544-4150</a></dd>
+        </div>
+        <div>
+          <dt class="text-ink-muted mb-1">이메일</dt>
+          <dd class="font-semibold text-ink"><a href="mailto:contact@houseman.co.kr">contact@houseman.co.kr</a></dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>

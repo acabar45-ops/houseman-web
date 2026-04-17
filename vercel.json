@@ -1,0 +1,20 @@
+{
+  "redirects": [
+    { "source": "/pages/about/about.php", "destination": "/about", "permanent": true },
+    { "source": "/pages/sv/sv-1.php", "destination": "/services/buildings", "permanent": true },
+    { "source": "/pages/sv/sv-2.php", "destination": "/services/housing", "permanent": true },
+    { "source": "/pages/sv/sv-3.php", "destination": "/services/short-term", "permanent": true },
+    { "source": "/pages/sv/sv-4.php", "destination": "/services/corporate", "permanent": true },
+    { "source": "/pages/sv/sv-5.php", "destination": "/services/non-resident", "permanent": true }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
+
+const features = [
+  { title: '공실 관리', body: '800+ 부동산 네트워크 동시 매칭으로 공실 기간 최소화.' },
+  { title: '체계적 수금·계약', body: '자동 알림톡 청구 + 입금 매칭 + 미납 3단계 대응.' },
+  { title: '시설 유지보수', body: '월 정기 점검 + 긴급 출동. 소방·승강기·전기 법정 이력 자동 관리.' },
+  { title: '민원·분쟁 처리', body: '입주민 민원 24시간 접수 + 법무 이슈 내용증명·명도 지원.' },
+];
+
+const forWho = [
+  '사옥·상가·복합건물을 소유하고 있습니다',
+  '직접 임차인 연락·민원 응대가 버겁습니다',
+  '여러 층·여러 호실을 한 시스템으로 관리하고 싶습니다',
+  '해외 거주 중이거나 본업이 따로 있습니다',
+];
+---
+
+<BaseLayout
+  title="중소형 빌딩 관리 | 하우스맨"
+  description="사옥·상가·복합건물 통합 운영. 공실 관리부터 민원·법무까지. 포르쉐 코리아 등 대기업 사옥 위탁 실적."
+>
+  <Nav />
+
+  <!-- 히어로 -->
+  <section class="bg-hero-gradient text-white py-24 md:py-28">
+    <div class="container-narrow max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">중소형 빌딩</p>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-6">
+        중소형 빌딩 관리의<br/>새 기준.
+      </h1>
+      <p class="text-lg md:text-xl text-white/85 leading-relaxed mb-8">
+        사옥·상가·복합건물을 하우스맨이 통합 운영합니다.
+        공실부터 민원·법무·시설·수금까지 한 팀이 맡습니다.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="tel:1544-4150" class="btn-primary bg-white !text-navy-700 hover:!bg-ink-soft">무료 상담 1544-4150</a>
+        <a href="https://pf.kakao.com/_hYmxjn/chat" target="_blank" rel="noopener" class="btn-secondary">카톡 문의</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 적합 대상 -->
+  <section class="container-narrow py-section">
+    <div class="max-w-3xl mx-auto">
+      <p class="label-uppercase mb-3 text-center">이런 분께 적합합니다</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-10">
+        빌딩 운영이 본업이 아닌 분들께 맞춤.
+      </h2>
+      <ul class="space-y-3">
+        {forWho.map((line) => (
+          <li class="flex items-start gap-3 card">
+            <span class="text-navy-700 font-bold mt-0.5">✓</span>
+            <span class="text-ink">{line}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 기능 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow">
+      <div class="text-center mb-12">
+        <p class="label-uppercase mb-3">핵심 기능</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-navy-700">빌딩 하나에 필요한 모든 것.</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+        {features.map(({ title, body }) => (
+          <div class="card">
+            <h3 class="text-lg font-bold text-ink mb-2">{title}</h3>
+            <p class="text-ink-muted text-sm leading-relaxed">{body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 사례 -->
+  <section class="container-narrow py-section max-w-3xl">
+    <div class="card">
+      <div class="label-uppercase mb-3">사례</div>
+      <h3 class="text-2xl font-bold text-navy-700 mb-3">
+        6층 상가 빌딩, 2주 만에 공실 해소
+      </h3>
+      <p class="text-ink-muted leading-relaxed">
+        역삼동 6층 상가 빌딩의 3개 층 공실이 수개월 지속. 하우스맨 800+ 부동산 네트워크에 동시 등록 후 2주 내 3개 층 계약 완료. 이후 수금·민원·시설 점검까지 자동화.
+      </p>
+      <div class="mt-5 pt-4 border-t border-ink-line flex items-baseline gap-3">
+        <span class="text-3xl font-extrabold text-emphasis">14일</span>
+        <span class="text-sm text-ink-muted">공실 → 전층 계약</span>
+      </div>
+    </div>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,46 @@
+---
+// 레퍼런스 로고 캐러셀 — 클리언트 확보 동의 후 로고 파일 교체
+// 현재는 텍스트 placeholder (사장님 메일 발송 후 채워짐)
+const clients = [
+  { name: '포르쉐 코리아', logo: '/logos/porsche.svg' },
+  { name: '보건복지부 이브릿지', logo: '/logos/ebridge.svg' },
+  { name: 'Coming Soon', logo: null },
+  { name: 'Coming Soon', logo: null },
+  { name: 'Coming Soon', logo: null },
+  { name: 'Coming Soon', logo: null },
+] as const;
+---
+
+<section class="border-y border-ink-line py-14 bg-white">
+  <div class="container-narrow">
+    <p class="label-uppercase text-center mb-8">하우스맨을 신뢰하는 고객</p>
+    <div class="overflow-hidden relative">
+      <div class="logo-track flex items-center gap-16 whitespace-nowrap">
+        {[...clients, ...clients].map((c) => (
+          c.logo ? (
+            <img
+              src={c.logo}
+              alt={c.name}
+              class="h-10 opacity-60 hover:opacity-100 grayscale hover:grayscale-0 transition"
+            />
+          ) : (
+            <div class="text-ink-label text-sm font-medium px-4 py-2 border border-dashed border-ink-line rounded">
+              {c.name}
+            </div>
+          )
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .logo-track {
+    animation: scroll 40s linear infinite;
+    width: max-content;
+  }
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+</style>

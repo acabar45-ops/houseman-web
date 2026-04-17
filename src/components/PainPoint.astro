@@ -1,0 +1,43 @@
+---
+// "지금 이런 고민 있으세요?" 4박자 공감 훅 (오피스B 벤치마킹)
+const pains = [
+  {
+    title: '공실이 길어지고 있나요?',
+    body: '한 달 이상 비어있는 호실 하나당 수익이 매달 줄어듭니다. 부동산 한 곳만으로는 대응이 느립니다.',
+  },
+  {
+    title: '미납·연체 스트레스',
+    body: '임차인에게 독촉 전화하기가 불편하고, 안 들어온 돈은 계속 쌓입니다. 제때 회수하려면 타이밍과 시스템이 필요합니다.',
+  },
+  {
+    title: '민원 하나하나 대응이 힘든가요?',
+    body: '누수·소음·주차·공용부 고장. 건물주 개인 휴대폰으로 연락이 몰리면 본업까지 흔들립니다.',
+  },
+  {
+    title: '검침·정산·청구가 번거롭다',
+    body: '호실마다 전기·수도 검침하고, 엑셀로 계산하고, 일일이 계좌로 나누고. 시간도, 실수도 두렵습니다.',
+  },
+] as const;
+---
+
+<section class="container-narrow py-section">
+  <div class="text-center mb-12">
+    <p class="label-uppercase mb-3">건물주의 고민</p>
+    <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+      지금 이런 고민 있으세요?
+    </h2>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+    {pains.map(({ title, body }) => (
+      <div class="card">
+        <h3 class="text-lg font-bold text-ink mb-2">{title}</h3>
+        <p class="text-ink-muted text-sm leading-relaxed">{body}</p>
+      </div>
+    ))}
+  </div>
+
+  <p class="text-center mt-10 text-ink-muted">
+    하우스맨은 이 네 가지를 <span class="font-bold text-navy-700">시스템으로 해결합니다.</span>
+  </p>
+</section>

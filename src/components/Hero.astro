@@ -1,0 +1,75 @@
+---
+// Hero — 킬러 메타포 + 알림톡 플로팅 애니메이션
+// feedback 준수: 색 1~2개 (네이비 + 흰색), 박스 안 박스 X
+---
+
+<section class="relative overflow-hidden bg-hero-gradient text-white">
+  <div class="container-narrow py-24 md:py-32 grid md:grid-cols-5 gap-12 items-center">
+    <!-- 좌 60% — 메시지 -->
+    <div class="md:col-span-3">
+      <p class="label-uppercase text-white/70 mb-5">새로운 기준</p>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-[1.15] tracking-tight">
+        건물관리, 이제<br/>
+        <span class="text-white">네비게이션처럼.</span>
+      </h1>
+      <p class="mt-7 text-lg md:text-xl text-white/85 leading-relaxed max-w-[520px]">
+        경로는 시스템이, 돌발상황은 하우스맨이.<br/>
+        15년 현장 경험 + 자체 SaaS로 당신의 건물을 책임집니다.
+      </p>
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="tel:1544-4150" class="btn-primary bg-white !text-navy-700 hover:!bg-ink-soft">
+          무료 상담 받기
+        </a>
+        <a href="https://pf.kakao.com/_hYmxjn/chat" target="_blank" rel="noopener"
+           class="btn-secondary">
+          카톡으로 문의
+        </a>
+      </div>
+    </div>
+
+    <!-- 우 40% — 알림톡 플로팅 -->
+    <div class="md:col-span-2 relative h-[420px] hidden md:block">
+      <!-- 스마트폰 목업 대신 알림톡 3개 카드만 (심플함 우선) -->
+      <div class="absolute right-0 top-0 w-full space-y-4">
+        <div class="alertkakao-card delay-0">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+            <span class="text-[11px] font-bold text-ink-label">[하우스맨]</span>
+          </div>
+          <p class="text-sm text-ink">역삼101호 월세 청구서가 도착했습니다.</p>
+        </div>
+        <div class="alertkakao-card delay-1">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+            <span class="text-[11px] font-bold text-ink-label">[하우스맨]</span>
+          </div>
+          <p class="text-sm text-ink">역삼101호 납부 완료가 확인되었습니다.</p>
+        </div>
+        <div class="alertkakao-card delay-2">
+          <div class="flex items-center gap-2 mb-1">
+            <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+            <span class="text-[11px] font-bold text-ink-label">[하우스맨]</span>
+          </div>
+          <p class="text-sm text-ink">이번 달 정산 리포트를 업로드했습니다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .alertkakao-card {
+    @apply bg-white text-ink rounded-card p-4 shadow-lg
+           opacity-0 translate-y-4 animate-[slide-in_0.6s_ease-out_forwards];
+  }
+  .alertkakao-card.delay-0 { animation-delay: 0.3s; }
+  .alertkakao-card.delay-1 { animation-delay: 1.3s; }
+  .alertkakao-card.delay-2 { animation-delay: 2.3s; }
+
+  @keyframes slide-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

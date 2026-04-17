@@ -1,0 +1,123 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+}
+
+const {
+  title = '하우스맨 - 건물관리, 이제 네비게이션처럼',
+  description = '서울 강남 기반 15년차 건물관리 전문기업. 100+ 건물 1,100+ 호실 운영. 자체 SaaS로 청구·수금·정산 자동화.',
+  ogImage = '/og-default.svg',
+  canonicalUrl = Astro.url.href,
+} = Astro.props;
+
+// JSON-LD 구조화 데이터 — AEO용 (ChatGPT·Claude·Perplexity가 인용하기 쉽게)
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: '하우스맨',
+  alternateName: ['(주)하우스맨', 'HOUSEMAN'],
+  url: 'https://houseman.co.kr',
+  logo: 'https://houseman.co.kr/logo.png',
+  foundingDate: '2012',
+  description: '건물관리 전문기업. 중소형 빌딩·주택·단기임대·기업시설·비상주 관리사무소 5대 서비스.',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '학동로8길 9, 5층',
+    addressLocality: '강남구',
+    addressRegion: '서울특별시',
+    addressCountry: 'KR',
+  },
+  telephone: '1544-4150',
+  email: 'contact@houseman.co.kr',
+  taxID: '206-16-25497',
+};
+
+const localBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: '하우스맨',
+  image: 'https://houseman.co.kr/logo.png',
+  telephone: '1544-4150',
+  address: organizationSchema.address,
+  priceRange: '₩₩',
+  areaServed: { '@type': 'City', name: '서울' },
+};
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:site_name" content="하우스맨" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Naver / Google site verification (Phase 3에서 채움) -->
+    <meta name="naver-site-verification" content="" />
+    <meta name="google-site-verification" content="" />
+
+    <!-- Pretendard -->
+    <link rel="stylesheet" as="style" crossorigin
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+
+    <!-- JSON-LD 스키마 -->
+    <script type="application/ld+json" set:html={JSON.stringify(organizationSchema)}></script>
+    <script type="application/ld+json" set:html={JSON.stringify(localBusinessSchema)}></script>
+
+    <!-- 다크모드 플리커 방지 -->
+    <script is:inline>
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
+  </head>
+  <body>
+    <slot />
+
+    <!-- 스크롤 페이드인 옵저버 (전역) -->
+    <script>
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const entry of entries) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                io.unobserve(entry.target);
+              }
+            }
+          },
+          { threshold: 0.15, rootMargin: '0px 0px -80px 0px' },
+        );
+        // section 요소에 자동 적용
+        document.querySelectorAll('main > section').forEach((section) => {
+          section.classList.add('fade-up');
+          io.observe(section);
+        });
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
+import { fetchPosts, fetchPostBySlug, type WPPost } from '../../lib/wp.ts';
+
+export async function getStaticPaths() {
+  try {
+    const posts = await fetchPosts({ perPage: 100 });
+    return posts.map((post) => ({
+      params: { slug: post.slug },
+      props: { post },
+    }));
+  } catch {
+    return [];
+  }
+}
+
+const { post } = Astro.props as { post: WPPost };
+
+// fallback — WP 미세팅 시 placeholder 데이터
+const title = post?.title?.rendered ?? '글 제목';
+const content = post?.content?.rendered ?? '<p>본문 내용. 블로그 운영 시작 후 실제 글이 표시됩니다.</p>';
+const date = post?.date ?? '';
+const categoryName =
+  post?._embedded?.['wp:term']?.[0]?.[0]?.name ?? '미분류';
+const featuredImage =
+  post?._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? null;
+---
+
+<BaseLayout title={`${title} | 하우스맨 블로그`} description={title}>
+  <Nav />
+
+  <article class="container-narrow py-section max-w-3xl">
+    <div class="mb-8">
+      <a href="/blog" class="text-sm text-ink-muted hover:text-navy-700">
+        ← 블로그 목록
+      </a>
+    </div>
+
+    <div class="label-uppercase mb-4">{categoryName}</div>
+    <h1 class="text-3xl md:text-5xl font-extrabold text-navy-700 leading-tight tracking-tight mb-6" set:html={title}></h1>
+    <time class="text-sm text-ink-label block mb-10">
+      {date && new Date(date).toLocaleDateString('ko-KR')}
+    </time>
+
+    {featuredImage && (
+      <img src={featuredImage} alt="" class="w-full rounded-card mb-10" />
+    )}
+
+    <div
+      class="prose prose-neutral max-w-none
+             prose-headings:text-navy-700 prose-headings:font-bold
+             prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+             prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+             prose-p:text-ink prose-p:leading-relaxed
+             prose-a:text-navy-700 prose-a:no-underline hover:prose-a:underline
+             prose-strong:text-navy-700
+             prose-blockquote:border-navy-700 prose-blockquote:text-ink-muted"
+      set:html={content}
+    >
+    </div>
+
+    <!-- 공유·다음글 (Phase 2 Week 6 이후 추가) -->
+  </article>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>

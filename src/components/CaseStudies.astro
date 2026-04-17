@@ -1,0 +1,58 @@
+---
+// 실제 사례 3개 — 숫자 기반 케이스 스터디
+// Phase 1 Week 2에 실제 사례로 교체 예정 (현재 placeholder)
+const cases = [
+  {
+    badge: '공실 해소',
+    headline: '18개월 공실 건물, 30일 만에 만실',
+    body: '역삼동 6층 빌딩. 기존 중개사 2곳으로는 해결 안 됨. 하우스맨 800+ 부동산 네트워크 동시 매칭 후 4주 내 전 호실 계약 완료.',
+    metric: '공실 0%',
+  },
+  {
+    badge: '미납 회수',
+    headline: '2년 누적 미납 90% 회수',
+    body: '10개 호실 장기 미납 총 ○○천만원. 하우스맨이 3단계 알림톡 + 내용증명 + 법무 지원으로 3개월 내 90% 회수, 나머지 명도 진행.',
+    metric: '90% 회수',
+  },
+  {
+    badge: '기업 시설',
+    headline: '포르쉐 사옥 유지비 절감',
+    body: '시설 유지관리·에너지·청소 통합 위탁. 기존 대비 고정 관리비 구조 재설계로 연간 운영 비용 감축. 법정 점검·소방 이력 완전 자동화.',
+    metric: '연 절감 확정',
+  },
+] as const;
+---
+
+<section class="bg-ink-soft py-section">
+  <div class="container-narrow">
+    <div class="text-center mb-12">
+      <p class="label-uppercase mb-3">실제 사례</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+        숫자로 증명합니다.
+      </h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-5">
+      {cases.map(({ badge, headline, body, metric }) => (
+        <article class="card h-full flex flex-col">
+          <div class="label-uppercase mb-3">{badge}</div>
+          <h3 class="text-xl font-bold text-navy-700 mb-3 leading-snug">
+            {headline}
+          </h3>
+          <p class="text-sm text-ink-muted leading-relaxed flex-1">
+            {body}
+          </p>
+          <div class="mt-5 pt-4 border-t border-ink-line">
+            <div class="text-2xl font-extrabold text-emphasis">{metric}</div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="text-center mt-10">
+      <a href="/cases" class="btn-ghost">
+        전체 사례 보기
+      </a>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,70 @@
+---
+// 푸터 — Stripe급 정보 밀도 + 사업자정보 전면 공개 (AEO 신뢰 신호)
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="border-t border-ink-line bg-ink-soft">
+  <div class="container-narrow py-16 grid md:grid-cols-5 gap-8">
+    <!-- 브랜드 -->
+    <div class="md:col-span-2">
+      <div class="text-xl font-extrabold text-navy-700 mb-3">HOUSEMAN</div>
+      <p class="text-sm text-ink-muted leading-relaxed">
+        2012년 설립, 서울 강남 기반<br/>
+        15년차 건물관리 전문기업.
+      </p>
+      <div class="mt-5 text-sm text-ink-muted space-y-1">
+        <div>대표 박종호 · 사업자 206-16-25497</div>
+        <div>서울시 강남구 학동로8길 9, 5층</div>
+        <div>
+          <a href="tel:1544-4150" class="hover:text-navy-700">1544-4150</a> ·
+          <a href="mailto:contact@houseman.co.kr" class="hover:text-navy-700">contact@houseman.co.kr</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 서비스 -->
+    <div>
+      <div class="label-uppercase mb-4">서비스</div>
+      <ul class="space-y-2 text-sm">
+        <li><a href="/services/buildings" class="text-ink-muted hover:text-navy-700">중소형 빌딩</a></li>
+        <li><a href="/services/housing" class="text-ink-muted hover:text-navy-700">중소형 주택</a></li>
+        <li><a href="/services/short-term" class="text-ink-muted hover:text-navy-700">단기임대</a></li>
+        <li><a href="/services/corporate" class="text-ink-muted hover:text-navy-700">기업 시설</a></li>
+        <li><a href="/services/non-resident" class="text-ink-muted hover:text-navy-700">비상주 관리사무소</a></li>
+      </ul>
+    </div>
+
+    <!-- 회사 -->
+    <div>
+      <div class="label-uppercase mb-4">회사</div>
+      <ul class="space-y-2 text-sm">
+        <li><a href="/about" class="text-ink-muted hover:text-navy-700">회사소개</a></li>
+        <li><a href="/cases" class="text-ink-muted hover:text-navy-700">케이스 스터디</a></li>
+        <li><a href="/blog" class="text-ink-muted hover:text-navy-700">블로그</a></li>
+        <li><a href="/contact" class="text-ink-muted hover:text-navy-700">문의</a></li>
+      </ul>
+    </div>
+
+    <!-- 리소스 -->
+    <div>
+      <div class="label-uppercase mb-4">리소스</div>
+      <ul class="space-y-2 text-sm">
+        <li><a href="/vacancies" class="text-ink-muted hover:text-navy-700">공실 정보</a></li>
+        <li><a href="/pricing" class="text-ink-muted hover:text-navy-700">요금제</a></li>
+        <li><a href="/saas" class="text-ink-muted hover:text-navy-700">SaaS 플랫폼</a></li>
+        <li><a href="https://pf.kakao.com/_hYmxjn/chat" target="_blank" rel="noopener"
+               class="text-ink-muted hover:text-navy-700">카톡 채널</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-ink-line">
+    <div class="container-narrow py-6 flex flex-wrap justify-between gap-3 text-xs text-ink-label">
+      <div>© {currentYear} (주)하우스맨. All rights reserved.</div>
+      <div class="flex gap-5">
+        <a href="/privacy" class="hover:text-navy-700">개인정보처리방침</a>
+        <a href="/terms" class="hover:text-navy-700">이용약관</a>
+      </div>
+    </div>
+  </div>
+</footer>

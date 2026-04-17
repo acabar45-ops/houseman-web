@@ -1,0 +1,95 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
+
+const features = [
+  { title: '3개월 계약 + 100% 수금 보장', body: '임차인이 나가도 계약 3개월 임대료는 하우스맨이 건물주에게 지급 보장.' },
+  { title: '풀옵션 세팅 컨설팅', body: '가구·가전·인테리어·청소·사진까지. 최고 수익률을 위한 초기 세팅 지원.' },
+  { title: '800+ 부동산 공실 매칭', body: '강남·서초·송파·마포 전역 부동산 네트워크에 동시 등록.' },
+  { title: '입퇴실·정산 자동화', body: '체크인/체크아웃·청소·정산·퇴실 증빙까지 시스템으로 자동.' },
+];
+
+const forWho = [
+  '장기 월세 수익에 한계를 느끼셨습니다',
+  '풀옵션 관리·청소·입퇴실 업무가 부담스럽습니다',
+  '한 달 이상의 공실이 반복됩니다',
+  '수익률을 +30~50% 끌어올리고 싶습니다',
+];
+---
+
+<BaseLayout
+  title="단기임대 운영 | 하우스맨"
+  description="3개월 계약 100% 수금 보장. 강남·서초 단기임대 전문. 풀옵션 세팅부터 입퇴실 자동화까지. 월 수익 최대 +50% 실증."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-24 md:py-28">
+    <div class="container-narrow max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">단기임대 ★ 주력</p>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-6">
+        3개월 계약,<br/>100% 수금 보장.
+      </h1>
+      <p class="text-lg md:text-xl text-white/85 leading-relaxed mb-8">
+        강남권 단기임대 운영의 모든 것.
+        수익은 최대 +50%, 건물주 업무는 0.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="tel:1544-4150" class="btn-primary bg-white !text-navy-700 hover:!bg-ink-soft">무료 상담 1544-4150</a>
+        <a href="https://pf.kakao.com/_hYmxjn/chat" target="_blank" rel="noopener" class="btn-secondary">카톡 문의</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 100% 수금 보장 강조 -->
+  <section class="container-narrow py-section max-w-4xl text-center">
+    <div class="card border-2 border-navy-700 py-14">
+      <p class="label-uppercase text-emphasis mb-3">핵심 약속</p>
+      <h2 class="text-3xl md:text-4xl font-extrabold text-navy-700 mb-4">
+        100% 임대료 수금 보장
+      </h2>
+      <p class="text-ink-muted leading-relaxed max-w-xl mx-auto">
+        3개월 이상 계약 시 하우스맨이 임차인 유무와 무관하게
+        건물주에게 임대료를 지급합니다. 공실 리스크 제로.
+      </p>
+    </div>
+  </section>
+
+  <section class="container-narrow py-section">
+    <div class="max-w-3xl mx-auto">
+      <p class="label-uppercase mb-3 text-center">이런 분께 적합합니다</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-10">
+        원룸·오피스텔 수익을 극대화하고 싶은 분들께.
+      </h2>
+      <ul class="space-y-3">
+        {forWho.map((line) => (
+          <li class="flex items-start gap-3 card">
+            <span class="text-navy-700 font-bold mt-0.5">✓</span>
+            <span class="text-ink">{line}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow">
+      <div class="text-center mb-12">
+        <p class="label-uppercase mb-3">핵심 기능</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-navy-700">단기임대 성공의 4가지 축.</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+        {features.map(({ title, body }) => (
+          <div class="card">
+            <h3 class="text-lg font-bold text-ink mb-2">{title}</h3>
+            <p class="text-ink-muted text-sm leading-relaxed">{body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>

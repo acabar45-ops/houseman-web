@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
+
+const features = [
+  { title: '순회 방문 관리', body: '주 2~3회 순회로 공용시설 점검·민원 수거·입퇴실 확인.' },
+  { title: '민원 실시간 대응', body: '입주민 카톡 채널 + 관리 앱으로 24시간 접수. 긴급건은 직접 출동.' },
+  { title: '합리적 비용 구조', body: '전담 인력을 따로 두지 않아 150세대 미만 단지 예산에 맞춤.' },
+  { title: '맞춤 서비스 선택', body: '필요한 항목만 고르는 모듈 방식. 청소·경비·회계 개별 선택 가능.' },
+];
+
+const forWho = [
+  '150세대 미만 공동주택 또는 소형 오피스텔을 운영합니다',
+  '관리사무소 상주 인력 인건비가 부담스럽습니다',
+  '민원 응대가 체계적이지 않아 입주민 불만이 쌓입니다',
+  '수익·지출 투명한 월간 보고를 받고 싶습니다',
+];
+---
+
+<BaseLayout
+  title="비상주 관리사무소 | 하우스맨"
+  description="150세대 미만 소규모 공동주택 전문. 순회 방문·민원 대응·맞춤 선택. 관리사무소 상주 인력 없이 체계적 운영."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-24 md:py-28">
+    <div class="container-narrow max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">비상주 관리사무소</p>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-6">
+        관리사무소 없이도<br/>체계적으로.
+      </h1>
+      <p class="text-lg md:text-xl text-white/85 leading-relaxed mb-8">
+        150세대 미만 공동주택 전문.
+        상주 인력 없이도 순회 방문·민원·공용시설·회계까지 책임집니다.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="tel:1544-4150" class="btn-primary bg-white !text-navy-700 hover:!bg-ink-soft">무료 상담 1544-4150</a>
+        <a href="https://pf.kakao.com/_hYmxjn/chat" target="_blank" rel="noopener" class="btn-secondary">카톡 문의</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-narrow py-section">
+    <div class="max-w-3xl mx-auto">
+      <p class="label-uppercase mb-3 text-center">이런 분께 적합합니다</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-10">
+        소규모 단지 입주자대표·건물주께.
+      </h2>
+      <ul class="space-y-3">
+        {forWho.map((line) => (
+          <li class="flex items-start gap-3 card">
+            <span class="text-navy-700 font-bold mt-0.5">✓</span>
+            <span class="text-ink">{line}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow">
+      <div class="text-center mb-12">
+        <p class="label-uppercase mb-3">핵심 기능</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+          상주 없이도, 빠짐없이.
+        </h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+        {features.map(({ title, body }) => (
+          <div class="card">
+            <h3 class="text-lg font-bold text-ink mb-2">{title}</h3>
+            <p class="text-ink-muted text-sm leading-relaxed">{body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>

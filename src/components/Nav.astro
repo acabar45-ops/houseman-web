@@ -1,0 +1,133 @@
+---
+// 공통 상단 네비게이션 — 데스크톱: 가로 메뉴 / 모바일: 햄버거 + 오버레이
+const menu = [
+  { label: '주거용', href: '/services/housing' },
+  { label: '상업용', href: '/services/corporate' },
+  { label: '단기임대', href: '/services/short-term' },
+  { label: 'SaaS', href: '/saas' },
+  { label: '요금제', href: '/pricing' },
+  { label: '공실', href: '/vacancies' },
+  { label: '블로그', href: '/blog' },
+] as const;
+---
+
+<nav class="border-b border-ink-line bg-white/80 backdrop-blur sticky top-0 z-40 dark:bg-dk-bg/80 dark:border-dk-line">
+  <div class="container-narrow flex items-center justify-between py-4">
+    <a href="/" class="text-xl font-extrabold text-navy-700 tracking-tight dark:text-dk-accent">
+      HOUSEMAN
+    </a>
+
+    <!-- 데스크톱 메뉴 -->
+    <div class="hidden md:flex items-center gap-5 text-sm font-medium">
+      {menu.map(({ label, href }) => (
+        <a href={href} class="text-ink-muted hover:text-navy-700 transition dark:text-dk-muted dark:hover:text-dk-accent">
+          {label}
+        </a>
+      ))}
+      <button
+        id="theme-toggle-desktop"
+        aria-label="다크모드 토글"
+        class="w-9 h-9 flex items-center justify-center rounded-full border border-ink-line hover:border-navy-700 transition dark:border-dk-line"
+      >
+        <svg class="w-4 h-4 block dark:hidden" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+        <svg class="w-4 h-4 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+        </svg>
+      </button>
+      <a href="tel:1544-4150" class="btn-ghost !py-2 !px-4 text-sm ml-1">
+        1544-4150
+      </a>
+    </div>
+
+    <!-- 모바일: 다크 토글 + 햄버거 -->
+    <div class="md:hidden flex items-center gap-2">
+      <button
+        id="theme-toggle-mobile"
+        aria-label="다크모드 토글"
+        class="w-9 h-9 flex items-center justify-center rounded-full border border-ink-line dark:border-dk-line"
+      >
+        <svg class="w-4 h-4 block dark:hidden" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+        <svg class="w-4 h-4 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+        </svg>
+      </button>
+      <button
+        id="mobile-menu-toggle"
+        aria-label="메뉴 열기"
+        class="w-9 h-9 flex items-center justify-center rounded-full border border-ink-line dark:border-dk-line"
+      >
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="20" y2="12" />
+          <line x1="4" y1="18" x2="20" y2="18" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- 모바일 메뉴 오버레이 -->
+  <div
+    id="mobile-menu"
+    class="hidden md:hidden fixed inset-0 z-50 bg-white dark:bg-dk-bg"
+  >
+    <div class="container-narrow py-4 flex items-center justify-between border-b border-ink-line dark:border-dk-line">
+      <a href="/" class="text-xl font-extrabold text-navy-700 dark:text-dk-accent">HOUSEMAN</a>
+      <button
+        id="mobile-menu-close"
+        aria-label="메뉴 닫기"
+        class="w-9 h-9 flex items-center justify-center rounded-full border border-ink-line dark:border-dk-line"
+      >
+        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="6" y1="6" x2="18" y2="18" />
+          <line x1="6" y1="18" x2="18" y2="6" />
+        </svg>
+      </button>
+    </div>
+    <div class="container-narrow py-10">
+      <div class="space-y-2">
+        {menu.map(({ label, href }) => (
+          <a
+            href={href}
+            class="block py-3 text-xl font-semibold text-ink hover:text-navy-700 border-b border-ink-line dark:text-dk-text dark:border-dk-line"
+          >
+            {label}
+          </a>
+        ))}
+      </div>
+      <a
+        href="tel:1544-4150"
+        class="btn-primary w-full justify-center mt-8"
+      >
+        1544-4150 무료 상담
+      </a>
+    </div>
+  </div>
+</nav>
+
+<script>
+  // 다크모드 토글
+  const root = document.documentElement;
+  const toggleTheme = () => {
+    const isDark = root.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  };
+  document.getElementById('theme-toggle-desktop')?.addEventListener('click', toggleTheme);
+  document.getElementById('theme-toggle-mobile')?.addEventListener('click', toggleTheme);
+
+  // 모바일 메뉴
+  const mobileMenu = document.getElementById('mobile-menu');
+  document.getElementById('mobile-menu-toggle')?.addEventListener('click', () => {
+    mobileMenu?.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  });
+  document.getElementById('mobile-menu-close')?.addEventListener('click', () => {
+    mobileMenu?.classList.add('hidden');
+    document.body.style.overflow = '';
+  });
+</script>

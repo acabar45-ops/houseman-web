@@ -1,0 +1,66 @@
+---
+// StatsGrid — 뷰포트 진입 시 0에서 숫자 카운트업 (IntersectionObserver)
+const stats = [
+  { target: 100, suffix: '+', label: '관리 건물' },
+  { target: 1100, suffix: '+', label: '관리 호실' },
+  { target: 800, suffix: '+', label: '부동산 네트워크' },
+  { target: 15, suffix: '년', label: '운영 경험' },
+] as const;
+
+const baseDate = '2026-04';
+---
+
+<section class="container-narrow py-20 md:py-section">
+  <p class="label-uppercase text-center mb-10">숫자로 본 하우스맨</p>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    {stats.map(({ target, suffix, label }) => (
+      <div class="card text-center py-10 md:py-12">
+        <div
+          class="stat-number text-4xl md:text-5xl font-extrabold text-navy-700 mb-2 tracking-tight"
+          data-target={target}
+          data-suffix={suffix}
+        >
+          0{suffix}
+        </div>
+        <div class="text-sm text-ink-muted">{label}</div>
+      </div>
+    ))}
+  </div>
+  <p class="mt-6 text-center text-[11px] text-ink-label">기준: {baseDate}</p>
+</section>
+
+<script>
+  // 뷰포트 진입 시 0→target 카운트업 (1회만)
+  const nodes = document.querySelectorAll<HTMLElement>('.stat-number');
+  if (nodes.length && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const el = entry.target as HTMLElement;
+          const target = Number(el.dataset.target);
+          const suffix = el.dataset.suffix ?? '';
+          const duration = 1400;
+          const start = performance.now();
+          const tick = (now: number) => {
+            const p = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+            const current = Math.round(target * eased);
+            el.textContent = current.toLocaleString() + suffix;
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+          observer.unobserve(el);
+        }
+      },
+      { threshold: 0.3 },
+    );
+    nodes.forEach((n) => observer.observe(n));
+  } else {
+    // IO 미지원 — 최종값 즉시 표시
+    nodes.forEach((n) => {
+      const target = Number(n.dataset.target);
+      n.textContent = target.toLocaleString() + (n.dataset.suffix ?? '');
+    });
+  }
+</script>

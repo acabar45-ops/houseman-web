@@ -1,0 +1,110 @@
+---
+// SaaS 실제 UI 목업 — Stripe가 코드 스니펫으로 하는 자리를
+// 하우스맨은 실제 대시보드 UI로 대체 (경쟁사 중 누구도 안 하는 무기)
+---
+
+<section class="container-narrow py-section">
+  <div class="text-center mb-12">
+    <p class="label-uppercase mb-3">실사용 UI</p>
+    <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+      건물주가 실제로 보는 화면입니다.
+    </h2>
+  </div>
+
+  <!-- 브라우저 창 프레임 -->
+  <div class="max-w-5xl mx-auto card !p-0 overflow-hidden shadow-xl">
+    <!-- 상단 바 -->
+    <div class="flex items-center gap-2 px-4 py-3 border-b border-ink-line bg-ink-soft">
+      <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-yellow-400"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-green-400"></span>
+      <span class="ml-4 text-xs text-ink-label">app.houseman.co.kr / dashboard</span>
+    </div>
+
+    <!-- 실제 대시보드 -->
+    <div class="grid grid-cols-12 min-h-[480px] text-xs md:text-sm">
+      <!-- 사이드바 -->
+      <aside class="col-span-3 bg-navy-900 text-white/80 p-4 hidden md:block">
+        <div class="text-white font-bold mb-6 tracking-tight">HOUSEMAN</div>
+        <nav class="space-y-1">
+          <a class="block px-3 py-2 rounded bg-white/10 text-white">📊 대시보드</a>
+          <a class="block px-3 py-2 rounded hover:bg-white/5">🏢 건물 / 호실</a>
+          <a class="block px-3 py-2 rounded hover:bg-white/5">👥 임차인</a>
+          <a class="block px-3 py-2 rounded hover:bg-white/5">🧾 청구·수금</a>
+          <a class="block px-3 py-2 rounded hover:bg-white/5">💬 알림톡</a>
+          <a class="block px-3 py-2 rounded hover:bg-white/5">💰 정산</a>
+          <a class="block px-3 py-2 rounded hover:bg-white/5">📅 검침</a>
+        </nav>
+      </aside>
+
+      <!-- 메인 -->
+      <main class="col-span-12 md:col-span-9 p-5 bg-white">
+        <div class="flex items-center justify-between mb-5">
+          <h3 class="font-bold text-ink text-base">4월 운영 요약</h3>
+          <span class="label-uppercase">2026-04-17 기준</span>
+        </div>
+
+        <!-- 4개 KPI 카드 -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+          <div class="border border-ink-line rounded-lg p-3">
+            <div class="text-[10px] text-ink-label uppercase mb-1">청구 완료</div>
+            <div class="text-xl font-extrabold text-navy-700">1,087</div>
+          </div>
+          <div class="border border-ink-line rounded-lg p-3">
+            <div class="text-[10px] text-ink-label uppercase mb-1">수금 완료</div>
+            <div class="text-xl font-extrabold text-navy-700">978</div>
+          </div>
+          <div class="border border-ink-line rounded-lg p-3">
+            <div class="text-[10px] text-ink-label uppercase mb-1">미납 호실</div>
+            <div class="text-xl font-extrabold text-emphasis">19</div>
+          </div>
+          <div class="border border-ink-line rounded-lg p-3">
+            <div class="text-[10px] text-ink-label uppercase mb-1">공실</div>
+            <div class="text-xl font-extrabold text-ink">21</div>
+          </div>
+        </div>
+
+        <!-- 오늘 처리 리스트 -->
+        <div class="border border-ink-line rounded-lg overflow-hidden">
+          <div class="bg-ink-soft px-4 py-2 text-[11px] font-bold uppercase tracking-wider text-ink-label border-b border-ink-line">
+            오늘 자동 처리된 업무
+          </div>
+          <ul class="divide-y divide-ink-line">
+            <li class="flex items-center justify-between px-4 py-2.5">
+              <div class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-[10px]">✓</span>
+                <span>알림톡 42건 발송 (청구 7일 전)</span>
+              </div>
+              <span class="text-ink-label text-[11px]">06:00</span>
+            </li>
+            <li class="flex items-center justify-between px-4 py-2.5">
+              <div class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-[10px]">✓</span>
+                <span>입금 매칭 17건 (수금 완료)</span>
+              </div>
+              <span class="text-ink-label text-[11px]">09:12</span>
+            </li>
+            <li class="flex items-center justify-between px-4 py-2.5">
+              <div class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-yellow-100 text-yellow-700 flex items-center justify-center text-[10px]">!</span>
+                <span>미납 3호실 → 2차 독촉 알림톡 발송</span>
+              </div>
+              <span class="text-ink-label text-[11px]">13:30</span>
+            </li>
+            <li class="flex items-center justify-between px-4 py-2.5">
+              <div class="flex items-center gap-3">
+                <span class="w-5 h-5 rounded-full bg-green-100 text-green-700 flex items-center justify-center text-[10px]">✓</span>
+                <span>정산 리포트 PDF 2건 건물주 전송</span>
+              </div>
+              <span class="text-ink-label text-[11px]">15:00</span>
+            </li>
+          </ul>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <p class="text-center text-xs text-ink-label mt-6">
+    실제 운영 화면 (가명 데이터). 건물주는 수입·지출·공실·미납을 한 화면에서 확인합니다.
+  </p>
+</section>

@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
+
+const features = [
+  { title: '정기 방문 & 상시 점검', body: '전등·수전·소방·승강기·냉난방 등 소규모 이슈를 즉시 해결.' },
+  { title: '투명한 운영 프로세스', body: '월간 보고서·작업 이력·비용 구조 공개. 재무 담당자도 한눈에.' },
+  { title: '기업 이미지 유지', body: '방문객·협력사에 보이는 공간을 항상 A급 컨디션으로 유지.' },
+  { title: '고정 인건비 절감', body: '관리소장·경비·미화 인력을 개별 채용할 필요 없이 위탁 운영.' },
+];
+
+const forWho = [
+  '사옥 유지관리를 내부 인력으로 처리 중입니다',
+  '시설 관리에 대한 고객사·임직원 불만이 있습니다',
+  '외주 업체 비용 관리가 복잡해졌습니다',
+  '법정 점검·소방 이력이 체계화되어 있지 않습니다',
+];
+---
+
+<BaseLayout
+  title="기업 시설 관리 | 하우스맨"
+  description="포르쉐 코리아·보건복지부 이브릿지가 선택한 사옥 유지관리. 시설·경비·미화·에너지 통합 위탁. 법정 이력 자동 관리."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-24 md:py-28">
+    <div class="container-narrow max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">기업 시설 관리</p>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-6">
+        사옥 관리는<br/>회사 이미지입니다.
+      </h1>
+      <p class="text-lg md:text-xl text-white/85 leading-relaxed mb-8">
+        포르쉐 코리아·보건복지부 이브릿지가 선택한 기업 시설 관리.
+        시설·경비·미화·에너지·법정 이력까지 통합 위탁.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="tel:1544-4150" class="btn-primary bg-white !text-navy-700 hover:!bg-ink-soft">무료 상담 1544-4150</a>
+        <a href="mailto:contact@houseman.co.kr" class="btn-secondary">이메일 문의</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 레퍼런스 -->
+  <section class="container-narrow py-section">
+    <p class="label-uppercase text-center mb-6">레퍼런스</p>
+    <div class="flex items-center justify-center gap-12 flex-wrap opacity-70">
+      <div class="text-xl font-bold text-ink-muted">포르쉐 코리아</div>
+      <div class="text-xl font-bold text-ink-muted">보건복지부 이브릿지</div>
+      <div class="text-xl font-bold text-ink-label">+ 추가 공개 예정</div>
+    </div>
+  </section>
+
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-3xl">
+      <p class="label-uppercase mb-3 text-center">이런 분께 적합합니다</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-10">
+        시설 관리가 본업이 아닌 법인·기업께.
+      </h2>
+      <ul class="space-y-3">
+        {forWho.map((line) => (
+          <li class="flex items-start gap-3 card">
+            <span class="text-navy-700 font-bold mt-0.5">✓</span>
+            <span class="text-ink">{line}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="container-narrow py-section">
+    <div class="text-center mb-12">
+      <p class="label-uppercase mb-3">핵심 기능</p>
+      <h2 class="text-3xl md:text-4xl font-bold text-navy-700">기업 공간에 필요한 모든 것.</h2>
+    </div>
+    <div class="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+      {features.map(({ title, body }) => (
+        <div class="card">
+          <h3 class="text-lg font-bold text-ink mb-2">{title}</h3>
+          <p class="text-ink-muted text-sm leading-relaxed">{body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>

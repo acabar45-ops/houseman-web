@@ -1,0 +1,58 @@
+---
+// 자동화 프로세스 4단계 — 히어로 알림톡과 연결되는 핵심 증명 섹션
+const steps = [
+  {
+    label: '1',
+    title: '청구 생성',
+    body: '매월 지정일, 호실별 월세·관리비·공과금이 자동 계산됩니다.',
+  },
+  {
+    label: '2',
+    title: '알림톡 발송',
+    body: '임차인에게 카톡 알림톡으로 청구서 도착. 실패 시 SMS 자동 폴백.',
+  },
+  {
+    label: '3',
+    title: '수금 확인',
+    body: '입금 계좌와 자동 매칭. 미납 시 3단계 자동 독촉 알림톡.',
+  },
+  {
+    label: '4',
+    title: '정산 리포트',
+    body: '건물주에게 월말 정산 PDF 자동 발송. 수입·지출·공실 한눈에.',
+  },
+] as const;
+---
+
+<section class="container-narrow py-section">
+  <div class="text-center mb-14">
+    <p class="label-uppercase mb-3">자동화 흐름</p>
+    <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+      청구부터 정산까지, 매달 자동으로.
+    </h2>
+    <p class="mt-4 text-ink-muted">건물주가 신경 쓸 일이 없습니다.</p>
+  </div>
+
+  <div class="grid md:grid-cols-4 gap-4 relative">
+    {steps.map(({ label, title, body }, i) => (
+      <div class="relative">
+        <div class="card h-full">
+          <div class="text-[11px] font-bold tracking-wider uppercase text-ink-label mb-2">
+            Step {label}
+          </div>
+          <h3 class="text-lg font-bold text-ink mb-2">{title}</h3>
+          <p class="text-sm text-ink-muted leading-relaxed">{body}</p>
+        </div>
+        {i < steps.length - 1 && (
+          <div class="hidden md:block absolute top-1/2 -right-2 w-4 h-px bg-ink-line"></div>
+        )}
+      </div>
+    ))}
+  </div>
+
+  <div class="text-center mt-10">
+    <a href="/saas" class="btn-ghost">
+      SaaS 데모 1분 영상 보기
+    </a>
+  </div>
+</section>

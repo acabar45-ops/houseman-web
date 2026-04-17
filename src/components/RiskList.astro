@@ -1,0 +1,53 @@
+---
+// "못 맡기면 터지는 5가지" — 집앤땅 벤치마킹
+const risks = [
+  {
+    title: '예상치 못한 지출 폭발',
+    body: '관리 주체가 불분명하면 보수·공사 때마다 견적 폭탄.',
+  },
+  {
+    title: '상승하는 인건비',
+    body: '관리소장·경비·미화 인건비가 매년 오릅니다.',
+  },
+  {
+    title: '의미 없는 공사',
+    body: '정기 점검 없으면 이미 망가진 후에 큰 공사로 해결.',
+  },
+  {
+    title: '장기 공실',
+    body: '부동산 한 곳만 맡기면 3~6개월 공실 피하기 어렵습니다.',
+  },
+  {
+    title: '임차인 법적 분쟁',
+    body: '미납·원상복구·계약 해지 분쟁은 언제든 소송으로.',
+  },
+] as const;
+---
+
+<section class="container-narrow py-section">
+  <div class="text-center mb-12 max-w-2xl mx-auto">
+    <p class="label-uppercase mb-3 text-emphasis">주의</p>
+    <h2 class="text-3xl md:text-4xl font-bold text-navy-700">
+      방치하면 이 다섯 가지가 터집니다.
+    </h2>
+    <p class="mt-4 text-ink-muted">
+      하우스맨은 이 다섯 가지를 체계적으로 예방합니다.
+    </p>
+  </div>
+
+  <div class="grid md:grid-cols-5 gap-4 max-w-6xl mx-auto">
+    {risks.map(({ title, body }, i) => (
+      <div class="card flex flex-col">
+        <div class="text-xs font-bold text-ink-label tracking-wider uppercase mb-3">
+          #{i + 1}
+        </div>
+        <h3 class="text-base font-bold text-ink mb-2 leading-snug">
+          {title}
+        </h3>
+        <p class="text-xs text-ink-muted leading-relaxed flex-1">
+          {body}
+        </p>
+      </div>
+    ))}
+  </div>
+</section>

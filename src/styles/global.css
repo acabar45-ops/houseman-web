@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 스크롤 페이드인 — 뷰포트 진입 시 위로 슬라이드 + 페이드 */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .fade-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@layer base {
+  html {
+    font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-white text-ink;
+  }
+  .dark body {
+    @apply bg-dk-bg text-dk-text;
+  }
+  /* feedback_simple_clean_design.md 원칙: 한 화면 1~2색, 박스 안 박스 X */
+  .container-narrow {
+    @apply max-w-content mx-auto px-6 md:px-8;
+  }
+  /* 헤더 패턴 — 라벨은 작은 회색 대문자 */
+  .label-uppercase {
+    @apply text-[11px] font-bold tracking-wider uppercase text-ink-label;
+  }
+}
+
+@layer components {
+  /* 기본 버튼 — 네이비 솔리드 */
+  .btn-primary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-card
+           bg-navy-700 text-white font-semibold
+           hover:bg-navy-800 transition;
+  }
+  /* 세컨더리 버튼 — 투명 보더 */
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-card
+           border border-white/30 text-white font-medium
+           hover:bg-white/10 transition;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-6 py-3 rounded-card
+           border border-ink-line text-ink font-medium
+           hover:bg-ink-soft transition;
+  }
+  /* 카드 — 얇은 회색 보더 + 여백 */
+  .card {
+    @apply bg-white border border-ink-line rounded-card p-6;
+  }
+  .dark .card {
+    @apply bg-dk-card border-dk-line;
+  }
+}

@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import FinalCTA from '../../components/FinalCTA.astro';
+
+const features = [
+  { title: '임차인 민원 24시간', body: '카톡 채널·전화·앱으로 접수. 사장님 휴대폰으로 연락 안 옵니다.' },
+  { title: '미납 3단계 자동 대응', body: '청구 7일 전·5일 전·미납 7일 후 알림톡 자동 발송. 그래도 미납 시 법무 지원.' },
+  { title: '공실 최소화 전략', body: '단기·장기 혼합 전략 + 800+ 부동산 네트워크로 평균 공실 기간 단축.' },
+  { title: '퇴실 정산·원상복구', body: '사진 증빙, 보증금 공제 자동 계산, 임차인 납득 가능한 정산서 자동 발급.' },
+];
+
+const forWho = [
+  '원룸·오피스텔·다가구주택을 보유하고 있습니다',
+  '매달 월세 수금·미납 독촉이 스트레스입니다',
+  '퇴실 정산과 분쟁이 부담스럽습니다',
+  '공실 기간을 최대한 줄이고 싶습니다',
+];
+---
+
+<BaseLayout
+  title="중소형 주택 관리 | 하우스맨"
+  description="원룸·오피스텔·다가구주택 운영. 미납 자동 대응·공실 단축·퇴실 정산 자동화. 호실 단위 관리 1,100+ 실적."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-24 md:py-28">
+    <div class="container-narrow max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">중소형 주택</p>
+      <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight mb-6">
+        원룸 수십 호실,<br/>시스템으로 돌립니다.
+      </h1>
+      <p class="text-lg md:text-xl text-white/85 leading-relaxed mb-8">
+        호실 단위 관리는 하우스맨이 가장 잘합니다.
+        1,100+ 호실 운영 경험이 그 증거입니다.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <a href="tel:1544-4150" class="btn-primary bg-white !text-navy-700 hover:!bg-ink-soft">무료 상담 1544-4150</a>
+        <a href="https://pf.kakao.com/_hYmxjn/chat" target="_blank" rel="noopener" class="btn-secondary">카톡 문의</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container-narrow py-section">
+    <div class="max-w-3xl mx-auto">
+      <p class="label-uppercase mb-3 text-center">이런 분께 적합합니다</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700 text-center mb-10">
+        수십 개 호실을 혼자 관리하기 벅찬 분들께.
+      </h2>
+      <ul class="space-y-3">
+        {forWho.map((line) => (
+          <li class="flex items-start gap-3 card">
+            <span class="text-navy-700 font-bold mt-0.5">✓</span>
+            <span class="text-ink">{line}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow">
+      <div class="text-center mb-12">
+        <p class="label-uppercase mb-3">핵심 기능</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-navy-700">주택 운영의 모든 순간.</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-5 max-w-4xl mx-auto">
+        {features.map(({ title, body }) => (
+          <div class="card">
+            <h3 class="text-lg font-bold text-ink mb-2">{title}</h3>
+            <p class="text-ink-muted text-sm leading-relaxed">{body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-narrow py-section max-w-3xl">
+    <div class="card">
+      <div class="label-uppercase mb-3">사례</div>
+      <h3 class="text-2xl font-bold text-navy-700 mb-3">
+        2년 누적 미납 90% 회수
+      </h3>
+      <p class="text-ink-muted leading-relaxed">
+        10호실 장기 미납 누적 수천만원. 하우스맨이 인수받아 3단계 알림톡 + 내용증명 + 법무 지원으로 3개월 내 90% 회수. 나머지 10%는 명도 진행.
+      </p>
+      <div class="mt-5 pt-4 border-t border-ink-line flex items-baseline gap-3">
+        <span class="text-3xl font-extrabold text-emphasis">90%</span>
+        <span class="text-sm text-ink-muted">3개월 내 회수</span>
+      </div>
+    </div>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>
