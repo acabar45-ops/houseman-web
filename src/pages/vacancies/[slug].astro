@@ -1,0 +1,136 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { vacancies, type Vacancy } from '../../data/vacancies.ts';
+
+export async function getStaticPaths() {
+  return vacancies.map((v) => ({
+    params: { slug: v.slug },
+    props: { vacancy: v },
+  }));
+}
+
+const { vacancy } = Astro.props as { vacancy: Vacancy };
+
+// 같은 카테고리의 다른 공실 3개
+const related = vacancies
+  .filter((v) => v.category === vacancy.category && v.slug !== vacancy.slug)
+  .slice(0, 3);
+
+const fields = [
+  { label: '카테고리', value: vacancy.category },
+  { label: '건물', value: vacancy.building },
+  { label: '호실', value: vacancy.room },
+  { label: '지역', value: vacancy.area },
+  { label: '방 구조', value: vacancy.layout ?? '-' },
+  { label: '전용 면적', value: vacancy.areaSize ?? '-' },
+  { label: '층', value: vacancy.floor ?? '-' },
+  { label: '엘리베이터', value: vacancy.elevator ? '있음' : '없음' },
+  { label: '주차', value: vacancy.parking ?? '-' },
+  { label: '지하철', value: vacancy.subway ?? '-' },
+  { label: '옵션', value: vacancy.option ?? '-' },
+  { label: '입주 가능일', value: vacancy.availableFrom ?? '협의' },
+];
+---
+
+<BaseLayout
+  title={`${vacancy.building} ${vacancy.room} | ${vacancy.area} ${vacancy.category}임대 공실 | 하우스맨`}
+  description={`${vacancy.area} ${vacancy.building} ${vacancy.room}. 보증금 ${vacancy.deposit}만 / 월세 ${vacancy.rent}만. ${vacancy.highlight ?? ''} 하우스맨이 직접 운영하는 ${vacancy.category}임대 호실.`}
+>
+  <Nav />
+
+  <article class="container-narrow py-section max-w-5xl">
+    <!-- 뒤로 가기 -->
+    <div class="mb-6">
+      <a href="/vacancies" class="text-sm text-ink-muted hover:text-navy-700">
+        ← 공실 목록으로
+      </a>
+    </div>
+
+    <!-- 헤더 -->
+    <header class="mb-10">
+      <div class="flex items-center gap-3 mb-3">
+        <span class={`label-uppercase px-2 py-1 rounded ${vacancy.category === '단기' ? 'bg-red-50 text-emphasis' : 'bg-ink-soft text-navy-700'}`}>
+          {vacancy.category}임대
+        </span>
+        <span class="text-sm text-ink-muted">{vacancy.area}</span>
+      </div>
+      <h1 class="text-3xl md:text-5xl font-extrabold text-navy-700 tracking-tight mb-3">
+        {vacancy.building}
+      </h1>
+      <p class="text-xl text-ink">{vacancy.room} · {vacancy.layout}</p>
+      {vacancy.highlight && (
+        <p class="mt-4 text-lg text-ink-muted italic">"{vacancy.highlight}"</p>
+      )}
+    </header>
+
+    <!-- 가격 강조 + CTA -->
+    <section class="card bg-ink-soft mb-10">
+      <div class="grid md:grid-cols-3 gap-6 items-center">
+        <div>
+          <div class="label-uppercase mb-1">보증금</div>
+          <div class="text-3xl font-extrabold text-ink">
+            {vacancy.deposit.toLocaleString()}<span class="text-base text-ink-muted ml-1">만원</span>
+          </div>
+        </div>
+        <div>
+          <div class="label-uppercase mb-1">월세</div>
+          <div class="text-3xl font-extrabold text-navy-700">
+            {vacancy.rent}<span class="text-base text-ink-muted ml-1">만원</span>
+          </div>
+        </div>
+        <div class="flex flex-col gap-2">
+          <a
+            href="https://pf.kakao.com/_hYmxjn/chat"
+            target="_blank"
+            rel="noopener"
+            class="btn-primary justify-center"
+          >
+            카톡으로 상담
+          </a>
+          <a href="tel:1544-4150" class="btn-ghost justify-center">
+            1544-4150 전화
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 상세 정보 -->
+    <section class="mb-12">
+      <h2 class="label-uppercase mb-5">상세 정보</h2>
+      <dl class="grid md:grid-cols-2 gap-x-10 gap-y-1">
+        {fields.map(({ label, value }) => (
+          <div class="flex items-center justify-between py-3 border-b border-ink-line">
+            <dt class="text-sm text-ink-muted">{label}</dt>
+            <dd class="text-sm font-semibold text-ink">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <!-- 같은 카테고리 다른 공실 -->
+    {related.length > 0 && (
+      <section class="pt-10 border-t border-ink-line">
+        <h2 class="label-uppercase mb-5">같은 카테고리 다른 호실</h2>
+        <div class="grid md:grid-cols-3 gap-5">
+          {related.map((r) => (
+            <a href={`/vacancies/${r.slug}`} class="card hover:border-navy-700 transition">
+              <div class="flex items-center justify-between mb-2">
+                <span class={`label-uppercase ${r.category === '단기' ? 'text-emphasis' : 'text-navy-700'}`}>{r.category}</span>
+                <span class="text-xs text-ink-label">{r.area}</span>
+              </div>
+              <h3 class="font-bold text-ink mb-1">{r.building} {r.room}</h3>
+              <p class="text-sm text-ink-muted mb-3">{r.layout} · {r.areaSize}</p>
+              <div class="text-sm text-ink">
+                보증 <strong>{r.deposit.toLocaleString()}만</strong> / 월 <strong class="text-navy-700">{r.rent}만</strong>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </article>
+
+  <Footer />
+</BaseLayout>

@@ -2,40 +2,21 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
-
-// Phase 2에서 기존 PHP 게시판 21건 이전 예정 (placeholder)
-const vacancies = [
-  // 단기임대 9건
-  { category: '단기', building: '다존하우스', room: '208호', deposit: 500, rent: 80, area: '역삼동' },
-  { category: '단기', building: '다존하우스', room: '309호', deposit: 500, rent: 85, area: '역삼동' },
-  { category: '단기', building: '다존하우스', room: '605호', deposit: 500, rent: 95, area: '역삼동' },
-  { category: '단기', building: '모던라이프', room: '303호', deposit: 300, rent: 110, area: '강남' },
-  { category: '단기', building: '스타빌', room: '101호', deposit: 500, rent: 90, area: '논현동' },
-  { category: '단기', building: 'W하우스', room: '603호', deposit: 500, rent: 120, area: '서초' },
-  { category: '단기', building: '리트코하우스', room: '601호', deposit: 500, rent: 130, area: '역삼' },
-  { category: '단기', building: '서우하우스', room: '401호', deposit: 500, rent: 100, area: '역삼' },
-  { category: '단기', building: '서우하우스', room: '402호', deposit: 500, rent: 100, area: '역삼' },
-  // 근생 12건
-  { category: '근생', building: '에이스빌딩', room: 'B1층', deposit: 2000, rent: 150, area: '구로동' },
-  { category: '근생', building: '우영빌딩', room: '2층', deposit: 3000, rent: 250, area: '논현동' },
-  { category: '근생', building: '우영빌딩', room: '4층', deposit: 3000, rent: 250, area: '논현동' },
-  { category: '근생', building: '문화빌딩', room: 'B1층', deposit: 2000, rent: 200, area: '도화동' },
-  { category: '근생', building: '문화빌딩', room: '2층', deposit: 2500, rent: 230, area: '도화동' },
-  { category: '근생', building: '어반그레이', room: 'B01', deposit: 2000, rent: 180, area: '논현동' },
-  { category: '근생', building: '어반그레이', room: '1층', deposit: 5000, rent: 350, area: '논현동' },
-  { category: '근생', building: '어반그레이', room: '2층', deposit: 3000, rent: 250, area: '논현동' },
-  { category: '근생', building: '상건빌딩', room: '301호', deposit: 2000, rent: 160, area: '을지로6가' },
-  { category: '근생', building: '상건빌딩', room: '302호', deposit: 2000, rent: 160, area: '을지로6가' },
-  { category: '근생', building: '유석빌딩', room: '402호', deposit: 2500, rent: 200, area: '신당동' },
-  { category: '근생', building: '미진빌딩', room: '5층', deposit: 3000, rent: 280, area: '을지로6가' },
-];
+import { vacancies } from '../../data/vacancies.ts';
 
 const categories = ['전체', '단기', '근생', '주택'] as const;
+
+const counts: Record<string, number> = {
+  전체: vacancies.length,
+  단기: vacancies.filter((v) => v.category === '단기').length,
+  근생: vacancies.filter((v) => v.category === '근생').length,
+  주택: vacancies.filter((v) => v.category === '주택').length,
+};
 ---
 
 <BaseLayout
   title="공실 정보 | 하우스맨"
-  description="하우스맨 관리 건물 중 현재 비어있는 호실을 실시간 공개합니다. 단기임대·근생·주택 카테고리별 검색."
+  description="하우스맨 관리 건물 중 현재 비어있는 호실을 실시간 공개합니다. 단기·근생·주택 카테고리별 필터."
 >
   <Nav />
 
@@ -43,22 +24,26 @@ const categories = ['전체', '단기', '근생', '주택'] as const;
     <div class="container-narrow text-center max-w-3xl">
       <p class="label-uppercase text-white/70 mb-4">공실 정보</p>
       <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-5">
-        지금 비어있는 호실.
+        지금 비어있는 호실 {vacancies.length}개.
       </h1>
       <p class="text-lg text-white/85 leading-relaxed">
-        하우스맨 관리 건물의 현재 공실을 실시간 공개합니다.
+        하우스맨 관리 건물의 공실을 실시간 공개합니다. 카톡 한 번으로 상담 시작.
       </p>
     </div>
   </section>
 
-  <!-- 카테고리 탭 (간단 필터 — JS 인터랙션은 Phase 2에 강화) -->
+  <!-- 카테고리 필터 (클라이언트 JS 작동) -->
   <section class="container-narrow pt-14">
     <div class="flex flex-wrap justify-center gap-3 mb-10">
       {categories.map((cat, i) => (
-        <button class={`px-5 py-2 rounded-full text-sm font-semibold border transition ${
-          i === 0 ? 'bg-navy-700 text-white border-navy-700' : 'border-ink-line text-ink-muted hover:border-navy-700'
-        }`}>
-          {cat}
+        <button
+          type="button"
+          data-filter={cat}
+          class={`filter-btn px-5 py-2 rounded-full text-sm font-semibold border transition ${
+            i === 0 ? 'active bg-navy-700 text-white border-navy-700' : 'border-ink-line text-ink-muted'
+          }`}
+        >
+          {cat} <span class="ml-1 text-xs opacity-70">({counts[cat] ?? 0})</span>
         </button>
       ))}
     </div>
@@ -66,9 +51,12 @@ const categories = ['전체', '단기', '근생', '주택'] as const;
 
   <!-- 공실 목록 -->
   <section class="container-narrow pb-section">
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div id="vacancy-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
       {vacancies.map((v) => (
-        <article class="card hover:border-navy-700 transition">
+        <article
+          data-category={v.category}
+          class="vacancy-card card hover:border-navy-700 transition flex flex-col"
+        >
           <div class="flex items-center justify-between mb-3">
             <span class={`label-uppercase ${v.category === '단기' ? 'text-emphasis' : 'text-navy-700'}`}>
               {v.category}
@@ -76,8 +64,11 @@ const categories = ['전체', '단기', '근생', '주택'] as const;
             <span class="text-xs text-ink-label">{v.area}</span>
           </div>
           <h3 class="text-lg font-bold text-ink mb-1">{v.building}</h3>
-          <p class="text-sm text-ink-muted mb-4">{v.room}</p>
-          <div class="pt-4 border-t border-ink-line flex items-baseline gap-4">
+          <p class="text-sm text-ink-muted mb-3">{v.room} · {v.layout} · {v.areaSize}</p>
+          {v.highlight && (
+            <p class="text-xs text-ink-muted italic mb-3">"{v.highlight}"</p>
+          )}
+          <div class="pt-4 border-t border-ink-line flex items-baseline gap-4 mt-auto">
             <div>
               <div class="text-[11px] text-ink-label mb-1">보증금</div>
               <div class="font-bold text-ink">{v.deposit.toLocaleString()}만</div>
@@ -87,21 +78,68 @@ const categories = ['전체', '단기', '근생', '주택'] as const;
               <div class="font-bold text-navy-700">{v.rent}만</div>
             </div>
           </div>
-          <a
-            href="https://pf.kakao.com/_hYmxjn/chat"
-            target="_blank"
-            rel="noopener"
-            class="mt-4 block text-center py-2 text-sm font-semibold text-navy-700 border border-navy-700 rounded hover:bg-navy-700 hover:text-white transition"
-          >
-            카톡으로 상담
-          </a>
+          <div class="flex gap-2 mt-4">
+            <a
+              href={`/vacancies/${v.slug}`}
+              class="flex-1 text-center py-2 text-sm font-semibold text-navy-700 border border-navy-700 rounded hover:bg-navy-700 hover:text-white transition"
+            >
+              자세히
+            </a>
+            <a
+              href="https://pf.kakao.com/_hYmxjn/chat"
+              target="_blank"
+              rel="noopener"
+              class="flex-1 text-center py-2 text-sm font-semibold bg-navy-700 text-white rounded hover:bg-navy-800 transition"
+            >
+              카톡 상담
+            </a>
+          </div>
         </article>
       ))}
     </div>
+
+    <p id="empty-state" class="hidden text-center py-20 text-ink-muted">
+      이 카테고리에는 현재 공실이 없습니다.<br/>
+      <a href="https://pf.kakao.com/_hYmxjn/chat" target="_blank" rel="noopener"
+         class="inline-block mt-4 btn-primary">
+        대기자 등록 요청
+      </a>
+    </p>
+
     <p class="text-center text-xs text-ink-label mt-10">
-      기준일: 2026-04 · 실시간 업데이트
+      기준일: 2026-04 · 변동 가능 (카톡 상담 시 최신 상태 확인)
     </p>
   </section>
 
   <Footer />
+
+  <script is:inline>
+    const buttons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.vacancy-card');
+    const emptyState = document.getElementById('empty-state');
+
+    function apply(filter) {
+      let visible = 0;
+      cards.forEach((card) => {
+        const match = filter === '전체' || card.dataset.category === filter;
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      if (emptyState) {
+        emptyState.classList.toggle('hidden', visible > 0);
+      }
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        buttons.forEach((b) => {
+          b.classList.remove('active', 'bg-navy-700', 'text-white', 'border-navy-700');
+          b.classList.add('border-ink-line', 'text-ink-muted');
+        });
+        btn.classList.add('active', 'bg-navy-700', 'text-white', 'border-navy-700');
+        btn.classList.remove('border-ink-line', 'text-ink-muted');
+        apply(btn.dataset.filter);
+      });
+    });
+  </script>
 </BaseLayout>

@@ -1,0 +1,268 @@
+---
+// 자료실 — PDF 가이드 다운로드 (이메일 수집 → 영업 리드 생성)
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+const guides = [
+  {
+    id: 'short-term-playbook',
+    title: '강남 단기임대 성공 플레이북',
+    subtitle: '호실 세팅부터 수익 극대화까지',
+    pages: 28,
+    audience: '강남권 원룸·오피스텔 건물주',
+    toc: [
+      '단기임대 시장 현황과 기회',
+      '풀옵션 세팅 필수 20가지',
+      '공실률 5% 이하 유지 전략',
+      '수익률 계산 공식',
+      '법적 리스크 체크리스트',
+    ],
+  },
+  {
+    id: 'collection-automation',
+    title: '미납·연체 대응 실무 가이드',
+    subtitle: '임차인과의 불편 없이 100% 회수',
+    pages: 18,
+    audience: '원룸·오피스텔·빌라 건물주',
+    toc: [
+      '미납 초기 신호 7가지',
+      '3단계 자동 알림 시나리오',
+      '내용증명 작성 템플릿',
+      '명도 소송 vs 합의 판단 기준',
+      '실제 회수 성공 사례 5건',
+    ],
+  },
+  {
+    id: 'corporate-facility',
+    title: '기업 사옥 유지관리 통합 운영 가이드',
+    subtitle: '포르쉐·보건복지부 운영 노하우 공개',
+    pages: 22,
+    audience: '사옥 관리 담당자·경영지원팀',
+    toc: [
+      '연간 법정 점검 캘린더',
+      '시설·경비·미화 통합 위탁 효과',
+      '에너지 절감 10가지 방법',
+      '방문객 응대 기준',
+      '비용 구조 투명화 체크리스트',
+    ],
+  },
+];
+---
+
+<BaseLayout
+  title="자료실 — 건물주를 위한 PDF 가이드 | 하우스맨"
+  description="단기임대 플레이북·미납 대응 가이드·기업 시설 관리 운영서. 이메일만 입력하면 즉시 다운로드."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-20">
+    <div class="container-narrow text-center max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">자료실</p>
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-5">
+        건물주를 위한 실무 가이드.
+      </h1>
+      <p class="text-lg text-white/85 leading-relaxed">
+        하우스맨이 14년간 현장에서 정리한 노하우 PDF 3종. 무료 다운로드.
+      </p>
+    </div>
+  </section>
+
+  <section class="container-narrow py-section max-w-5xl">
+    <div class="grid md:grid-cols-3 gap-5">
+      {guides.map((g) => (
+        <article class="card h-full flex flex-col">
+          <div class="label-uppercase mb-3">{g.pages}p · PDF</div>
+          <h2 class="text-xl font-bold text-navy-700 mb-2 leading-snug">{g.title}</h2>
+          <p class="text-sm text-ink-muted mb-4">{g.subtitle}</p>
+          <p class="text-xs text-ink-label mb-5">추천 대상: {g.audience}</p>
+
+          <div class="mb-5 flex-1">
+            <div class="text-xs font-bold text-ink-label uppercase tracking-wider mb-2">목차</div>
+            <ol class="text-xs text-ink-muted space-y-1">
+              {g.toc.map((item, i) => (
+                <li>{i + 1}. {item}</li>
+              ))}
+            </ol>
+          </div>
+
+          <button
+            type="button"
+            class="btn-primary justify-center w-full open-form"
+            data-guide-id={g.id}
+            data-guide-title={g.title}
+          >
+            무료 다운로드
+          </button>
+        </article>
+      ))}
+    </div>
+
+    <p class="text-center text-xs text-ink-label mt-10">
+      ※ PDF 제작 중입니다. 이메일 남겨주시면 완성되는 대로 발송드립니다.
+    </p>
+  </section>
+
+  <!-- 추가 가치 제안 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-3xl text-center">
+      <p class="label-uppercase mb-3">특별 제공</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700 mb-4">
+        PDF 다운로드 시 함께 드립니다
+      </h2>
+      <div class="grid md:grid-cols-3 gap-5 mt-8 text-left">
+        <div class="card">
+          <h3 class="font-bold text-ink mb-2">🧮 수익 계산기</h3>
+          <p class="text-sm text-ink-muted">장기 vs 단기임대 수익 비교 엑셀 템플릿</p>
+        </div>
+        <div class="card">
+          <h3 class="font-bold text-ink mb-2">📋 공실 체크리스트</h3>
+          <p class="text-sm text-ink-muted">입주 전·출·중 47개 확인 항목</p>
+        </div>
+        <div class="card">
+          <h3 class="font-bold text-ink mb-2">💌 월 1회 업계 소식</h3>
+          <p class="text-sm text-ink-muted">규제·시장·절세 뉴스 요약 (거절 가능)</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 이메일 폼 모달 -->
+  <div
+    id="lead-modal"
+    class="fixed inset-0 z-[60] bg-black/60 hidden items-center justify-center p-4"
+    role="dialog"
+  >
+    <div class="bg-white rounded-card max-w-md w-full p-6 md:p-8 relative">
+      <button
+        id="close-modal"
+        aria-label="닫기"
+        class="absolute right-4 top-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-ink-soft text-ink-muted"
+      >
+        ✕
+      </button>
+
+      <p class="label-uppercase mb-3">무료 다운로드</p>
+      <h3 id="modal-title" class="text-xl font-bold text-navy-700 mb-6">
+        가이드 제목
+      </h3>
+
+      <form id="lead-form" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold text-ink mb-1" for="lead-name">성함</label>
+          <input
+            id="lead-name"
+            name="name"
+            type="text"
+            required
+            placeholder="홍길동"
+            class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-ink mb-1" for="lead-email">이메일</label>
+          <input
+            id="lead-email"
+            name="email"
+            type="email"
+            required
+            placeholder="owner@example.com"
+            class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none"
+          />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold text-ink mb-1" for="lead-phone">연락처 (선택)</label>
+          <input
+            id="lead-phone"
+            name="phone"
+            type="tel"
+            placeholder="010-1234-5678"
+            class="w-full px-4 py-3 rounded-card border border-ink-line focus:border-navy-700 focus:outline-none"
+          />
+        </div>
+
+        <label class="flex items-start gap-2 text-xs text-ink-muted leading-relaxed">
+          <input type="checkbox" name="consent" required class="mt-0.5" />
+          <span>개인정보 수집·이용에 동의합니다. (이메일로 가이드 PDF 및 하우스맨 소식을 받아봅니다. 언제든 해지 가능.)</span>
+        </label>
+
+        <button type="submit" class="btn-primary w-full justify-center">
+          이메일로 PDF 받기
+        </button>
+
+        <div id="lead-result" class="hidden pt-4 text-center">
+          <p class="text-navy-700 font-semibold">
+            ✅ 접수 완료! 이메일함을 확인해주세요.
+          </p>
+          <p class="text-xs text-ink-muted mt-1">
+            스팸함도 확인해주세요. 5분 내 미도착 시 contact@houseman.co.kr로 문의.
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <Footer />
+
+  <script is:inline>
+    const modal = document.getElementById('lead-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const form = document.getElementById('lead-form');
+    const result = document.getElementById('lead-result');
+    let currentGuideId = '';
+
+    document.querySelectorAll('.open-form').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        currentGuideId = btn.dataset.guideId;
+        modalTitle.textContent = btn.dataset.guideTitle;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        result.classList.add('hidden');
+        form.reset();
+      });
+    });
+
+    document.getElementById('close-modal').addEventListener('click', () => {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const payload = {
+        guide: currentGuideId,
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone') || '',
+        submittedAt: new Date().toISOString(),
+      };
+
+      // 실제 제출 엔드포인트 (Phase 3에서 구현)
+      // fetch('/api/lead', { method: 'POST', body: JSON.stringify(payload) })
+      // 현재는 콘솔 + 성공 메시지만
+      console.log('[lead]', payload);
+
+      // 로컬스토리지에 임시 저장 (나중에 엔드포인트 연결 시 대체)
+      const leads = JSON.parse(localStorage.getItem('pending_leads') || '[]');
+      leads.push(payload);
+      localStorage.setItem('pending_leads', JSON.stringify(leads));
+
+      result.classList.remove('hidden');
+
+      // GA4 이벤트 (있으면)
+      if (typeof gtag !== 'undefined') {
+        gtag('event', 'guide_download', {
+          guide_id: currentGuideId,
+        });
+      }
+    });
+  </script>
+</BaseLayout>
