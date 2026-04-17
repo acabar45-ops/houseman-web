@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import FloatingCTA from '../components/FloatingCTA.astro';
 
 interface Props {
   title?: string;
@@ -129,6 +130,8 @@ const localBusinessSchema = {
   </head>
   <body>
     <slot />
+
+    <FloatingCTA />
 
     <!-- 스크롤 페이드인 옵저버 (전역) -->
     <script is:inline>

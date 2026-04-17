@@ -1,0 +1,252 @@
+---
+// 월간 정산 리포트 샘플 — 건물주에게 제공되는 실제 포맷
+// 인쇄(Ctrl+P) 시 PDF로 저장 가능한 A4 최적화 레이아웃
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+
+const reportMonth = '2026-03';
+const building = {
+  name: 'A빌라 (가명·강남구)',
+  owner: '김○○ 건물주',
+  totalRooms: 12,
+};
+
+const kpis = [
+  { label: '청구 총액', value: '12,480,000', unit: '원' },
+  { label: '수금 완료', value: '11,760,000', unit: '원' },
+  { label: '수금률', value: '94.2', unit: '%' },
+  { label: '미납 호실', value: '1', unit: '건' },
+];
+
+const summary = {
+  income: [
+    { item: '월세',    amount: 9_840_000 },
+    { item: '관리비',  amount: 1_560_000 },
+    { item: '주차비',  amount:   240_000 },
+    { item: '공과금 대납', amount: 120_000 },
+  ],
+  expense: [
+    { item: '하우스맨 위탁 수수료', amount: 780_000 },
+    { item: '시설 유지·보수',     amount: 180_000 },
+    { item: '공용부 청소',         amount: 120_000 },
+    { item: '기타 경비',           amount: 40_000 },
+  ],
+};
+const totalIncome  = summary.income.reduce((s, r) => s + r.amount, 0);
+const totalExpense = summary.expense.reduce((s, r) => s + r.amount, 0);
+const netIncome    = totalIncome - totalExpense;
+
+const activities = [
+  { date: '03-02', type: '청구', body: '호실 12건 자동 청구 생성 + 알림톡 발송' },
+  { date: '03-05', type: '민원', body: '305호 누수 접수 → 당일 협력업체 출동, 수리 완료 (무상)' },
+  { date: '03-07', type: '수금', body: '11호실 자동 입금 매칭 완료' },
+  { date: '03-10', type: '검침', body: '전기·수도 검침 완료, 3월분 반영' },
+  { date: '03-14', type: '계약', body: '402호 단기임대 계약 체결 (3개월, 85만 원)' },
+  { date: '03-22', type: '미납', body: '2단계 독촉 알림톡 발송 → 다음날 수금 완료' },
+  { date: '03-28', type: '퇴실', body: '201호 퇴실 정산 완료, 보증금 환급' },
+  { date: '03-31', type: '리포트', body: '월간 정산 리포트 자동 생성' },
+];
+
+const unpaid = [
+  { room: '107호', tenant: '박○○', month: '2026-03', amount: 720_000, delay: 7, status: '2단계 독촉 완료' },
+];
+---
+
+<BaseLayout
+  title="월간 정산 리포트 샘플 | 하우스맨"
+  description="하우스맨이 건물주에게 매월 자동 발송하는 정산 리포트의 샘플 형식. 인쇄 시 A4 한 장으로 출력됩니다."
+>
+  <div class="no-print">
+    <Nav />
+    <section class="container-narrow py-12 max-w-4xl">
+      <p class="label-uppercase mb-3">샘플 자료</p>
+      <h1 class="text-2xl md:text-3xl font-bold text-navy-700 mb-3">
+        월간 정산 리포트는 이렇게 받으십니다
+      </h1>
+      <p class="text-ink-muted leading-relaxed mb-4">
+        매월 말 하우스맨 SaaS가 자동 생성해 건물주 이메일·카톡으로 발송하는 실제 포맷입니다.
+        가명 데이터로 구성되어 있습니다.
+      </p>
+      <div class="flex flex-wrap gap-3">
+        <button onclick="window.print()" class="btn-primary">🖨️ PDF로 인쇄·저장</button>
+        <a href="/saas" class="btn-ghost">SaaS 자세히 보기</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- 여기부터 인쇄 영역 -->
+  <article class="report-page">
+    <header class="flex items-start justify-between mb-6 pb-4 border-b-2 border-navy-700">
+      <div>
+        <div class="text-xs font-bold tracking-wider uppercase text-ink-label mb-1">
+          HOUSEMAN · 월간 정산 리포트
+        </div>
+        <h2 class="text-xl font-extrabold text-navy-700">
+          {building.name} — {reportMonth}
+        </h2>
+        <p class="text-sm text-ink-muted mt-1">수신: {building.owner} · 관리 호실 {building.totalRooms}개</p>
+      </div>
+      <div class="text-right text-xs text-ink-label leading-relaxed">
+        (주)하우스맨<br/>
+        1544-4150<br/>
+        contact@houseman.co.kr
+      </div>
+    </header>
+
+    <!-- KPI -->
+    <section class="grid grid-cols-4 gap-3 mb-6">
+      {kpis.map(({ label, value, unit }) => (
+        <div class="border border-ink-line rounded-lg p-3">
+          <div class="text-[10px] uppercase text-ink-label mb-1">{label}</div>
+          <div class="text-lg font-extrabold text-navy-700">
+            {value}<span class="text-xs text-ink-muted font-semibold ml-1">{unit}</span>
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <!-- 수입·지출 -->
+    <section class="grid grid-cols-2 gap-5 mb-6">
+      <div>
+        <h3 class="text-sm font-bold text-ink mb-2">수입</h3>
+        <table class="w-full text-sm">
+          <tbody>
+            {summary.income.map((r) => (
+              <tr class="border-b border-ink-line">
+                <td class="py-2 text-ink-muted">{r.item}</td>
+                <td class="py-2 text-right font-semibold">{r.amount.toLocaleString()}</td>
+              </tr>
+            ))}
+            <tr class="border-t-2 border-navy-700">
+              <td class="py-2 font-bold">수입 합계</td>
+              <td class="py-2 text-right font-extrabold text-navy-700">{totalIncome.toLocaleString()}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h3 class="text-sm font-bold text-ink mb-2">지출</h3>
+        <table class="w-full text-sm">
+          <tbody>
+            {summary.expense.map((r) => (
+              <tr class="border-b border-ink-line">
+                <td class="py-2 text-ink-muted">{r.item}</td>
+                <td class="py-2 text-right font-semibold">{r.amount.toLocaleString()}</td>
+              </tr>
+            ))}
+            <tr class="border-t-2 border-navy-700">
+              <td class="py-2 font-bold">지출 합계</td>
+              <td class="py-2 text-right font-extrabold text-navy-700">{totalExpense.toLocaleString()}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="rounded-lg bg-ink-soft p-4 mb-6 flex items-baseline justify-between">
+      <div class="text-sm font-bold text-ink">이번 달 순수익 (건물주 지급)</div>
+      <div class="text-2xl font-extrabold text-emphasis">
+        {netIncome.toLocaleString()} <span class="text-sm font-semibold text-ink-muted">원</span>
+      </div>
+    </section>
+
+    <!-- 주요 활동 -->
+    <section class="mb-6">
+      <h3 class="text-sm font-bold text-ink mb-3">이번 달 주요 활동</h3>
+      <table class="w-full text-xs border-t border-b border-ink-line">
+        <tbody>
+          {activities.map((a) => (
+            <tr class="border-b border-ink-line">
+              <td class="py-2 px-2 text-ink-label w-16">{a.date}</td>
+              <td class="py-2 px-2 w-20">
+                <span class="inline-block px-2 py-0.5 rounded bg-ink-soft text-[10px] font-bold uppercase">
+                  {a.type}
+                </span>
+              </td>
+              <td class="py-2 px-2 text-ink">{a.body}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 미납 -->
+    {unpaid.length > 0 && (
+      <section class="mb-6">
+        <h3 class="text-sm font-bold text-ink mb-3">미납 현황</h3>
+        <table class="w-full text-xs border-t border-b border-ink-line">
+          <thead>
+            <tr>
+              <th class="py-2 px-2 text-left text-ink-label">호실</th>
+              <th class="py-2 px-2 text-left text-ink-label">임차인</th>
+              <th class="py-2 px-2 text-left text-ink-label">청구월</th>
+              <th class="py-2 px-2 text-right text-ink-label">금액</th>
+              <th class="py-2 px-2 text-left text-ink-label">연체일</th>
+              <th class="py-2 px-2 text-left text-ink-label">진행 상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            {unpaid.map((u) => (
+              <tr class="border-b border-ink-line">
+                <td class="py-2 px-2 font-semibold">{u.room}</td>
+                <td class="py-2 px-2">{u.tenant}</td>
+                <td class="py-2 px-2">{u.month}</td>
+                <td class="py-2 px-2 text-right font-semibold">{u.amount.toLocaleString()}</td>
+                <td class="py-2 px-2 text-emphasis font-semibold">{u.delay}일</td>
+                <td class="py-2 px-2 text-ink-muted">{u.status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
+    )}
+
+    <!-- 다음 달 예정 -->
+    <section class="mb-6">
+      <h3 class="text-sm font-bold text-ink mb-2">다음 달 예정</h3>
+      <ul class="text-xs text-ink-muted space-y-1">
+        <li>· 4월 1일: 4월분 청구 자동 생성 + 알림톡 발송</li>
+        <li>· 4월 10일: 전기·수도 검침 예정</li>
+        <li>· 4월 15일: 107호 계약 만료 — 재계약 협의 진행 중</li>
+        <li>· 4월 25일: 소방 정기 점검 (법정)</li>
+      </ul>
+    </section>
+
+    <footer class="pt-4 border-t border-ink-line text-[10px] text-ink-label">
+      본 리포트는 하우스맨 SaaS에서 자동 생성되었습니다. 의문사항은 contact@houseman.co.kr 또는 1544-4150.
+      · (주)하우스맨 대표 박종호 · 사업자번호 206-16-25497
+    </footer>
+  </article>
+
+  <div class="no-print">
+    <Footer />
+  </div>
+
+  <style>
+    .report-page {
+      max-width: 820px;
+      margin: 0 auto 80px;
+      padding: 40px 48px;
+      background: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      border-radius: 8px;
+      font-size: 14px;
+      color: #111827;
+    }
+    @media print {
+      @page { size: A4; margin: 14mm; }
+      body { background: white !important; }
+      .no-print { display: none !important; }
+      .report-page {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border-radius: 0;
+        break-inside: avoid;
+      }
+      article { page-break-inside: avoid; }
+    }
+  </style>
+</BaseLayout>
