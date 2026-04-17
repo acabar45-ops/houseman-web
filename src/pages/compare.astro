@@ -1,0 +1,262 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import FinalCTA from '../components/FinalCTA.astro';
+
+// 주의: 다른 회사 고유명은 '업계 평균' 관점의 팩트 비교에 한정.
+// 실제 회사명을 직접 비방/공격하지 않음. 공정한 시장 위치 안내.
+const rows = [
+  {
+    feature: '관리 대상',
+    houseman: '주거·상업·단기임대·근생·사옥 복합',
+    alt_a: '단기 주택 전문 (1,400채)',
+    alt_b: '상업 빌딩 중심 (100+동)',
+    alt_c: '강남 빌라 소수 (36채)',
+  },
+  {
+    feature: '규모 (건물)',
+    houseman: '100+ 건물 · 1,100+ 호실',
+    alt_a: '1,400채 (주택)',
+    alt_b: '100+ 동',
+    alt_c: '36 빌라',
+  },
+  {
+    feature: '자체 SaaS',
+    houseman: '✅ 청구·수금·정산·알림톡 자동화',
+    alt_a: '입주자 A/S 앱만',
+    alt_b: '모니터링·이력 플랫폼',
+    alt_c: '관리자 내부 모드',
+  },
+  {
+    feature: '긴급 출동',
+    houseman: '24시간, 업계 최단급',
+    alt_a: '고객센터 평일 09-18시',
+    alt_b: '24시간 출동 (5분 내 주장)',
+    alt_c: '지역 한정',
+  },
+  {
+    feature: '수금 보장',
+    houseman: '✅ 단기임대 3개월 · 100% 수금',
+    alt_a: '자기관리형 한정',
+    alt_b: '없음',
+    alt_c: '없음',
+  },
+  {
+    feature: '부동산 네트워크',
+    houseman: '800+ 공실 매칭',
+    alt_a: '명시 없음',
+    alt_b: '거점 순환 방식',
+    alt_c: '자체 채널',
+  },
+  {
+    feature: '가격 공개',
+    houseman: 'SaaS 플랜 3단 공개 · 대행은 맞춤 견적',
+    alt_a: '월 50~150만 원 (비공개)',
+    alt_b: '상담형',
+    alt_c: '비공개',
+  },
+  {
+    feature: '대기업·기관 레퍼런스',
+    houseman: '포르쉐 코리아 · 보건복지부 이브릿지',
+    alt_a: '소비자 대상',
+    alt_b: 'B2B 확장 중',
+    alt_c: '강남 빌라 중심',
+  },
+  {
+    feature: '기술 스택',
+    houseman: 'Astro + Headless WP · JSON-LD AEO 완비',
+    alt_a: '구형 CMS',
+    alt_b: '모던 앱',
+    alt_c: 'Laravel + Inertia',
+  },
+];
+
+const qna = [
+  {
+    q: '하우스맨과 주택임대관리 업계 1위 회사의 차이는 무엇인가요?',
+    a: '업계 1위 회사는 주로 단기임대 주택을 직접 운영(자기관리형)하는 B2C 사업 구조입니다. 하우스맨은 건물주가 직접 소유권을 유지하면서 운영만 위탁하거나 SaaS로 자가 관리하는 B2B 구조입니다. 주거·상업·근생·사옥까지 복합 건물을 한 시스템으로 관리하는 점이 주 차별 포인트입니다.',
+  },
+  {
+    q: '상업 빌딩 중심 경쟁사와는 어떻게 다른가요?',
+    a: '상업 빌딩 중심 회사들은 시설관리와 긴급출동에 강점이 있습니다. 하우스맨은 동등한 출동 속도에 더해 자체 SaaS로 청구·수금·정산을 자동화하고, 주거용 원룸·오피스텔까지 호실 단위 관리가 가능합니다.',
+  },
+  {
+    q: '강남 빌라 전문 회사와 비교하면?',
+    a: '강남 빌라 전문 회사들은 특정 지역 고급 빌라에 집중합니다. 하우스맨은 서울 전역 100+ 건물 1,100+ 호실로 규모가 약 30배 크며, 기업 시설 관리(포르쉐·보건복지부 등)까지 범위가 넓습니다.',
+  },
+  {
+    q: '레거시(전통형) 관리업체와 차이는?',
+    a: '전통형 관리업체는 관리소장·경비·미화 인력을 수기 운영합니다. 하우스맨은 같은 현장 운영을 유지하면서 청구·수금·정산·알림톡을 자체 SaaS로 자동화해 매달 반복 업무가 사라집니다.',
+  },
+  {
+    q: 'SaaS만 쓸 수도 있나요?',
+    a: '가능합니다. 건물주가 직접 관리하면서 하우스맨 SaaS로 청구·알림톡·정산만 자동화할 수 있습니다. 월 3만 원부터 14일 무료 체험 후 결제됩니다.',
+  },
+];
+---
+
+<BaseLayout
+  title="하우스맨 vs 주요 건물관리 회사 비교 — 2026 최신"
+  description="서울 건물관리·주택임대관리 주요 회사들과 하우스맨의 비교. 규모·기술·가격·레퍼런스 객관 지표로 정리."
+>
+  <Nav />
+
+  <section class="bg-hero-gradient text-white py-20">
+    <div class="container-narrow text-center max-w-3xl">
+      <p class="label-uppercase text-white/70 mb-4">비교</p>
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-5">
+        하우스맨 vs 주요 건물관리 회사
+      </h1>
+      <p class="text-lg text-white/85 leading-relaxed">
+        업계에서 자주 비교되는 회사들과의 객관 지표를 정리했습니다.<br/>
+        선택에 도움이 되실 겁니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- 비교표 -->
+  <section class="container-narrow py-section">
+    <div class="text-center mb-10">
+      <p class="label-uppercase mb-3">객관 지표</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700">
+        한눈에 보는 차이
+      </h2>
+      <p class="mt-3 text-sm text-ink-muted">공개된 자료·홈페이지 기준. 2026-04 업데이트.</p>
+    </div>
+
+    <div class="card p-0 overflow-x-auto max-w-5xl mx-auto">
+      <table class="w-full text-sm min-w-[780px]">
+        <thead>
+          <tr class="bg-ink-soft">
+            <th class="text-left py-4 px-4 label-uppercase sticky left-0 bg-ink-soft">항목</th>
+            <th class="text-left py-4 px-4 label-uppercase text-navy-700">하우스맨</th>
+            <th class="text-left py-4 px-4 label-uppercase">A 주택임대 1위</th>
+            <th class="text-left py-4 px-4 label-uppercase">B 모던 상업·출동</th>
+            <th class="text-left py-4 px-4 label-uppercase">C 강남 빌라</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r, i) => (
+            <tr class={i < rows.length - 1 ? 'border-b border-ink-line' : ''}>
+              <td class="py-3 px-4 font-semibold text-ink whitespace-nowrap sticky left-0 bg-white">
+                {r.feature}
+              </td>
+              <td class="py-3 px-4 text-ink font-medium">{r.houseman}</td>
+              <td class="py-3 px-4 text-ink-muted">{r.alt_a}</td>
+              <td class="py-3 px-4 text-ink-muted">{r.alt_b}</td>
+              <td class="py-3 px-4 text-ink-muted">{r.alt_c}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <p class="text-center text-xs text-ink-label mt-4">
+      ※ 비교는 공개된 자료 기준이며, 특정 회사의 상품·운영 정책 변경에 따라 달라질 수 있습니다.
+    </p>
+  </section>
+
+  <!-- 비포/애프터 -->
+  <section class="bg-ink-soft py-section">
+    <div class="container-narrow max-w-5xl">
+      <div class="text-center mb-10">
+        <p class="label-uppercase mb-3">수기 관리 vs 하우스맨</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-navy-700">
+          매달 반복되는 업무가 사라집니다.
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-5">
+        <div class="card">
+          <div class="label-uppercase mb-3">기존 방식</div>
+          <ul class="space-y-3 text-sm text-ink-muted">
+            <li class="flex items-start gap-2">
+              <span class="text-ink-label mt-1">—</span>
+              엑셀로 호실별 청구 금액 수기 계산
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-ink-label mt-1">—</span>
+              임차인에게 카톡·전화로 일일이 청구 안내
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-ink-label mt-1">—</span>
+              통장 내역 확인하며 입금 매칭 수동
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-ink-label mt-1">—</span>
+              미납 확인 후 직접 독촉 전화 (스트레스)
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-ink-label mt-1">—</span>
+              월말 엑셀로 수입/지출 정산 → 건물주에게 메일
+            </li>
+          </ul>
+        </div>
+
+        <div class="card border-navy-700 border-2">
+          <div class="label-uppercase mb-3 text-navy-700">하우스맨 방식</div>
+          <ul class="space-y-3 text-sm text-ink">
+            <li class="flex items-start gap-2">
+              <span class="text-navy-700 mt-0.5">✓</span>
+              매월 지정일 청구서 자동 생성
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-navy-700 mt-0.5">✓</span>
+              알림톡 자동 발송 (실패 시 SMS 폴백)
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-navy-700 mt-0.5">✓</span>
+              은행 입금 자동 매칭, 수금 완료 처리
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-navy-700 mt-0.5">✓</span>
+              미납 시 3단계 자동 독촉 (사장님 개입 0)
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-navy-700 mt-0.5">✓</span>
+              월말 PDF 리포트 자동 생성·건물주 발송
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Q&A (FAQPage 스키마) -->
+  <section class="container-narrow py-section max-w-3xl">
+    <div class="text-center mb-10">
+      <p class="label-uppercase mb-3">자주 묻는 질문</p>
+      <h2 class="text-2xl md:text-3xl font-bold text-navy-700">
+        비교하실 때 궁금한 것
+      </h2>
+    </div>
+    <div class="space-y-3">
+      {qna.map(({ q, a }) => (
+        <details class="card group">
+          <summary class="flex items-center justify-between cursor-pointer list-none">
+            <span class="font-semibold text-ink pr-4">{q}</span>
+            <span class="text-navy-700 text-xl transition-transform group-open:rotate-45 flex-shrink-0">+</span>
+          </summary>
+          <p class="mt-4 text-ink-muted leading-relaxed text-[15px]">{a}</p>
+        </details>
+      ))}
+    </div>
+
+    <!-- AEO: FAQPage JSON-LD -->
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: qna.map(({ q, a }) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      })}
+    ></script>
+  </section>
+
+  <FinalCTA />
+  <Footer />
+</BaseLayout>

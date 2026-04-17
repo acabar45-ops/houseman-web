@@ -15,6 +15,12 @@ const {
   canonicalUrl = Astro.url.href,
 } = Astro.props;
 
+// Analytics — 프로덕션에서만 활성화. Vercel Env에 설정 후 값 들어옴.
+// PUBLIC_GA_ID 와 PUBLIC_NAVER_WCS 환경변수 미설정 시 스크립트 미삽입.
+const GA_ID = import.meta.env.PUBLIC_GA_ID ?? '';
+const NAVER_WCS = import.meta.env.PUBLIC_NAVER_WCS ?? '';
+const isProd = import.meta.env.PROD;
+
 // JSON-LD 구조화 데이터 — AEO용 (ChatGPT·Claude·Perplexity가 인용하기 쉽게)
 const organizationSchema = {
   '@context': 'https://schema.org',
@@ -94,6 +100,32 @@ const localBusinessSchema = {
         document.documentElement.classList.add('dark');
       }
     </script>
+
+    {isProd && GA_ID && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+        <script is:inline define:vars={{ GA_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', GA_ID, { anonymize_ip: true });
+        </script>
+      </>
+    )}
+
+    {isProd && NAVER_WCS && (
+      <script is:inline define:vars={{ NAVER_WCS }}>
+        (function(){
+          var s = document.createElement('script');
+          s.src = '//wcs.naver.net/wcslog.js';
+          document.head.appendChild(s);
+          s.onload = function(){
+            window.wcs_add = { wa: NAVER_WCS };
+            if (window.wcs) window.wcs_do();
+          };
+        })();
+      </script>
+    )}
   </head>
   <body>
     <slot />
